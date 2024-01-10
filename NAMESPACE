@@ -1,0 +1,6 @@
+useDynLib(robord, .registration=TRUE)
+importFrom(Rcpp, evalCpp)
+export(ident)
+export(add_r)
+export(rcpp_hello_world)
+export(mult)
