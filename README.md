@@ -40,6 +40,8 @@ polycor$thetahat
 
 Thus, in the absence of contamination, both estimators yield equivalent solutions. Next, we introduce 20% contamination.
 
+### Compare MLE and robust estimator with contamination
+
 ```R
 ## replace 20% of observations with negative leverage points
 x[1:200] <- 1
