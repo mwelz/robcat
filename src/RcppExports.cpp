@@ -34,6 +34,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// callothercpp
+double callothercpp(double x);
+RcppExport SEXP _robord_callothercpp(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(callothercpp(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// internalfun
+double internalfun(double x);
+RcppExport SEXP _robord_internalfun(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(internalfun(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rcpp_hello_world
 List rcpp_hello_world();
 RcppExport SEXP _robord_rcpp_hello_world() {
@@ -48,6 +70,8 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_robord_mult", (DL_FUNC) &_robord_mult, 2},
     {"_robord_add", (DL_FUNC) &_robord_add, 2},
+    {"_robord_callothercpp", (DL_FUNC) &_robord_callothercpp, 1},
+    {"_robord_internalfun", (DL_FUNC) &_robord_internalfun, 1},
     {"_robord_rcpp_hello_world", (DL_FUNC) &_robord_rcpp_hello_world, 0},
     {NULL, NULL, 0}
 };

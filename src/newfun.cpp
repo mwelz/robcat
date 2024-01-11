@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include "otherfun.h"
 using namespace Rcpp;
 
 
@@ -16,4 +17,12 @@ double mult( double v1, double v2 ) {return v1*v2;}
 // helper function, shall not be exported to user: note the absence pof @export
 // [[Rcpp::export]]
 double add(double x, double y){return x+y;}
+
+
+// [[Rcpp::export]]
+double callothercpp(double x)
+{
+	double foo = internalfun(x);
+	return foo;	
+}
 

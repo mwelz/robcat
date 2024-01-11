@@ -15,6 +15,14 @@ add <- function(x, y) {
     .Call(`_robord_add`, x, y)
 }
 
+callothercpp <- function(x) {
+    .Call(`_robord_callothercpp`, x)
+}
+
+internalfun <- function(x) {
+    .Call(`_robord_internalfun`, x)
+}
+
 rcpp_hello_world <- function() {
     .Call(`_robord_rcpp_hello_world`)
 }
