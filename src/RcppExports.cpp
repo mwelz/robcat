@@ -10,6 +10,29 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// outer_vec
+NumericMatrix outer_vec(NumericVector v);
+RcppExport SEXP _robord_outer_vec(SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type v(vSEXP);
+    rcpp_result_gen = Rcpp::wrap(outer_vec(v));
+    return rcpp_result_gen;
+END_RCPP
+}
+// matplus
+NumericMatrix matplus(NumericMatrix A, NumericMatrix B);
+RcppExport SEXP _robord_matplus(SEXP ASEXP, SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type A(ASEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(matplus(A, B));
+    return rcpp_result_gen;
+END_RCPP
+}
 // mult
 double mult(double v1, double v2);
 RcppExport SEXP _robord_mult(SEXP v1SEXP, SEXP v2SEXP) {
@@ -56,6 +79,702 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// fhat
+NumericVector fhat(NumericVector x, NumericVector y, int Kx, int Ky);
+RcppExport SEXP _robord_fhat(SEXP xSEXP, SEXP ySEXP, SEXP KxSEXP, SEXP KySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< int >::type Kx(KxSEXP);
+    Rcpp::traits::input_parameter< int >::type Ky(KySEXP);
+    rcpp_result_gen = Rcpp::wrap(fhat(x, y, Kx, Ky));
+    return rcpp_result_gen;
+END_RCPP
+}
+// make_cormat
+NumericMatrix make_cormat(double rho);
+RcppExport SEXP _robord_make_cormat(SEXP rhoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    rcpp_result_gen = Rcpp::wrap(make_cormat(rho));
+    return rcpp_result_gen;
+END_RCPP
+}
+// any_sug
+bool any_sug(LogicalVector x);
+RcppExport SEXP _robord_any_sug(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(any_sug(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pmvnorm_cpp
+double pmvnorm_cpp(NumericVector lower, NumericVector upper, NumericVector mean, NumericMatrix corr);
+RcppExport SEXP _robord_pmvnorm_cpp(SEXP lowerSEXP, SEXP upperSEXP, SEXP meanSEXP, SEXP corrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type lower(lowerSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type upper(upperSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type corr(corrSEXP);
+    rcpp_result_gen = Rcpp::wrap(pmvnorm_cpp(lower, upper, mean, corr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pk_theta
+double pk_theta(int x, int y, NumericMatrix cormat, NumericVector thresX, NumericVector thresY, NumericVector mean);
+RcppExport SEXP _robord_pk_theta(SEXP xSEXP, SEXP ySEXP, SEXP cormatSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP meanSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type y(ySEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type cormat(cormatSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
+    rcpp_result_gen = Rcpp::wrap(pk_theta(x, y, cormat, thresX, thresY, mean));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pk_theta_contam
+double pk_theta_contam(int x, int y, NumericMatrix sigma, NumericVector thresX, NumericVector thresY, NumericVector mean);
+RcppExport SEXP _robord_pk_theta_contam(SEXP xSEXP, SEXP ySEXP, SEXP sigmaSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP meanSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type y(ySEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
+    rcpp_result_gen = Rcpp::wrap(pk_theta_contam(x, y, sigma, thresX, thresY, mean));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rho_fun_fast
+double rho_fun_fast(double x, double c1, double c2, double logc1p1, double logc2p1);
+RcppExport SEXP _robord_rho_fun_fast(SEXP xSEXP, SEXP c1SEXP, SEXP c2SEXP, SEXP logc1p1SEXP, SEXP logc2p1SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type c1(c1SEXP);
+    Rcpp::traits::input_parameter< double >::type c2(c2SEXP);
+    Rcpp::traits::input_parameter< double >::type logc1p1(logc1p1SEXP);
+    Rcpp::traits::input_parameter< double >::type logc2p1(logc2p1SEXP);
+    rcpp_result_gen = Rcpp::wrap(rho_fun_fast(x, c1, c2, logc1p1, logc2p1));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rho_fun_cpp
+double rho_fun_cpp(double x, double c1, double c2);
+RcppExport SEXP _robord_rho_fun_cpp(SEXP xSEXP, SEXP c1SEXP, SEXP c2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type c1(c1SEXP);
+    Rcpp::traits::input_parameter< double >::type c2(c2SEXP);
+    rcpp_result_gen = Rcpp::wrap(rho_fun_cpp(x, c1, c2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// objective_cpp_fast
+double objective_cpp_fast(double rho, NumericVector f, NumericVector thresX, NumericVector thresY, double c1, double c2, int Kx, int Ky, int K, double logc1p1, double logc2p1, NumericVector mean, double feasible);
+RcppExport SEXP _robord_objective_cpp_fast(SEXP rhoSEXP, SEXP fSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP c1SEXP, SEXP c2SEXP, SEXP KxSEXP, SEXP KySEXP, SEXP KSEXP, SEXP logc1p1SEXP, SEXP logc2p1SEXP, SEXP meanSEXP, SEXP feasibleSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type f(fSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< double >::type c1(c1SEXP);
+    Rcpp::traits::input_parameter< double >::type c2(c2SEXP);
+    Rcpp::traits::input_parameter< int >::type Kx(KxSEXP);
+    Rcpp::traits::input_parameter< int >::type Ky(KySEXP);
+    Rcpp::traits::input_parameter< int >::type K(KSEXP);
+    Rcpp::traits::input_parameter< double >::type logc1p1(logc1p1SEXP);
+    Rcpp::traits::input_parameter< double >::type logc2p1(logc2p1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< double >::type feasible(feasibleSEXP);
+    rcpp_result_gen = Rcpp::wrap(objective_cpp_fast(rho, f, thresX, thresY, c1, c2, Kx, Ky, K, logc1p1, logc2p1, mean, feasible));
+    return rcpp_result_gen;
+END_RCPP
+}
+// objective_cpp
+double objective_cpp(double rho, NumericVector f, NumericVector thresX, NumericVector thresY, double c1, double c2, NumericVector mean, double tol);
+RcppExport SEXP _robord_objective_cpp(SEXP rhoSEXP, SEXP fSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP c1SEXP, SEXP c2SEXP, SEXP meanSEXP, SEXP tolSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type f(fSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< double >::type c1(c1SEXP);
+    Rcpp::traits::input_parameter< double >::type c2(c2SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
+    rcpp_result_gen = Rcpp::wrap(objective_cpp(rho, f, thresX, thresY, c1, c2, mean, tol));
+    return rcpp_result_gen;
+END_RCPP
+}
+// feps_cpp
+NumericVector feps_cpp(NumericVector thresX, NumericVector thresY, double eps, NumericMatrix covmat_true, NumericMatrix covmat_contam, NumericVector mean_true, NumericVector mean_contam);
+RcppExport SEXP _robord_feps_cpp(SEXP thresXSEXP, SEXP thresYSEXP, SEXP epsSEXP, SEXP covmat_trueSEXP, SEXP covmat_contamSEXP, SEXP mean_trueSEXP, SEXP mean_contamSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< double >::type eps(epsSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type covmat_true(covmat_trueSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type covmat_contam(covmat_contamSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type mean_true(mean_trueSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type mean_contam(mean_contamSEXP);
+    rcpp_result_gen = Rcpp::wrap(feps_cpp(thresX, thresY, eps, covmat_true, covmat_contam, mean_true, mean_contam));
+    return rcpp_result_gen;
+END_RCPP
+}
+// model_probabilities
+NumericVector model_probabilities(double rho, NumericVector thresX, NumericVector thresY, int Kx, int Ky);
+RcppExport SEXP _robord_model_probabilities(SEXP rhoSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP KxSEXP, SEXP KySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< int >::type Kx(KxSEXP);
+    Rcpp::traits::input_parameter< int >::type Ky(KySEXP);
+    rcpp_result_gen = Rcpp::wrap(model_probabilities(rho, thresX, thresY, Kx, Ky));
+    return rcpp_result_gen;
+END_RCPP
+}
+// is_infinite_pos
+bool is_infinite_pos(double x);
+RcppExport SEXP _robord_is_infinite_pos(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(is_infinite_pos(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// is_infinite_neg
+bool is_infinite_neg(double x);
+RcppExport SEXP _robord_is_infinite_neg(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(is_infinite_neg(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// is_infinite
+bool is_infinite(double x);
+RcppExport SEXP _robord_is_infinite(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(is_infinite(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// dnorm
+double dnorm(double x);
+RcppExport SEXP _robord_dnorm(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(dnorm(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pnorm
+double pnorm(double x);
+RcppExport SEXP _robord_pnorm(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(pnorm(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// dnorm2
+double dnorm2(double x, double y, double rho);
+RcppExport SEXP _robord_dnorm2(SEXP xSEXP, SEXP ySEXP, SEXP rhoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type y(ySEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    rcpp_result_gen = Rcpp::wrap(dnorm2(x, y, rho));
+    return rcpp_result_gen;
+END_RCPP
+}
+// F_prime_rho
+double F_prime_rho(double x, double y, double rho);
+RcppExport SEXP _robord_F_prime_rho(SEXP xSEXP, SEXP ySEXP, SEXP rhoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type y(ySEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    rcpp_result_gen = Rcpp::wrap(F_prime_rho(x, y, rho));
+    return rcpp_result_gen;
+END_RCPP
+}
+// F_prime_thres
+double F_prime_thres(double thres_variable, double thres_fixed, double rho);
+RcppExport SEXP _robord_F_prime_thres(SEXP thres_variableSEXP, SEXP thres_fixedSEXP, SEXP rhoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type thres_variable(thres_variableSEXP);
+    Rcpp::traits::input_parameter< double >::type thres_fixed(thres_fixedSEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    rcpp_result_gen = Rcpp::wrap(F_prime_thres(thres_variable, thres_fixed, rho));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pk_prime_thresX
+NumericVector pk_prime_thresX(int x, int y, NumericVector thresX, NumericVector thresY, double rho, int Kx);
+RcppExport SEXP _robord_pk_prime_thresX(SEXP xSEXP, SEXP ySEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP rhoSEXP, SEXP KxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type y(ySEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    Rcpp::traits::input_parameter< int >::type Kx(KxSEXP);
+    rcpp_result_gen = Rcpp::wrap(pk_prime_thresX(x, y, thresX, thresY, rho, Kx));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pk_prime_thresY
+NumericVector pk_prime_thresY(int x, int y, NumericVector thresX, NumericVector thresY, double rho, int Ky);
+RcppExport SEXP _robord_pk_prime_thresY(SEXP xSEXP, SEXP ySEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP rhoSEXP, SEXP KySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type y(ySEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    Rcpp::traits::input_parameter< int >::type Ky(KySEXP);
+    rcpp_result_gen = Rcpp::wrap(pk_prime_thresY(x, y, thresX, thresY, rho, Ky));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pk_prime_rho
+double pk_prime_rho(int x, int y, NumericVector thresX, NumericVector thresY, double rho);
+RcppExport SEXP _robord_pk_prime_rho(SEXP xSEXP, SEXP ySEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP rhoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type y(ySEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    rcpp_result_gen = Rcpp::wrap(pk_prime_rho(x, y, thresX, thresY, rho));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pk_prime_theta
+NumericVector pk_prime_theta(int x, int y, NumericVector thresX, NumericVector thresY, double rho, int Kx, int Ky);
+RcppExport SEXP _robord_pk_prime_theta(SEXP xSEXP, SEXP ySEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP rhoSEXP, SEXP KxSEXP, SEXP KySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type y(ySEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    Rcpp::traits::input_parameter< int >::type Kx(KxSEXP);
+    Rcpp::traits::input_parameter< int >::type Ky(KySEXP);
+    rcpp_result_gen = Rcpp::wrap(pk_prime_theta(x, y, thresX, thresY, rho, Kx, Ky));
+    return rcpp_result_gen;
+END_RCPP
+}
+// dnorm1_prime
+double dnorm1_prime(double x);
+RcppExport SEXP _robord_dnorm1_prime(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(dnorm1_prime(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// dnorm2_prime_rho
+double dnorm2_prime_rho(double x, double y, double rho);
+RcppExport SEXP _robord_dnorm2_prime_rho(SEXP xSEXP, SEXP ySEXP, SEXP rhoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type y(ySEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    rcpp_result_gen = Rcpp::wrap(dnorm2_prime_rho(x, y, rho));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pnorm2_prime2_x_x
+double pnorm2_prime2_x_x(double variable, double fixed, double rho);
+RcppExport SEXP _robord_pnorm2_prime2_x_x(SEXP variableSEXP, SEXP fixedSEXP, SEXP rhoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type variable(variableSEXP);
+    Rcpp::traits::input_parameter< double >::type fixed(fixedSEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    rcpp_result_gen = Rcpp::wrap(pnorm2_prime2_x_x(variable, fixed, rho));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pnorm2_prime2_x_rho
+double pnorm2_prime2_x_rho(double variable, double fixed, double rho);
+RcppExport SEXP _robord_pnorm2_prime2_x_rho(SEXP variableSEXP, SEXP fixedSEXP, SEXP rhoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type variable(variableSEXP);
+    Rcpp::traits::input_parameter< double >::type fixed(fixedSEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    rcpp_result_gen = Rcpp::wrap(pnorm2_prime2_x_rho(variable, fixed, rho));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pnorm2_prime2_x_y
+double pnorm2_prime2_x_y(double x, double y, double rho);
+RcppExport SEXP _robord_pnorm2_prime2_x_y(SEXP xSEXP, SEXP ySEXP, SEXP rhoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type y(ySEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    rcpp_result_gen = Rcpp::wrap(pnorm2_prime2_x_y(x, y, rho));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pk_prime2_rho2
+double pk_prime2_rho2(int x, int y, NumericVector thresX, NumericVector thresY, double rho);
+RcppExport SEXP _robord_pk_prime2_rho2(SEXP xSEXP, SEXP ySEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP rhoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type y(ySEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    rcpp_result_gen = Rcpp::wrap(pk_prime2_rho2(x, y, thresX, thresY, rho));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pk_prime2_thresX_rho
+double pk_prime2_thresX_rho(int x, int y, int k, NumericVector thresX, NumericVector thresY, double rho);
+RcppExport SEXP _robord_pk_prime2_thresX_rho(SEXP xSEXP, SEXP ySEXP, SEXP kSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP rhoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type y(ySEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    rcpp_result_gen = Rcpp::wrap(pk_prime2_thresX_rho(x, y, k, thresX, thresY, rho));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pk_prime2_thresY_rho
+double pk_prime2_thresY_rho(int x, int y, int k, NumericVector thresX, NumericVector thresY, double rho);
+RcppExport SEXP _robord_pk_prime2_thresY_rho(SEXP xSEXP, SEXP ySEXP, SEXP kSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP rhoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type y(ySEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    rcpp_result_gen = Rcpp::wrap(pk_prime2_thresY_rho(x, y, k, thresX, thresY, rho));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pk_prime2_thresX2
+double pk_prime2_thresX2(int x, int y, int k, NumericVector thresX, NumericVector thresY, double rho);
+RcppExport SEXP _robord_pk_prime2_thresX2(SEXP xSEXP, SEXP ySEXP, SEXP kSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP rhoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type y(ySEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    rcpp_result_gen = Rcpp::wrap(pk_prime2_thresX2(x, y, k, thresX, thresY, rho));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pk_prime2_thresY2
+double pk_prime2_thresY2(int x, int y, int k, NumericVector thresX, NumericVector thresY, double rho);
+RcppExport SEXP _robord_pk_prime2_thresY2(SEXP xSEXP, SEXP ySEXP, SEXP kSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP rhoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type y(ySEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    rcpp_result_gen = Rcpp::wrap(pk_prime2_thresY2(x, y, k, thresX, thresY, rho));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pk_prime2_thresY_kl
+double pk_prime2_thresY_kl(int x, int y, int k, int l, NumericVector thresX, NumericVector thresY, double rho);
+RcppExport SEXP _robord_pk_prime2_thresY_kl(SEXP xSEXP, SEXP ySEXP, SEXP kSEXP, SEXP lSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP rhoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type y(ySEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< int >::type l(lSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    rcpp_result_gen = Rcpp::wrap(pk_prime2_thresY_kl(x, y, k, l, thresX, thresY, rho));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pk_prime2_thresX_kl
+double pk_prime2_thresX_kl(int x, int y, int k, int l, NumericVector thresX, NumericVector thresY, double rho);
+RcppExport SEXP _robord_pk_prime2_thresX_kl(SEXP xSEXP, SEXP ySEXP, SEXP kSEXP, SEXP lSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP rhoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type y(ySEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< int >::type l(lSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    rcpp_result_gen = Rcpp::wrap(pk_prime2_thresX_kl(x, y, k, l, thresX, thresY, rho));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pk_prime2_thresXk_thresYl
+double pk_prime2_thresXk_thresYl(int x, int y, int k, int l, NumericVector thresX, NumericVector thresY, double rho);
+RcppExport SEXP _robord_pk_prime2_thresXk_thresYl(SEXP xSEXP, SEXP ySEXP, SEXP kSEXP, SEXP lSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP rhoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type y(ySEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< int >::type l(lSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    rcpp_result_gen = Rcpp::wrap(pk_prime2_thresXk_thresYl(x, y, k, l, thresX, thresY, rho));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_indices_thresX
+std::vector<int> get_indices_thresX(int Kx);
+RcppExport SEXP _robord_get_indices_thresX(SEXP KxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type Kx(KxSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_indices_thresX(Kx));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_indices_thresY
+std::vector<int> get_indices_thresY(int Kx, int Ky);
+RcppExport SEXP _robord_get_indices_thresY(SEXP KxSEXP, SEXP KySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type Kx(KxSEXP);
+    Rcpp::traits::input_parameter< int >::type Ky(KySEXP);
+    rcpp_result_gen = Rcpp::wrap(get_indices_thresY(Kx, Ky));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_indices_rho
+std::vector<int> get_indices_rho();
+RcppExport SEXP _robord_get_indices_rho() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(get_indices_rho());
+    return rcpp_result_gen;
+END_RCPP
+}
+// is_in
+bool is_in(int i, std::vector<int> v);
+RcppExport SEXP _robord_is_in(SEXP iSEXP, SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type i(iSEXP);
+    Rcpp::traits::input_parameter< std::vector<int> >::type v(vSEXP);
+    rcpp_result_gen = Rcpp::wrap(is_in(i, v));
+    return rcpp_result_gen;
+END_RCPP
+}
+// to_a
+int to_a(int i);
+RcppExport SEXP _robord_to_a(SEXP iSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type i(iSEXP);
+    rcpp_result_gen = Rcpp::wrap(to_a(i));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pk_prime2_theta2
+NumericMatrix pk_prime2_theta2(int x, int y, NumericVector thresX, NumericVector thresY, double rho, int Kx, int Ky);
+RcppExport SEXP _robord_pk_prime2_theta2(SEXP xSEXP, SEXP ySEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP rhoSEXP, SEXP KxSEXP, SEXP KySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type y(ySEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    Rcpp::traits::input_parameter< int >::type Kx(KxSEXP);
+    Rcpp::traits::input_parameter< int >::type Ky(KySEXP);
+    rcpp_result_gen = Rcpp::wrap(pk_prime2_theta2(x, y, thresX, thresY, rho, Kx, Ky));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sk_theta
+NumericVector sk_theta(int x, int y, NumericVector thresX, NumericVector thresY, double rho, int Kx, int Ky);
+RcppExport SEXP _robord_sk_theta(SEXP xSEXP, SEXP ySEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP rhoSEXP, SEXP KxSEXP, SEXP KySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type y(ySEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    Rcpp::traits::input_parameter< int >::type Kx(KxSEXP);
+    Rcpp::traits::input_parameter< int >::type Ky(KySEXP);
+    rcpp_result_gen = Rcpp::wrap(sk_theta(x, y, thresX, thresY, rho, Kx, Ky));
+    return rcpp_result_gen;
+END_RCPP
+}
+// w_fun
+double w_fun(double x, double c1, double c2);
+RcppExport SEXP _robord_w_fun(SEXP xSEXP, SEXP c1SEXP, SEXP c2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type c1(c1SEXP);
+    Rcpp::traits::input_parameter< double >::type c2(c2SEXP);
+    rcpp_result_gen = Rcpp::wrap(w_fun(x, c1, c2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// w_fun_prime
+double w_fun_prime(double x, double c1, double c2);
+RcppExport SEXP _robord_w_fun_prime(SEXP xSEXP, SEXP c1SEXP, SEXP c2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type c1(c1SEXP);
+    Rcpp::traits::input_parameter< double >::type c2(c2SEXP);
+    rcpp_result_gen = Rcpp::wrap(w_fun_prime(x, c1, c2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// in_interval
+double in_interval(double x, double c1, double c2);
+RcppExport SEXP _robord_in_interval(SEXP xSEXP, SEXP c1SEXP, SEXP c2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type c1(c1SEXP);
+    Rcpp::traits::input_parameter< double >::type c2(c2SEXP);
+    rcpp_result_gen = Rcpp::wrap(in_interval(x, c1, c2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_MW
+List get_MW(double rho, NumericVector thresX, NumericVector thresY, NumericVector f, double c1, double c2, int Kx, int Ky);
+RcppExport SEXP _robord_get_MW(SEXP rhoSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP fSEXP, SEXP c1SEXP, SEXP c2SEXP, SEXP KxSEXP, SEXP KySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type f(fSEXP);
+    Rcpp::traits::input_parameter< double >::type c1(c1SEXP);
+    Rcpp::traits::input_parameter< double >::type c2(c2SEXP);
+    Rcpp::traits::input_parameter< int >::type Kx(KxSEXP);
+    Rcpp::traits::input_parameter< int >::type Ky(KySEXP);
+    rcpp_result_gen = Rcpp::wrap(get_MW(rho, thresX, thresY, f, c1, c2, Kx, Ky));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_fisher
+NumericMatrix get_fisher(double rho, NumericVector thresX, NumericVector thresY, int Kx, int Ky);
+RcppExport SEXP _robord_get_fisher(SEXP rhoSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP KxSEXP, SEXP KySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< int >::type Kx(KxSEXP);
+    Rcpp::traits::input_parameter< int >::type Ky(KySEXP);
+    rcpp_result_gen = Rcpp::wrap(get_fisher(rho, thresX, thresY, Kx, Ky));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rcpp_hello_world
 List rcpp_hello_world();
 RcppExport SEXP _robord_rcpp_hello_world() {
@@ -68,10 +787,61 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_robord_outer_vec", (DL_FUNC) &_robord_outer_vec, 1},
+    {"_robord_matplus", (DL_FUNC) &_robord_matplus, 2},
     {"_robord_mult", (DL_FUNC) &_robord_mult, 2},
     {"_robord_add", (DL_FUNC) &_robord_add, 2},
     {"_robord_callothercpp", (DL_FUNC) &_robord_callothercpp, 1},
     {"_robord_internalfun", (DL_FUNC) &_robord_internalfun, 1},
+    {"_robord_fhat", (DL_FUNC) &_robord_fhat, 4},
+    {"_robord_make_cormat", (DL_FUNC) &_robord_make_cormat, 1},
+    {"_robord_any_sug", (DL_FUNC) &_robord_any_sug, 1},
+    {"_robord_pmvnorm_cpp", (DL_FUNC) &_robord_pmvnorm_cpp, 4},
+    {"_robord_pk_theta", (DL_FUNC) &_robord_pk_theta, 6},
+    {"_robord_pk_theta_contam", (DL_FUNC) &_robord_pk_theta_contam, 6},
+    {"_robord_rho_fun_fast", (DL_FUNC) &_robord_rho_fun_fast, 5},
+    {"_robord_rho_fun_cpp", (DL_FUNC) &_robord_rho_fun_cpp, 3},
+    {"_robord_objective_cpp_fast", (DL_FUNC) &_robord_objective_cpp_fast, 13},
+    {"_robord_objective_cpp", (DL_FUNC) &_robord_objective_cpp, 8},
+    {"_robord_feps_cpp", (DL_FUNC) &_robord_feps_cpp, 7},
+    {"_robord_model_probabilities", (DL_FUNC) &_robord_model_probabilities, 5},
+    {"_robord_is_infinite_pos", (DL_FUNC) &_robord_is_infinite_pos, 1},
+    {"_robord_is_infinite_neg", (DL_FUNC) &_robord_is_infinite_neg, 1},
+    {"_robord_is_infinite", (DL_FUNC) &_robord_is_infinite, 1},
+    {"_robord_dnorm", (DL_FUNC) &_robord_dnorm, 1},
+    {"_robord_pnorm", (DL_FUNC) &_robord_pnorm, 1},
+    {"_robord_dnorm2", (DL_FUNC) &_robord_dnorm2, 3},
+    {"_robord_F_prime_rho", (DL_FUNC) &_robord_F_prime_rho, 3},
+    {"_robord_F_prime_thres", (DL_FUNC) &_robord_F_prime_thres, 3},
+    {"_robord_pk_prime_thresX", (DL_FUNC) &_robord_pk_prime_thresX, 6},
+    {"_robord_pk_prime_thresY", (DL_FUNC) &_robord_pk_prime_thresY, 6},
+    {"_robord_pk_prime_rho", (DL_FUNC) &_robord_pk_prime_rho, 5},
+    {"_robord_pk_prime_theta", (DL_FUNC) &_robord_pk_prime_theta, 7},
+    {"_robord_dnorm1_prime", (DL_FUNC) &_robord_dnorm1_prime, 1},
+    {"_robord_dnorm2_prime_rho", (DL_FUNC) &_robord_dnorm2_prime_rho, 3},
+    {"_robord_pnorm2_prime2_x_x", (DL_FUNC) &_robord_pnorm2_prime2_x_x, 3},
+    {"_robord_pnorm2_prime2_x_rho", (DL_FUNC) &_robord_pnorm2_prime2_x_rho, 3},
+    {"_robord_pnorm2_prime2_x_y", (DL_FUNC) &_robord_pnorm2_prime2_x_y, 3},
+    {"_robord_pk_prime2_rho2", (DL_FUNC) &_robord_pk_prime2_rho2, 5},
+    {"_robord_pk_prime2_thresX_rho", (DL_FUNC) &_robord_pk_prime2_thresX_rho, 6},
+    {"_robord_pk_prime2_thresY_rho", (DL_FUNC) &_robord_pk_prime2_thresY_rho, 6},
+    {"_robord_pk_prime2_thresX2", (DL_FUNC) &_robord_pk_prime2_thresX2, 6},
+    {"_robord_pk_prime2_thresY2", (DL_FUNC) &_robord_pk_prime2_thresY2, 6},
+    {"_robord_pk_prime2_thresY_kl", (DL_FUNC) &_robord_pk_prime2_thresY_kl, 7},
+    {"_robord_pk_prime2_thresX_kl", (DL_FUNC) &_robord_pk_prime2_thresX_kl, 7},
+    {"_robord_pk_prime2_thresXk_thresYl", (DL_FUNC) &_robord_pk_prime2_thresXk_thresYl, 7},
+    {"_robord_get_indices_thresX", (DL_FUNC) &_robord_get_indices_thresX, 1},
+    {"_robord_get_indices_thresY", (DL_FUNC) &_robord_get_indices_thresY, 2},
+    {"_robord_get_indices_rho", (DL_FUNC) &_robord_get_indices_rho, 0},
+    {"_robord_is_in", (DL_FUNC) &_robord_is_in, 2},
+    {"_robord_to_a", (DL_FUNC) &_robord_to_a, 1},
+    {"_robord_pk_prime2_theta2", (DL_FUNC) &_robord_pk_prime2_theta2, 7},
+    {"_robord_sk_theta", (DL_FUNC) &_robord_sk_theta, 7},
+    {"_robord_w_fun", (DL_FUNC) &_robord_w_fun, 3},
+    {"_robord_w_fun_prime", (DL_FUNC) &_robord_w_fun_prime, 3},
+    {"_robord_in_interval", (DL_FUNC) &_robord_in_interval, 3},
+    {"_robord_get_MW", (DL_FUNC) &_robord_get_MW, 8},
+    {"_robord_get_fisher", (DL_FUNC) &_robord_get_fisher, 5},
     {"_robord_rcpp_hello_world", (DL_FUNC) &_robord_rcpp_hello_world, 0},
     {NULL, NULL, 0}
 };

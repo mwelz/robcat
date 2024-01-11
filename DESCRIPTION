@@ -1,10 +1,16 @@
 Package: robord
 Type: Package
-Title: What the Package Does in One 'Title Case' Line
-Version: 1.0
+Title: Robust Ordinal Data Analysis
+Version: 0.0.1
 Date: 2024-01-10
-Author: Your Name
-Maintainer: Your Name <your@email.com>
+Authors@R: 
+    c(person(given = "Max",
+           family = "Welz",
+           role = c("aut", "cre"),
+           email = "welz@ese.eur.nl",
+           comment = c(ORCID = "0000-0003-2945-1860")))
+Author: Max Welz [aut, cre] (<https://orcid.org/0000-0003-2945-1860>)
+Maintainer: Max Welz <welz@ese.eur.nl>
 Description: One paragraph description of what the package does as one or more full sentences.
 License: GPL (>= 2)
 Encoding: UTF-8

@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include <cmath>
 #include "otherfun.h"
 using namespace Rcpp;
 
@@ -22,7 +23,7 @@ double add(double x, double y){return x+y;}
 // [[Rcpp::export]]
 double callothercpp(double x)
 {
-	double foo = internalfun(x);
+	double foo = std::log(internalfun(x));
 	return foo;	
 }
 
