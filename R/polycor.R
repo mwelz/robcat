@@ -228,7 +228,18 @@ polycor_fast <-
 #' @param method numerical optimization method; default is Nelder-Mead
 #' @param tol tolerance in numerical optimization
 #' @param init initialization of numerical optimization. Default is neutral
-#' @param chisq shall a test for bivariate normality of teh latent variables be performed? Default is \code{FALSE}
+#' @param chisq shall a test for bivariate normality of the latent variables be performed? Default is \code{FALSE}
+#'
+#' @return 
+#' A list with the following components. 
+#' \describe{
+#'   \item{\code{theahat}}{A vector of estimates for the polychoric correlation coefficient (\code{rho}) as well as thresholds for \code{x} (named \code{a1,a2,...,a_{Kx-1}}) and \code{y} (named \code{b1,b2,...,b_{Ky-1}}).}
+#'   \item{\code{stderr}}{A vector of standard errors for each estimate in \code{theahat}}
+#'   \item{\code{sigma}}{Estimated asymptotic covariance matrix \eqn{\Sigma}, evaluated at the estimates in \code{theahat}.}
+#'   \item{\code{chisq,pval,df}}{Test statistic, p-value, and degrees of freedom of a test for bivariate normality}
+#'   \item{\code{objective}}{Value of minimized loss function}
+#'   \item{\code{optim}}{Object of class \code{optim}}
+#' }
 #' @export
 polycor <- function(x, y, c, 
                     Kx = max(x),
@@ -260,7 +271,7 @@ polycor <- function(x, y, c,
 #' @param method numerical optimization method; default is Nelder-Mead
 #' @param tol tolerance in numerical optimization
 #' @param init initialization of numerical optimization. Default is neutral
-#' @param chisq shall a test for bivariate normality of teh latent variables be performed? Default is \code{FALSE}
+#' @param chisq shall a test for bivariate normality of the latent variables be performed? Default is \code{FALSE}
 #' @export
 polycor_mle <- function(x, y, 
                         Kx = max(x),

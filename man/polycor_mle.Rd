@@ -33,7 +33,7 @@ polycor_mle(
 
 \item{init}{initialization of numerical optimization. Default is neutral}
 
-\item{chisq}{shall a test for bivariate normality of teh latent variables be performed? Default is \code{FALSE}}
+\item{chisq}{shall a test for bivariate normality of the latent variables be performed? Default is \code{FALSE}}
 }
 \description{
 Maximum likelihood estimation of polychoric correlation coefficient

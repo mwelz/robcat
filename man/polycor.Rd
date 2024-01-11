@@ -36,7 +36,18 @@ polycor(
 
 \item{init}{initialization of numerical optimization. Default is neutral}
 
-\item{chisq}{shall a test for bivariate normality of teh latent variables be performed? Default is \code{FALSE}}
+\item{chisq}{shall a test for bivariate normality of the latent variables be performed? Default is \code{FALSE}}
+}
+\value{
+A list with the following components. 
+\describe{
+  \item{\code{theahat}}{A vector of estimates for the polychoric correlation coefficient (\code{rho}) as well as thresholds for \code{x} (named \code{a1,a2,...,a_{Kx-1}}) and \code{y} (named \code{b1,b2,...,b_{Ky-1}}).}
+  \item{\code{stderr}}{A vector of standard errors for each estimate in \code{theahat}}
+  \item{\code{sigma}}{Estimated asymptotic covariance matrix \eqn{\Sigma}, evaluated at the estimates in \code{theahat}.}
+  \item{\code{chisq,pval,df}}{Test statistic, p-value, and degrees of freedom of a test for bivariate normality}
+  \item{\code{objective}}{Value of minimized loss function}
+  \item{\code{optim}}{Object of class \code{optim}}
+}
 }
 \description{
 Robust estimation of polychoric correlation coefficient
