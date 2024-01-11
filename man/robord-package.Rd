@@ -3,7 +3,7 @@
 \alias{robord}
 \docType{package}
 \title{
-  A short title line describing what the package does
+  Robust Ordinal Data Analysis
 }
 \description{
   A more detailed description of what the package does. A length
@@ -14,9 +14,9 @@
   package, including the most important functions.
 }
 \author{
-Your Name, email optional.
+Max Welz [aut, cre] (<https://orcid.org/0000-0003-2945-1860>)
 
-Maintainer: Your Name <your@email.com>
+Maintainer: Max Welz <welz@ese.eur.nl>
 }
 \references{
   This optional section can contain literature or other references for

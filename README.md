@@ -1,14 +1,14 @@
 # robord: Robust Ordinal Data Analysis
 
-## Example of robust estimation of polychoric correlation coefficient:
+## Example of robust estimation of polychoric correlation coefficient
 
 ### Generate simulated data
 
 ```R
 ## 5 answer categories each, define latent thresholds as follows
 Kx <- Ky <- 5
-thresX <- c(-Inf, -1.5, -1, -0.25, .75, Inf)
-thresY <- c(-Inf, -1.5, -1, .5, 1.5, Inf)
+thresX <- c(-Inf, -1.5, -1, -0.25, 0.75, Inf)
+thresY <- c(-Inf, -1.5, -1, 0.5, 1.5, Inf)
 rho_true <- 0.3 # true polychoric correlation
 
 ## simulate rating data
