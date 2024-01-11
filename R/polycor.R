@@ -1,3 +1,4 @@
+# don't forget that you must manually change the NAMESPACE file to register functions & methods!
 # TODO: allow for data table argument like in polycor package
 # TODO: use objective_cpp() in polycor function and merge tertracor() with polycor()
 # TODO: maybe profile to see where the bottlenecks are (prolly the integral)

@@ -33,52 +33,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// mult
-double mult(double v1, double v2);
-RcppExport SEXP _robord_mult(SEXP v1SEXP, SEXP v2SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type v1(v1SEXP);
-    Rcpp::traits::input_parameter< double >::type v2(v2SEXP);
-    rcpp_result_gen = Rcpp::wrap(mult(v1, v2));
-    return rcpp_result_gen;
-END_RCPP
-}
-// add
-double add(double x, double y);
-RcppExport SEXP _robord_add(SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type x(xSEXP);
-    Rcpp::traits::input_parameter< double >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(add(x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
-// callothercpp
-double callothercpp(double x);
-RcppExport SEXP _robord_callothercpp(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(callothercpp(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// internalfun
-double internalfun(double x);
-RcppExport SEXP _robord_internalfun(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(internalfun(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // fhat
 NumericVector fhat(NumericVector x, NumericVector y, int Kx, int Ky);
 RcppExport SEXP _robord_fhat(SEXP xSEXP, SEXP ySEXP, SEXP KxSEXP, SEXP KySEXP) {
@@ -789,10 +743,6 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_robord_outer_vec", (DL_FUNC) &_robord_outer_vec, 1},
     {"_robord_matplus", (DL_FUNC) &_robord_matplus, 2},
-    {"_robord_mult", (DL_FUNC) &_robord_mult, 2},
-    {"_robord_add", (DL_FUNC) &_robord_add, 2},
-    {"_robord_callothercpp", (DL_FUNC) &_robord_callothercpp, 1},
-    {"_robord_internalfun", (DL_FUNC) &_robord_internalfun, 1},
     {"_robord_fhat", (DL_FUNC) &_robord_fhat, 4},
     {"_robord_make_cormat", (DL_FUNC) &_robord_make_cormat, 1},
     {"_robord_any_sug", (DL_FUNC) &_robord_any_sug, 1},

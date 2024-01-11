@@ -9,28 +9,6 @@ matplus <- function(A, B) {
     .Call(`_robord_matplus`, A, B)
 }
 
-#' Multiplies two doubles
-#'
-#' @param v1 First value
-#' @param v2 Second value
-#' @return Product of v1 and v2
-#' @export
-mult <- function(v1, v2) {
-    .Call(`_robord_mult`, v1, v2)
-}
-
-add <- function(x, y) {
-    .Call(`_robord_add`, x, y)
-}
-
-callothercpp <- function(x) {
-    .Call(`_robord_callothercpp`, x)
-}
-
-internalfun <- function(x) {
-    .Call(`_robord_internalfun`, x)
-}
-
 fhat <- function(x, y, Kx, Ky) {
     .Call(`_robord_fhat`, x, y, Kx, Ky)
 }
