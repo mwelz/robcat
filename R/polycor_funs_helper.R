@@ -92,12 +92,17 @@ theta_names <- function(Kx, Ky)
 
 
 ## extract parameters from theta parameter
-extractfromtheta <- function(theta, Kx, Ky)
+extractfromtheta <- function(theta, Kx, Ky, includeInf = TRUE)
 {
   idxX <- seq(from = 2, to = Kx)
   idxY <- seq(from = Kx+1L, to = Kx+Ky-1L)
-  thresX <- c(-Inf, theta[idxX], Inf) 
-  thresY <- c(-Inf, theta[idxY], Inf) 
+  if(includeInf) {
+    thresX <- c(-Inf, theta[idxX], Inf) 
+    thresY <- c(-Inf, theta[idxY], Inf) 
+  } else{
+    thresX <- theta[idxX]
+    thresY <- theta[idxY]
+  }
   return(list(rho = theta[1L], thresX = thresX, thresY = thresY))
 }
 
