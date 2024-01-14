@@ -1,5 +1,7 @@
 useDynLib(robord, .registration=TRUE)
 importFrom(Rcpp, evalCpp)
+S3method(plot,polycor)
 export(polycor)
 export(init_thresholds)
 export(polycor_mle)
+import(ggplot2)

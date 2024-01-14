@@ -219,17 +219,20 @@ polycor_fast <-
     chisq <- df <- pval <- NULL
   }
   
-  return(list(thetahat = thetahat, 
-              stderr = stderr,
-              sigma = Sigma,
-              residual = vec2tab(pearson, Kx = Kx, Ky = Ky),
-              probs = vec2tab(probs, Kx = Kx, Ky = Ky),
-              f = vec2tab(f., Kx = Kx, Ky = Ky),
-              chisq = chisq, 
-              df = df,
-              pval = pval,
-              objective = opt$value,
-              optim = opt))
+  return(structure(
+    list(thetahat = thetahat, 
+         stderr = stderr,
+         sigma = Sigma,
+         residuals = vec2tab(pearson, Kx = Kx, Ky = Ky),
+         probs = vec2tab(probs, Kx = Kx, Ky = Ky),
+         f = vec2tab(f., Kx = Kx, Ky = Ky),
+         chisq = chisq, 
+         df = df,
+         pval = pval,
+         objective = opt$value,
+         optim = opt, 
+         inputs = list(Kx = Kx, Ky = Ky)),
+    class = "polycor"))
 } # FUN
 
 
