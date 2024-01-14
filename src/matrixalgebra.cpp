@@ -42,6 +42,7 @@ NumericMatrix outer_vec(NumericVector v)
 //   return out;
 // }
 
+
 // matrix addition: A + B
 // A and B are of same dimension and square
 // [[Rcpp::export]]
@@ -56,6 +57,40 @@ NumericMatrix matplus(NumericMatrix A, NumericMatrix B)
     {
       m(i,j) = A(i,j) + B(i,j);
     }
+  }
+  return m;
+}
+
+
+// matrix multiplication (faster than with Armadillo)
+//[[Rcpp::export]]
+NumericMatrix mmult(NumericMatrix A, NumericMatrix B)
+{
+  Rcpp::Environment base = Rcpp::Environment::namespace_env("base");
+  Rcpp::Function f = base["%*%"];
+  return f(A, B);
+}
+
+
+// invert matrix
+//[[Rcpp::export]]
+NumericMatrix inv(NumericMatrix A)
+{
+  Rcpp::Environment base = Rcpp::Environment::namespace_env("base");
+  Rcpp::Function f = base["solve"];
+  return f(A);
+}
+
+
+// cast vector to one-column matrix
+//[[Rcpp::export]]
+NumericMatrix mat2vec(NumericVector v)
+{
+  int n = v.length();
+  NumericMatrix m(n, 1);
+  for(int i = 0; i < n; ++i)
+  {
+    m(i,0) = v[i];
   }
   return m;
 }

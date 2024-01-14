@@ -89,3 +89,36 @@ theta_names <- function(Kx, Ky)
 {
   c("rho", paste0("a", 1:(Kx-1)), paste0("b", 1:(Ky-1)))
 }
+
+
+## extract parameters from theta parameter
+extractfromtheta <- function(theta, Kx, Ky)
+{
+  idxX <- seq(from = 2, to = Kx)
+  idxY <- seq(from = Kx+1L, to = Kx+Ky-1L)
+  thresX <- c(-Inf, theta[idxX], Inf) 
+  thresY <- c(-Inf, theta[idxY], Inf) 
+  return(list(rho = theta[1L], thresX = thresX, thresY = thresY))
+}
+
+
+## create contingency table based on a vector that was obtained by fhat() or model_probablities()
+vec2tab <- function(probs_vec, Kx, Ky)
+{
+  if(is.null(probs_vec))
+  {
+    out <- NULL
+  } else{
+    ## create table/matrix in the same order than they were created (that is, rows first)
+    tab <- as.table(
+      matrix(probs_vec, nrow = Kx, ncol = Ky,
+             byrow = TRUE))
+    
+    ## adjust naming
+    names(attr(tab, "dimnames")) = c("x", "y")
+    attr(tab, "dimnames")$x <- as.character(seq_len(Kx))
+    attr(tab, "dimnames")$y <- as.character(seq_len(Ky))
+    out <- tab
+  }
+  return(out)
+}

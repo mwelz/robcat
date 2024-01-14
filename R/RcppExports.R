@@ -9,6 +9,18 @@ matplus <- function(A, B) {
     .Call(`_robord_matplus`, A, B)
 }
 
+mmult <- function(A, B) {
+    .Call(`_robord_mmult`, A, B)
+}
+
+inv <- function(A) {
+    .Call(`_robord_inv`, A)
+}
+
+mat2vec <- function(v) {
+    .Call(`_robord_mat2vec`, v)
+}
+
 fhat <- function(x, y, Kx, Ky) {
     .Call(`_robord_fhat`, x, y, Kx, Ky)
 }

@@ -33,6 +33,40 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// mmult
+NumericMatrix mmult(NumericMatrix A, NumericMatrix B);
+RcppExport SEXP _robord_mmult(SEXP ASEXP, SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type A(ASEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(mmult(A, B));
+    return rcpp_result_gen;
+END_RCPP
+}
+// inv
+NumericMatrix inv(NumericMatrix A);
+RcppExport SEXP _robord_inv(SEXP ASEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type A(ASEXP);
+    rcpp_result_gen = Rcpp::wrap(inv(A));
+    return rcpp_result_gen;
+END_RCPP
+}
+// mat2vec
+NumericMatrix mat2vec(NumericVector v);
+RcppExport SEXP _robord_mat2vec(SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type v(vSEXP);
+    rcpp_result_gen = Rcpp::wrap(mat2vec(v));
+    return rcpp_result_gen;
+END_RCPP
+}
 // fhat
 NumericVector fhat(NumericVector x, NumericVector y, int Kx, int Ky);
 RcppExport SEXP _robord_fhat(SEXP xSEXP, SEXP ySEXP, SEXP KxSEXP, SEXP KySEXP) {
@@ -743,6 +777,9 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_robord_outer_vec", (DL_FUNC) &_robord_outer_vec, 1},
     {"_robord_matplus", (DL_FUNC) &_robord_matplus, 2},
+    {"_robord_mmult", (DL_FUNC) &_robord_mmult, 2},
+    {"_robord_inv", (DL_FUNC) &_robord_inv, 1},
+    {"_robord_mat2vec", (DL_FUNC) &_robord_mat2vec, 1},
     {"_robord_fhat", (DL_FUNC) &_robord_fhat, 4},
     {"_robord_make_cormat", (DL_FUNC) &_robord_make_cormat, 1},
     {"_robord_any_sug", (DL_FUNC) &_robord_any_sug, 1},
