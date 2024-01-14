@@ -179,6 +179,15 @@ polycor_fast <-
   thetahat <- opt$par
   names(thetahat) <- theta_names(Kx = Kx, Ky = Ky)
   
+  ## extract model parameters
+  theta_obj <- extractfromtheta(theta = thetahat, Kx = Kx, Ky = Ky)
+  probs <- model_probabilities(rho = theta_obj$rho, 
+                               thresX = theta_obj$thresX, thresY = theta_obj$thresY,
+                               Kx = Kx, Ky = Ky)
+  
+  ## calculate pearson residuals
+  pearson <- f. / probs
+  
   ## if requested, estimate covariance matrix
   if(variance)
   {
@@ -208,6 +217,9 @@ polycor_fast <-
   return(list(thetahat = thetahat, 
               stderr = stderr,
               sigma = Sigma,
+              residual = vec2tab(pearson, Kx = Kx, Ky = Ky),
+              probs = vec2tab(probs, Kx = Kx, Ky = Ky),
+              f = vec2tab(f., Kx = Kx, Ky = Ky),
               chisq = chisq, 
               df = df,
               pval = pval,
