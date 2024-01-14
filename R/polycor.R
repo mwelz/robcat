@@ -117,6 +117,7 @@ polycor_fast <-
            method = "Nelder-Mead",
            tol = 0.001,
            init = c(0, init_thresholds(Kx), init_thresholds(Ky)), 
+           constrained = TRUE,
            f = NULL,
            variance = FALSE, # compute variance?
            N = length(x),
@@ -156,24 +157,28 @@ polycor_fast <-
                        feasible = feasible)
   }
   
-  ## the linear constraints
-  lincon <- constrOptim_constraints(Kx = Kx, Ky = Ky, tol_rho = tol, tol_thresholds = tol)
-
-  ## linearly constrained optimization
-  opt <-
-    stats::constrOptim(theta = init,
-                       f = fn,
-                       grad = NULL,
-                       ui = lincon$ui,
-                       ci = lincon$ci,
-                       method = method,
-                       hessian = FALSE)
-  
-  ## without monotonicity constraints: runs faster, but less accurate
-  # opt <- optim(par = init, fn = fn, gr = NULL, 
-  #              lower = c(-1+tol, rep(-Inf, length(Kx+Ky-2))),
-  #              upper = c(1-tol, rep(Inf, length(Kx+Ky-2))), 
-  #              hessian = FALSE, method = "L-BFGS-B")
+  if(constrained)
+  {
+    ## the linear constraints
+    lincon <- constrOptim_constraints(Kx = Kx, Ky = Ky, tol_rho = tol, tol_thresholds = tol)
+    
+    ## linearly constrained optimization
+    opt <-
+      stats::constrOptim(theta = init,
+                         f = fn,
+                         grad = NULL,
+                         ui = lincon$ui,
+                         ci = lincon$ci,
+                         method = method,
+                         hessian = FALSE)
+  } else{
+    ## without monotonicity constraints: runs faster, but less accurate
+    opt <- 
+      stats::optim(par = init, fn = fn, gr = NULL, 
+                   lower = c(-1.+tol, rep(-Inf, length(Kx+Ky-2))),
+                   upper = c(1.-tol, rep(Inf, length(Kx+Ky-2))), 
+                   hessian = FALSE, method = method)
+  } # IF
   
   ## extract and name estimated parameters
   thetahat <- opt$par
@@ -238,6 +243,7 @@ polycor_fast <-
 #' @param Ky number of response options in second item (defaults to \code{max(y)})
 #' @param variance shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}
 #' @param method numerical optimization method; default is Nelder-Mead
+#' @param constrained shall strict monotonicity of constraints be explicitly enforced by linear constraints? 
 #' @param tol tolerance in numerical optimization
 #' @param init initialization of numerical optimization. Default is neutral
 #' @param chisq shall a test for bivariate normality of the latent variables be performed? Default is \code{FALSE}
@@ -258,6 +264,7 @@ polycor <- function(x, y, c,
                     Ky = max(y),
                     variance = TRUE,
                     method = "Nelder-Mead",
+                    constrained = TRUE,
                     tol = 0.001,
                     init = c(0, init_thresholds(Kx), init_thresholds(Ky)),
                     chisq = FALSE)
@@ -267,8 +274,8 @@ polycor <- function(x, y, c,
   stopifnot(c >= 1)
   
   polycor_fast(x = x, y = y, Kx = Kx, Ky = Ky, c1 = 0.0, c2 = c, 
-               method = method, tol = tol, init = init, 
-               f = NULL,
+               method = method, tol = tol, constrained = constrained,
+               init = init, f = NULL, 
                variance = variance, N = N, chisq = chisq)
 }
 
@@ -281,6 +288,7 @@ polycor <- function(x, y, c,
 #' @param Ky number of response options in second item (defaults to \code{max(y)})
 #' @param variance shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}
 #' @param method numerical optimization method; default is Nelder-Mead
+#' @param constrained shall strict monotonicity of constraints be explicitly enforced by linear constraints? 
 #' @param tol tolerance in numerical optimization
 #' @param init initialization of numerical optimization. Default is neutral
 #' @param chisq shall a test for bivariate normality of the latent variables be performed? Default is \code{FALSE}
@@ -290,6 +298,7 @@ polycor_mle <- function(x, y,
                         Ky = max(y),
                         variance = TRUE,
                         method = "Nelder-Mead",
+                        constrained = TRUE,
                         tol = 0.001,
                         init = c(0, init_thresholds(Kx), init_thresholds(Ky)),
                         chisq = FALSE)
@@ -299,8 +308,8 @@ polycor_mle <- function(x, y,
   
   obj <- 
     polycor_fast(x = x, y = y, Kx = Kx, Ky = Ky, c1 = 0.0, c2 = Inf, 
-                 method = method, tol = tol, init = init, 
-                 f = NULL,
+                 method = method, tol = tol, constrained = constrained,
+                 init = init, f = NULL,
                  variance = FALSE, N = N, chisq = chisq)
   
   # if variance requested, calculate it based on fisher information

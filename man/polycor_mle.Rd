@@ -11,6 +11,7 @@ polycor_mle(
   Ky = max(y),
   variance = TRUE,
   method = "Nelder-Mead",
+  constrained = TRUE,
   tol = 0.001,
   init = c(0, init_thresholds(Kx), init_thresholds(Ky)),
   chisq = FALSE
@@ -28,6 +29,8 @@ polycor_mle(
 \item{variance}{shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}}
 
 \item{method}{numerical optimization method; default is Nelder-Mead}
+
+\item{constrained}{shall strict monotonicity of constraints be explicitly enforced by linear constraints?}
 
 \item{tol}{tolerance in numerical optimization}
 
