@@ -1,10 +1,3 @@
-# robord: Robust Ordinal Data Analysis
-
-## Example of robust estimation of polychoric correlation coefficient
-
-### Generate simulated data
-
-```R
 library("robord")
 
 ## 5 answer categories each, define latent thresholds as follows
@@ -20,11 +13,7 @@ xi <- latent[,1]
 eta <- latent[,2]
 x <- as.integer(cut(xi, thresX))
 y <- as.integer(cut(eta, thresY))
-```
 
-### Compare MLE and robust estimator without contamination
-
-```R
 ## MLE
 mle <- polycor_mle(x = x, y = y)
 mle$thetahat 
@@ -38,13 +27,7 @@ polycor$thetahat
 # > polycor$thetahat
 #       rho         a1         a2         a3         a4         b1         b2         b3         b4 
 # 0.3151414 -1.4868373 -0.9829001 -0.2316910  0.7888495 -1.5112325 -0.9889749  0.4277239  1.4582497
-```
 
-Thus, in the absence of contamination, both estimators yield equivalent solutions. Next, we introduce 20% contamination.
-
-### Compare MLE and robust estimator with contamination
-
-```R
 ## replace 20% of observations with negative leverage points
 x[1:200] <- 1
 y[1:200] <- Ky
@@ -63,56 +46,31 @@ polycor$thetahat
 #       rho         a1         a2         a3         a4         b1         b2         b3         b4 
 # 0.3180104 -1.4461457 -0.9605778 -0.2342293  0.7795890 -1.5299883 -0.9981569  0.4092214  1.4566111 
 
-```
 
-We see that 20% contamination leads to a substantial bias in the MLE, whereas the robust estimator is still accurate.
-The package also provides methods for printing and plotting:
-
-```R
 ## print and plot method
 polycor
 # > polycor
 # 
 # Polychoric Correlation
-#        Estimate Std.Err.
+# Coefficient Std.Err.
 # rho       0.318  0.03857
 # 
 # X-thresholds
-#     Estimate Std.Err.
+# Threshold Std.Err.
 # a1   -1.4460  0.06619
 # a2   -0.9606  0.05262
 # a3   -0.2342  0.04449
 # a4    0.7796  0.04961
 # 
 # Y-thresholds
-#     Estimate Std.Err.
+# Threshold Std.Err.
 # b1   -1.5300  0.06931
 # b2   -0.9982  0.05309
 # b3    0.4092  0.04538
 # b4    1.4570  0.06759
 
-plot(polycor)
-```
+p <- plot(polycor)
+dir_save <- "inst/doc/readme_plots"
+ggsave(filename = "READMEplot.svg", device = "svg", path = dir_save, width = 6, height = 6, plot = p)
 
-<img src="./inst/doc/readme_plots/READMEplot.svg" width="67%" style="display: block; margin: auto;" />
-
-Indeed, the Pearson residual of contaminated cell `(x,y) = (1,5)` is excessively large compared to the others, which are all around the value 1.
-
-We can also do a test on a each cell being outlying. Here are its p-values (adjusted for multiple comparisons via the Benjamini-Hochberg procedure):
-
-```R
-> celltest(polycor)$pval_adjusted
-   y
-x              1            2            3            4            5
-  1 6.466992e-01 9.815441e-01 2.528686e-03 8.299378e-01 0.000000e+00
-  2 3.299974e-03 3.349025e-01 5.098700e-02 3.301253e-01 5.837664e-01
-  3 3.116348e-01 1.491972e-01 7.196293e-03 6.861626e-01 4.879806e-03
-  4 9.821283e-01 1.538695e-02 5.098700e-02 6.316023e-05 2.216292e-01
-  5 7.942232e-03 5.837664e-01 7.045633e-02 1.698195e-02 6.466992e-01
-```
-
-Hence, at the recommended extremely conservative significance level of 0.001, only the cell  `(x,y) = (1,5)` is correctly identified as outlying.
-
-
-## Authors
-Max Welz (welz@ese.eur.nl)
+celltest(polycor)$pval_adjusted

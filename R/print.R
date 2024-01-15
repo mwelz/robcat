@@ -13,18 +13,18 @@ print.polycor <- function(x, digits = max(3L, getOption("digits") - 3L), ...)
   
   ## rho
   cat("\nPolychoric Correlation\n")
-  rho <- signif(cbind(Coefficient = thetaobj$rho, Std.Err. = stderrobj$rho), 
+  rho <- signif(cbind(Estimate = thetaobj$rho, Std.Err. = stderrobj$rho), 
                 digits = digits)
   print(rho)
   
   ## thresX
-  thresX <- signif(cbind(Threshold = thetaobj$thresX, Std.Err. = stderrobj$thresX), 
+  thresX <- signif(cbind(Estimate = thetaobj$thresX, Std.Err. = stderrobj$thresX), 
                    digits = digits)
   cat("\nX-thresholds\n") 
   print(thresX)
   
   ## thresY
-  thresY <- signif(cbind(Threshold = thetaobj$thresY, Std.Err. = stderrobj$thresY), 
+  thresY <- signif(cbind(Estimate = thetaobj$thresY, Std.Err. = stderrobj$thresY), 
                    digits = digits)
   cat("\nY-thresholds\n") 
   print(thresY)

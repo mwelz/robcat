@@ -1,3 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 README.md
+code_for_readme.R
+inst/doc/readme_plots
