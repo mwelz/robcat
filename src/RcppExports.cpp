@@ -10,6 +10,36 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// pnorm_right
+double pnorm_right(double x);
+RcppExport SEXP _robord_pnorm_right(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(pnorm_right(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// celltest_cpp
+List celltest_cpp(double rho, NumericVector thresX, NumericVector thresY, int Kx, int Ky, NumericMatrix probs, NumericMatrix f, NumericMatrix sigma, int N);
+RcppExport SEXP _robord_celltest_cpp(SEXP rhoSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP KxSEXP, SEXP KySEXP, SEXP probsSEXP, SEXP fSEXP, SEXP sigmaSEXP, SEXP NSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< int >::type Kx(KxSEXP);
+    Rcpp::traits::input_parameter< int >::type Ky(KySEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type probs(probsSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type f(fSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< int >::type N(NSEXP);
+    rcpp_result_gen = Rcpp::wrap(celltest_cpp(rho, thresX, thresY, Kx, Ky, probs, f, sigma, N));
+    return rcpp_result_gen;
+END_RCPP
+}
 // outer_vec
 NumericMatrix outer_vec(NumericVector v);
 RcppExport SEXP _robord_outer_vec(SEXP vSEXP) {
@@ -775,6 +805,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_robord_pnorm_right", (DL_FUNC) &_robord_pnorm_right, 1},
+    {"_robord_celltest_cpp", (DL_FUNC) &_robord_celltest_cpp, 9},
     {"_robord_outer_vec", (DL_FUNC) &_robord_outer_vec, 1},
     {"_robord_matplus", (DL_FUNC) &_robord_matplus, 2},
     {"_robord_mmult", (DL_FUNC) &_robord_mmult, 2},

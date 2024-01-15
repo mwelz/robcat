@@ -107,23 +107,28 @@ extractfromtheta <- function(theta, Kx, Ky, includeInf = TRUE)
 }
 
 
+## cast matrix to table
+mat2tab <- function(mat)
+{
+  Kx <- nrow(mat) ; Ky <- ncol(mat)
+  tab <- as.table(mat)
+  names(attr(tab, "dimnames")) = c("x", "y")
+  attr(tab, "dimnames")$x <- as.character(seq_len(Kx))
+  attr(tab, "dimnames")$y <- as.character(seq_len(Ky))
+  return(tab)
+}
+
+
 ## create contingency table based on a vector that was obtained by fhat() or model_probablities()
-vec2tab <- function(probs_vec, Kx, Ky)
+vec2tab <- function(probs_vec, Kx, Ky, byrow = TRUE)
 {
   if(is.null(probs_vec))
   {
     out <- NULL
   } else{
     ## create table/matrix in the same order than they were created (that is, rows first)
-    tab <- as.table(
-      matrix(probs_vec, nrow = Kx, ncol = Ky,
-             byrow = TRUE))
-    
-    ## adjust naming
-    names(attr(tab, "dimnames")) = c("x", "y")
-    attr(tab, "dimnames")$x <- as.character(seq_len(Kx))
-    attr(tab, "dimnames")$y <- as.character(seq_len(Ky))
-    out <- tab
+    out <- mat2tab(matrix(probs_vec, nrow = Kx, ncol = Ky,
+                          byrow = byrow))
   }
   return(out)
 }

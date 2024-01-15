@@ -4,6 +4,7 @@
 #include <vector> // for vector class
 #include "polycor.h" // import relevant helper functions
 #include "matrixalgebra.h" // same
+#include "polycor_variance.h"
 using namespace Rcpp;
 
 
