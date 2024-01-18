@@ -4,7 +4,7 @@
 #' @param digits number of digits to be printed
 #' @param ... additional parameters to be passed down
 #' @export
-print.polycor <- function(x, digits = max(3L, getOption("digits") - 3L), ...)
+print.robpolycor <- function(x, digits = max(3L, getOption("digits") - 3L), ...)
 {
   stopifnot(inherits(x = x, what = "polycor"))
   Kx <- x$inputs$Kx ; Ky <- x$inputs$Ky

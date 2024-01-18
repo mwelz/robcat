@@ -4,7 +4,7 @@
 #' @param ... additional parameters to be passed down
 #' @import ggplot2
 #' @export
-plot.polycor <- function(x, ...)
+plot.robpolycor <- function(x, ...)
 {
   stopifnot(inherits(x = x, what = "polycor"))
   resid <- x[["residuals"]]

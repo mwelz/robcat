@@ -231,8 +231,8 @@ polycor_fast <-
          pval = pval,
          objective = opt$value,
          optim = opt, 
-         inputs = list(Kx = Kx, Ky = Ky, N = N)),
-    class = "polycor"))
+         inputs = list(Kx = Kx, Ky = Ky, N = N, c = c2)),
+    class = c("robpolycor", "polycor")))
 } # FUN
 
 
