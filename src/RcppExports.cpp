@@ -10,14 +10,15 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// pnorm_right
-double pnorm_right(double x);
-RcppExport SEXP _robord_pnorm_right(SEXP xSEXP) {
+// pnorm_tail
+double pnorm_tail(double x, bool lowertail);
+RcppExport SEXP _robord_pnorm_tail(SEXP xSEXP, SEXP lowertailSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(pnorm_right(x));
+    Rcpp::traits::input_parameter< bool >::type lowertail(lowertailSEXP);
+    rcpp_result_gen = Rcpp::wrap(pnorm_tail(x, lowertail));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -32,14 +33,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// pval_right
-double pval_right(double z);
-RcppExport SEXP _robord_pval_right(SEXP zSEXP) {
+// pval_left
+double pval_left(double z);
+RcppExport SEXP _robord_pval_left(SEXP zSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type z(zSEXP);
-    rcpp_result_gen = Rcpp::wrap(pval_right(z));
+    rcpp_result_gen = Rcpp::wrap(pval_left(z));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -828,9 +829,9 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_robord_pnorm_right", (DL_FUNC) &_robord_pnorm_right, 1},
+    {"_robord_pnorm_tail", (DL_FUNC) &_robord_pnorm_tail, 2},
     {"_robord_pval_twosided", (DL_FUNC) &_robord_pval_twosided, 1},
-    {"_robord_pval_right", (DL_FUNC) &_robord_pval_right, 1},
+    {"_robord_pval_left", (DL_FUNC) &_robord_pval_left, 1},
     {"_robord_celltest_cpp", (DL_FUNC) &_robord_celltest_cpp, 10},
     {"_robord_outer_vec", (DL_FUNC) &_robord_outer_vec, 1},
     {"_robord_matplus", (DL_FUNC) &_robord_matplus, 2},

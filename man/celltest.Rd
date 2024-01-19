@@ -9,7 +9,7 @@ celltest(x, twosided = FALSE, adjust = "fdr", ...)
 \arguments{
 \item{x}{object of class \code{polycor}}
 
-\item{twosided}{shall test be one- or two-sided with right-tail alternative?}
+\item{twosided}{shall test be one- or two-sided with left-tailed alternative?}
 
 \item{adjust}{method for adjustment of p-values for multiple comparisons; default is FDR}
 

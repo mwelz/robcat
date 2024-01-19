@@ -4,13 +4,13 @@
 #include "polycor_variance.h"
 using namespace Rcpp;
 
-// right quantile of standard normal distribution
+// probability of standard normal distribution
 //[[Rcpp::export]]
-double pnorm_right(double x)
+double pnorm_tail(double x, bool lowertail)
 {
   Rcpp::Environment stats = Rcpp::Environment::namespace_env("stats");
   Rcpp::Function f = stats["pnorm"];
-  NumericVector p = f(x, 0., 1., false, false);
+  NumericVector p = f(x, 0., 1., lowertail, false);
   return p[0];
 }
 
@@ -19,15 +19,15 @@ double pnorm_right(double x)
 //[[Rcpp::export]]
 double pval_twosided(double z)
 {
-  return 2.0 * pnorm_right(std::fabs(z));
+  return 2.0 * pnorm_tail(std::fabs(z), false);
 }
 
 
-// p-value of one-sided test with right-hand alternative H_0: Z > z
+// p-value of one-sided test with left-tailed alternative H_0: Z < z
 //[[Rcpp::export]]
-double pval_right(double z)
+double pval_left(double z)
 {
-  return pnorm_right(z);
+  return pnorm_tail(z, true);
 }
 
 
@@ -57,7 +57,7 @@ List celltest_cpp(
   {
     p_fun = &pval_twosided;
   } else{
-    p_fun = &pval_right;
+    p_fun = &pval_left;
   } // IF
 
   

@@ -98,17 +98,17 @@ plot(polycor)
 
 Indeed, the Pearson residual of contaminated cell `(x,y) = (1,5)` is excessively large compared to the others, which are all around the value 1.
 
-We can also do a test on a each cell being outlying. Here are its p-values (adjusted for multiple comparisons via the Benjamini-Hochberg procedure):
+We can also do a test on a each cell being outlying, that is, a Pearson residual of larger than 1 (one-sided alternative). Here are its p-values (adjusted for multiple comparisons via the Benjamini-Hochberg procedure):
 
 ```R
 > celltest(polycor)$pval_adjusted
    y
-x              1            2            3            4            5
-  1 6.466992e-01 9.815441e-01 2.528686e-03 8.299378e-01 0.000000e+00
-  2 3.299974e-03 3.349025e-01 5.098700e-02 3.301253e-01 5.837664e-01
-  3 3.116348e-01 1.491972e-01 7.196293e-03 6.861626e-01 4.879806e-03
-  4 9.821283e-01 1.538695e-02 5.098700e-02 6.316023e-05 2.216292e-01
-  5 7.942232e-03 5.837664e-01 7.045633e-02 1.698195e-02 6.466992e-01
+x           1         2         3         4         5
+  1 0.9999975 0.9999975 0.9999975 0.9999975 0.0000000
+  2 0.9999975 0.9999975 0.9999975 0.9999975 0.9999975
+  3 0.9999975 0.9999975 0.9999975 0.9999975 0.9999975
+  4 0.9999975 0.9999975 0.9999975 0.9999975 0.9999975
+  5 0.9999975 0.9999975 0.9999975 0.9999975 0.9999975
 ```
 
 Hence, at the recommended extremely conservative significance level of 0.001, only the cell  `(x,y) = (1,5)` is correctly identified as outlying.
