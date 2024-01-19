@@ -15,6 +15,22 @@ double pnorm_right(double x)
 }
 
 
+// p-value of two-sided test
+//[[Rcpp::export]]
+double pval_twosided(double z)
+{
+  return 2.0 * pnorm_right(std::fabs(z));
+}
+
+
+// p-value of one-sided test with right-hand alternative H_0: Z > z
+//[[Rcpp::export]]
+double pval_right(double z)
+{
+  return pnorm_right(z);
+}
+
+
 // test if a cell us outlying
 //[[Rcpp::export]]
 List celltest_cpp(
@@ -25,12 +41,25 @@ List celltest_cpp(
   NumericMatrix probs,
   NumericMatrix f,
   NumericMatrix sigma,
-  int N)
+  int N,
+  bool twosided)
 {
   int x, y;
   NumericMatrix stderr(Kx,Ky), teststat(Kx,Ky), pval(Kx,Ky);
   double sigma2, stderr_xy, z, p;
   double sqrtN = std::sqrt((double)N);
+  
+  // declare function pointer
+  double (*p_fun)(double);
+  
+  // depending if test is 1- or 2-sided, call correct p-value function
+  if(twosided)
+  {
+    p_fun = &pval_twosided;
+  } else{
+    p_fun = &pval_right;
+  } // IF
+
   
   for(int i = 0; i < Kx; ++i)
   {
@@ -53,8 +82,8 @@ List celltest_cpp(
       // test statistic at cell
       z = sqrtN * (probs(i,j) - f(i,j)) / stderr_xy;
       
-      // p-value of test statistic (unadjusted)
-      p = 2.0 * pnorm_right(std::fabs(z));
+      // p-value of test statistic (unadjusted for multiple comparisons)
+      p = p_fun(z);
       
       // collect results
       stderr(i,j) = stderr_xy;

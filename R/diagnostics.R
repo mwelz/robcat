@@ -1,11 +1,12 @@
 #' perform test if individual cells are outlying
 #' 
 #' @param x object of class \code{polycor}
+#' @param twosided shall test be one- or two-sided with right-tail alternative?
 #' @param adjust method for adjustment of p-values for multiple comparisons; default is FDR
 #' @param ... additional parameters to be passed down
 #' 
 #' @export
-celltest <- function(x, adjust = "fdr", ...)
+celltest <- function(x, twosided = FALSE, adjust = "fdr", ...)
 {
   stopifnot(inherits(x, what = "polycor"))
   Kx <- x$inputs$Kx ; Ky <- x$inputs$Ky ; N <- x$inputs$N
@@ -17,7 +18,8 @@ celltest <- function(x, adjust = "fdr", ...)
                  Kx = Kx, Ky = Ky,  
                  probs = as.matrix(x$probs), 
                  f = as.matrix(x$f), 
-                 sigma = x$sigma, N = N)
+                 sigma = x$sigma, N = N, 
+                 twosided = twosided)
   
   pval <- matrix(stats::p.adjust(as.numeric(obj$pval), method = adjust, ...), 
                  nrow = Kx, ncol = Ky, byrow = FALSE)

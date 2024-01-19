@@ -21,9 +21,31 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// pval_twosided
+double pval_twosided(double z);
+RcppExport SEXP _robord_pval_twosided(SEXP zSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type z(zSEXP);
+    rcpp_result_gen = Rcpp::wrap(pval_twosided(z));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pval_right
+double pval_right(double z);
+RcppExport SEXP _robord_pval_right(SEXP zSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type z(zSEXP);
+    rcpp_result_gen = Rcpp::wrap(pval_right(z));
+    return rcpp_result_gen;
+END_RCPP
+}
 // celltest_cpp
-List celltest_cpp(double rho, NumericVector thresX, NumericVector thresY, int Kx, int Ky, NumericMatrix probs, NumericMatrix f, NumericMatrix sigma, int N);
-RcppExport SEXP _robord_celltest_cpp(SEXP rhoSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP KxSEXP, SEXP KySEXP, SEXP probsSEXP, SEXP fSEXP, SEXP sigmaSEXP, SEXP NSEXP) {
+List celltest_cpp(double rho, NumericVector thresX, NumericVector thresY, int Kx, int Ky, NumericMatrix probs, NumericMatrix f, NumericMatrix sigma, int N, bool twosided);
+RcppExport SEXP _robord_celltest_cpp(SEXP rhoSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP KxSEXP, SEXP KySEXP, SEXP probsSEXP, SEXP fSEXP, SEXP sigmaSEXP, SEXP NSEXP, SEXP twosidedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -36,7 +58,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericMatrix >::type f(fSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type sigma(sigmaSEXP);
     Rcpp::traits::input_parameter< int >::type N(NSEXP);
-    rcpp_result_gen = Rcpp::wrap(celltest_cpp(rho, thresX, thresY, Kx, Ky, probs, f, sigma, N));
+    Rcpp::traits::input_parameter< bool >::type twosided(twosidedSEXP);
+    rcpp_result_gen = Rcpp::wrap(celltest_cpp(rho, thresX, thresY, Kx, Ky, probs, f, sigma, N, twosided));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -806,7 +829,9 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_robord_pnorm_right", (DL_FUNC) &_robord_pnorm_right, 1},
-    {"_robord_celltest_cpp", (DL_FUNC) &_robord_celltest_cpp, 9},
+    {"_robord_pval_twosided", (DL_FUNC) &_robord_pval_twosided, 1},
+    {"_robord_pval_right", (DL_FUNC) &_robord_pval_right, 1},
+    {"_robord_celltest_cpp", (DL_FUNC) &_robord_celltest_cpp, 10},
     {"_robord_outer_vec", (DL_FUNC) &_robord_outer_vec, 1},
     {"_robord_matplus", (DL_FUNC) &_robord_matplus, 2},
     {"_robord_mmult", (DL_FUNC) &_robord_mmult, 2},

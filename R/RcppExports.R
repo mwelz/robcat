@@ -5,8 +5,16 @@ pnorm_right <- function(x) {
     .Call(`_robord_pnorm_right`, x)
 }
 
-celltest_cpp <- function(rho, thresX, thresY, Kx, Ky, probs, f, sigma, N) {
-    .Call(`_robord_celltest_cpp`, rho, thresX, thresY, Kx, Ky, probs, f, sigma, N)
+pval_twosided <- function(z) {
+    .Call(`_robord_pval_twosided`, z)
+}
+
+pval_right <- function(z) {
+    .Call(`_robord_pval_right`, z)
+}
+
+celltest_cpp <- function(rho, thresX, thresY, Kx, Ky, probs, f, sigma, N, twosided) {
+    .Call(`_robord_celltest_cpp`, rho, thresX, thresY, Kx, Ky, probs, f, sigma, N, twosided)
 }
 
 outer_vec <- function(v) {
