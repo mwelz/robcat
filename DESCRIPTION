@@ -15,6 +15,6 @@ Description: One paragraph description of what the package does as one or more f
 License: GPL (>= 2)
 Encoding: UTF-8
 Depends: ggplot2
-Imports: Rcpp (>= 1.0.10), stats, mvtnorm
+Imports: Rcpp (>= 1.0.10), stats, mvtnorm, stringr
 LinkingTo: Rcpp
 RoxygenNote: 7.2.1

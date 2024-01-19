@@ -4,10 +4,12 @@
 \alias{plot.robpolycor}
 \title{Plot method for class "polycor"}
 \usage{
-\method{plot}{robpolycor}(x, ...)
+\method{plot}{robpolycor}(x, cutoff = stats::qnorm(0.001, lower.tail = FALSE), ...)
 }
 \arguments{
 \item{x}{object of class \code{polycor}}
+
+\item{cutoff}{cutoff beyond which a Pearson residual is classified as outlying}
 
 \item{...}{additional parameters to be passed down}
 }
