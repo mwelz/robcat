@@ -54,7 +54,6 @@ plot.robpolycor <- function(x, cutoff = stats::qnorm(0.001, lower.tail = FALSE),
                              size = Frequency)) +
     xlab("Y") + ylab("X") +
     scale_y_discrete(limits = rev) + # flip y-axis
-    scale_x_discrete(limits = rev) + # flip x-axis
     guides(size = guide_legend(order = 1, title = "Relative\nFrequency"),
            color  = guide_colorbar(order = 2, title = titlecolor), 
            fill = guide_legend(order = 3, title = "Poor\nFit")) 
