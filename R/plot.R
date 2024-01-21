@@ -32,8 +32,10 @@ plot.robpolycor <- function(x, cutoff = stats::qnorm(0.001, lower.tail = FALSE),
   outlier_bool <- df$Residual > cutoff
   
   # prepare data frame
-  df$x <- factor(df$x, levels = seq_len(Kx))
-  df$y <- factor(df$y, levels = rev(seq_len(Ky)))
+  Xseq <- rev(seq_len(Kx))
+  Yseq <- seq_len(Ky)
+  df$x <- factor(df$x, levels = Xseq)
+  df$y <- factor(df$y, levels = Yseq)
   df$Outlier <- paste0("PR > ", round(cutoff, 2))
   df$Outlier[df$Residual <= cutoff] <- NA 
   titlecolor <- paste0("Pearson\nResidual", ifelse(any(outlier_bool), "\n(PR)", ""))
@@ -53,7 +55,8 @@ plot.robpolycor <- function(x, cutoff = stats::qnorm(0.001, lower.tail = FALSE),
                              color = Residual, 
                              size = Frequency)) +
     xlab("Y") + ylab("X") +
-    scale_y_discrete(limits = rev) + # flip y-axis
+    scale_y_discrete(limits = as.character(Xseq)) + # flip y-axis
+    scale_x_discrete(limits = as.character(Yseq)) +
     guides(size = guide_legend(order = 1, title = "Relative\nFrequency"),
            color  = guide_colorbar(order = 2, title = titlecolor), 
            fill = guide_legend(order = 3, title = "Poor\nFit")) 
