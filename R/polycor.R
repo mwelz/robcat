@@ -110,30 +110,19 @@ polycor_variance_mle <- function(theta, Kx, Ky, N)
 
 # main functionality for polychoric correlation
 polycor_fast <- 
-  function(x = NULL, 
-           y = NULL,
+  function(f, 
            Kx, Ky,
            c1, c2,
+           N,
+           init,
            method = "Nelder-Mead",
            tol = 0.001,
-           init = c(0, init_thresholds(Kx), init_thresholds(Ky)), 
            constrained = TRUE,
-           f = NULL,
-           variance = FALSE, # compute variance?
-           N = length(x),
-           chisq = FALSE) 
+           variance = FALSE) 
 {
   K <- Kx * Ky
   logc1p1 <- log(c1) + 1.0
   logc2p1 <- log(c2) + 1.0
-  
-  # relative frequencies
-  if(is.null(f))
-  {
-    f. <-  fhat(x = x, y = y, Kx = Kx, Ky = Ky)
-  } else{
-    f. <- f
-  }
   
   ## local functions for optim
   # theta is a vector of dimension (1 + (Kx-1) + (Ky-1)) = Kx+Ky-1
@@ -148,7 +137,7 @@ polycor_fast <-
     rho <- theta[1]
     thresX <- c(-Inf, theta[idxX], Inf) # first and last thresholds are fixed to be \mp Inf
     thresY <- c(-Inf, theta[idxY], Inf) # first and last thresholds are fixed to be \mp Inf
-    objective_cpp_fast(rho = rho, f = f.,
+    objective_cpp_fast(rho = rho, f = f,
                        thresX = thresX, thresY = thresY, 
                        c1 = c1, c2 = c2,
                        Kx = Kx, Ky = Ky, K = K, 
@@ -191,13 +180,13 @@ polycor_fast <-
                                Kx = Kx, Ky = Ky)
   
   ## calculate pearson residuals
-  pearson <- f. / probs
+  pearson <- f / probs
   
   ## if requested, estimate covariance matrix
   if(variance)
   {
     tmp <- polycor_variance(theta = thetahat, c1 = c1, c2 = c2,
-                            Kx = Kx, Ky = Ky, f = f., N = N)
+                            Kx = Kx, Ky = Ky, f = f, N = N)
     stderr <- sqrt(diag(tmp$variance))
     Sigma  <- tmp$Sigma
     
@@ -207,6 +196,8 @@ polycor_fast <-
   }
   
   ## perform chisq test for bivariate normality
+  chisq <- FALSE # TODO: this test needs to be implemented also for contingency tables, so do not yet make it accessible
+  x <- y <- NULL # to avoid a warning in R CMD check 
   if(chisq)
   {
     chisqtest <- chisq_test(x = x, y = y, 
@@ -225,7 +216,7 @@ polycor_fast <-
          sigma = Sigma,
          residuals = vec2tab(pearson, Kx = Kx, Ky = Ky),
          probs = vec2tab(probs, Kx = Kx, Ky = Ky),
-         f = vec2tab(f., Kx = Kx, Ky = Ky),
+         f = vec2tab(f, Kx = Kx, Ky = Ky),
          chisq = chisq, 
          df = df,
          pval = pval,
@@ -239,17 +230,14 @@ polycor_fast <-
 
 #' Robust estimation of polychoric correlation coefficient
 #' 
-#' @param x vector of integer-valued responses to first item
-#' @param y vector of integer-valued responses to second item
-#' @param c tuning constant that governs robustness
-#' @param Kx number of response options in first item (defaults to \code{max(x)})
-#' @param Ky number of response options in second item (defaults to \code{max(y)})
+#' @param x vector of integer-valued responses to first item or contingency table (a \code{table} object)
+#' @param y vector of integer-valued responses to second item; only required if \code{x} is not a contingency table 
+#' @param c tuning constant that governs robustness; eafults to 1.6
 #' @param variance shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}
-#' @param method numerical optimization method; default is Nelder-Mead
+#' @param method numerical optimization method
 #' @param constrained shall strict monotonicity of constraints be explicitly enforced by linear constraints? 
 #' @param tol tolerance in numerical optimization
 #' @param init initialization of numerical optimization. Default is neutral
-#' @param chisq shall a test for bivariate normality of the latent variables be performed? Default is \code{FALSE}
 #'
 #' @return 
 #' A list with the following components. 
@@ -262,64 +250,67 @@ polycor_fast <-
 #'   \item{\code{optim}}{Object of class \code{optim}}
 #' }
 #' @export
-polycor <- function(x, y, c, 
-                    Kx = max(x),
-                    Ky = max(y),
+polycor <- function(x, y = NULL, c = 1.6, 
                     variance = TRUE,
-                    method = "Nelder-Mead",
                     constrained = TRUE,
+                    method = ifelse(constrained, "Nelder-Mead", "L-BFGS-B"),
                     tol = 0.001,
-                    init = c(0, init_thresholds(Kx), init_thresholds(Ky)),
-                    chisq = FALSE)
+                    init = initialize_param(x, y))
 {
-  N <- length(x)
-  stopifnot(N == length(y))
   stopifnot(c >= 1)
+  if(is.table(x))
+  {
+    inputs <- input_table(x = x, y = y)
+  } else
+  {
+    inputs <- input_vector(x = x, y = y)
+  }
   
-  polycor_fast(x = x, y = y, Kx = Kx, Ky = Ky, c1 = 0.0, c2 = c, 
+  polycor_fast(f = inputs$f, Kx = inputs$Kx, Ky = inputs$Ky, N = inputs$N,
+               c1 = 0.0, c2 = c, 
                method = method, tol = tol, constrained = constrained,
-               init = init, f = NULL, 
-               variance = variance, N = N, chisq = chisq)
+               init = init, 
+               variance = variance)
 }
 
 
 #' Maximum likelihood estimation of polychoric correlation coefficient
 #' 
-#' @param x vector of integer-valued responses to first item
-#' @param y vector of integer-valued responses to second item
-#' @param Kx number of response options in first item (defaults to \code{max(x)})
-#' @param Ky number of response options in second item (defaults to \code{max(y)})
+#' @param x vector of integer-valued responses to first item or contingency table (a \code{table} object)
+#' @param y vector of integer-valued responses to second item; only required if \code{x} is not a contingency table 
 #' @param variance shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}
 #' @param method numerical optimization method; default is Nelder-Mead
 #' @param constrained shall strict monotonicity of constraints be explicitly enforced by linear constraints? 
 #' @param tol tolerance in numerical optimization
 #' @param init initialization of numerical optimization. Default is neutral
-#' @param chisq shall a test for bivariate normality of the latent variables be performed? Default is \code{FALSE}
 #' @export
-polycor_mle <- function(x, y, 
-                        Kx = max(x),
-                        Ky = max(y),
+polycor_mle <- function(x, y = NULL, 
                         variance = TRUE,
-                        method = "Nelder-Mead",
                         constrained = TRUE,
+                        method = ifelse(constrained, "Nelder-Mead", "L-BFGS-B"),
                         tol = 0.001,
-                        init = c(0, init_thresholds(Kx), init_thresholds(Ky)),
-                        chisq = FALSE)
+                        init = initialize_param(x, y))
 {
-  N <- length(x)
-  stopifnot(N == length(y))
+  if(is.table(x))
+  {
+    inputs <- input_table(x = x, y = y)
+  } else
+  {
+    inputs <- input_vector(x = x, y = y)
+  }
   
   obj <- 
-    polycor_fast(x = x, y = y, Kx = Kx, Ky = Ky, c1 = 0.0, c2 = Inf, 
+    polycor_fast(f = inputs$f, Kx = inputs$Kx, Ky = inputs$Ky, N = inputs$N,
+                 c1 = 0.0, c2 = Inf, 
                  method = method, tol = tol, constrained = constrained,
-                 init = init, f = NULL,
-                 variance = FALSE, N = N, chisq = chisq)
+                 init = init, 
+                 variance = FALSE)
   
   # if variance requested, calculate it based on fisher information
   if(variance)
   {
     tmp <- 
-      polycor_variance_mle(theta = obj$thetahat, Kx = Kx, Ky = Ky, N = N)
+      polycor_variance_mle(theta = obj$thetahat, Kx = inputs$Kx, Ky = inputs$Ky, N = inputs$N)
     obj$stderr <- sqrt(diag(tmp$variance))
     obj$sigma <- tmp$Sigma
   } 

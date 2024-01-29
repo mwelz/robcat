@@ -5,15 +5,32 @@ get_thresholds <- function(K)
 } # FUN
 
 
-#' Initialize thresholds for K answer categories
-#' @param K number of answer categories
-#' @export
+# Initialize thresholds for K answer categories
 init_thresholds <- function(K)
 {
   tmp <- get_thresholds(K)
-  out <- tmp[-c(1, K+1)] # eliminiate the infinite fixed values
+  out <- tmp[-c(1, K+1)] # eliminate the infinite fixed values
   out
 } # FUN
+
+
+#' neutral initialization of starting values
+#' @param x vector of integer-valued responses to first item or contingency table (a \code{table} object)
+#' @param y vector of integer-valued responses to second item; only required if \code{x} is not a contingency table 
+#' @export
+initialize_param <- function(x, y)
+{
+  if(is.table(x))
+  {
+    Kx <- nrow(x)
+    Ky <- ncol(x)
+  } else
+  {
+    Kx <- max(x, na.rm = TRUE)
+    Ky <- max(y, na.rm = TRUE)
+  }
+  c(0, init_thresholds(Kx), init_thresholds(Ky))
+}
 
 
 # get discretized versions of a latent variable, governed by the thresholds

@@ -6,37 +6,28 @@
 \usage{
 polycor_mle(
   x,
-  y,
-  Kx = max(x),
-  Ky = max(y),
+  y = NULL,
   variance = TRUE,
-  method = "Nelder-Mead",
   constrained = TRUE,
+  method = ifelse(constrained, "Nelder-Mead", "L-BFGS-B"),
   tol = 0.001,
-  init = c(0, init_thresholds(Kx), init_thresholds(Ky)),
-  chisq = FALSE
+  init = initialize_param(x, y)
 )
 }
 \arguments{
-\item{x}{vector of integer-valued responses to first item}
+\item{x}{vector of integer-valued responses to first item or contingency table (a \code{table} object)}
 
-\item{y}{vector of integer-valued responses to second item}
-
-\item{Kx}{number of response options in first item (defaults to \code{max(x)})}
-
-\item{Ky}{number of response options in second item (defaults to \code{max(y)})}
+\item{y}{vector of integer-valued responses to second item; only required if \code{x} is not a contingency table}
 
 \item{variance}{shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}}
 
-\item{method}{numerical optimization method; default is Nelder-Mead}
-
 \item{constrained}{shall strict monotonicity of constraints be explicitly enforced by linear constraints?}
+
+\item{method}{numerical optimization method; default is Nelder-Mead}
 
 \item{tol}{tolerance in numerical optimization}
 
 \item{init}{initialization of numerical optimization. Default is neutral}
-
-\item{chisq}{shall a test for bivariate normality of the latent variables be performed? Default is \code{FALSE}}
 }
 \description{
 Maximum likelihood estimation of polychoric correlation coefficient
