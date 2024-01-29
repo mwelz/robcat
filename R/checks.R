@@ -4,10 +4,11 @@ check_NA <- function(x)
   if(any(is.na(x))) stop("Missing values detected in supplied data")
 }
 
-is_integer <- function(x)
+is_numeric <- function(x)
 {
   if(!is.vector(x)) stop("Responses must be supplied as vector or contingency table")
-  if(!is.integer(x)) stop("Responses must be integer-valued for now")
+  if(!is.numeric(x)) stop("Responses must be numeric for now")
+  if(!all(x %% 1 == 0)) stop("Responses must be integer-valued for now")
 }
 
 ## check if support of x is in {1,2,...,K}
@@ -37,7 +38,7 @@ input_vector <- function(x, y)
 {
   if(is.null(y)) stop("Since x is not a contingency table, you must also pass responses to the second item in y")
   check_NA(x) ; check_NA(y)
-  is_integer(x); is_integer(y)
+  is_numeric(x); is_numeric(y)
   N <- length(x)
   if(N != length(y)) stop("x and y must be of same length")
   Kx <- max(x)
