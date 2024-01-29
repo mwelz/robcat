@@ -70,7 +70,8 @@ plot_truncated <- function(resid, freq, Kx, Ky, cutoff)
   # https://stackoverflow.com/a/9812648
   p <- 
     ggplot() +
-    scale_color_gradient("Residual", low = "lightblue", high = "darkblue")+
+    theme_bw() +
+    scale_color_gradient2("Residual", low = "lightblue", midpoint = 1, mid = "gray", high = "blue")+
     geom_point(data = subset(df, outlier_bool), 
                mapping = aes(x = y, y = x, 
                              fill = stringr::str_wrap(Outlier, 3),
