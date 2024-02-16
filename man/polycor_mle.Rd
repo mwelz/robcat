@@ -21,7 +21,7 @@ polycor_mle(
 
 \item{variance}{shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}}
 
-\item{constrained}{shall strict monotonicity of constraints be explicitly enforced by linear constraints?}
+\item{constrained}{shall strict monotonicity of thresholds be explicitly enforced by linear constraints?}
 
 \item{method}{numerical optimization method; default is Nelder-Mead}
 
