@@ -232,10 +232,10 @@ polycor_fast <-
 #' 
 #' @param x vector of integer-valued responses to first item or contingency table (a \code{table} object)
 #' @param y vector of integer-valued responses to second item; only required if \code{x} is not a contingency table 
-#' @param c tuning constant that governs robustness; eafults to 1.6
+#' @param c tuning constant that governs robustness; defaults to 1.6
 #' @param variance shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}
 #' @param method numerical optimization method
-#' @param constrained shall strict monotonicity of constraints be explicitly enforced by linear constraints? 
+#' @param constrained shall strict monotonicity of thresholds be explicitly enforced by linear constraints? 
 #' @param tol tolerance in numerical optimization
 #' @param init initialization of numerical optimization. Default is neutral
 #'
@@ -280,7 +280,7 @@ polycor <- function(x, y = NULL, c = 1.6,
 #' @param y vector of integer-valued responses to second item; only required if \code{x} is not a contingency table 
 #' @param variance shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}
 #' @param method numerical optimization method; default is Nelder-Mead
-#' @param constrained shall strict monotonicity of constraints be explicitly enforced by linear constraints? 
+#' @param constrained shall strict monotonicity of thresholds be explicitly enforced by linear constraints? 
 #' @param tol tolerance in numerical optimization
 #' @param init initialization of numerical optimization. Default is neutral
 #' @export

@@ -20,11 +20,11 @@ polycor(
 
 \item{y}{vector of integer-valued responses to second item; only required if \code{x} is not a contingency table}
 
-\item{c}{tuning constant that governs robustness; eafults to 1.6}
+\item{c}{tuning constant that governs robustness; defaults to 1.6}
 
 \item{variance}{shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}}
 
-\item{constrained}{shall strict monotonicity of constraints be explicitly enforced by linear constraints?}
+\item{constrained}{shall strict monotonicity of thresholds be explicitly enforced by linear constraints?}
 
 \item{method}{numerical optimization method}
 
