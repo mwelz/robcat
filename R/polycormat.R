@@ -38,11 +38,14 @@ pairwise_polycor <- function(polycor_fn, unique_pairs_ls, data, num_cores, paral
         
         ## get responses to the item pair
         pair <- unique_pairs_ls[[i]]
+        # system(sprintf('echo "%s\n"', paste0("start ", pair[1], " ", pair[2])))
         x <- data[, pair[1L]]
         y <- data[, pair[2L]]
         
         ## run pairwise polycor
-        polycor_fn(x = x, y = y)
+        pp <- polycor_fn(x = x, y = y)
+        # system(sprintf('echo "%s\n"', paste0("finished ", pair[1], " ", pair[2])))
+        return(pp)
       })
   } else
   {
@@ -55,7 +58,8 @@ pairwise_polycor <- function(polycor_fn, unique_pairs_ls, data, num_cores, paral
         y <- data[, pair[2L]]
         
         ## run pairwise polycor
-        polycor_fn(x = x, y = y)
+        pp <- polycor_fn(x = x, y = y)
+        return(pp)
       })
   } # IF
  
@@ -89,8 +93,11 @@ get_correlations <- function(data, c, variance, constrained, method, tol, num_co
   }
   
   ## get the pairwise correlations in list form
-  pairwise_polycor(polycor_fn = polycor_fn, unique_pairs_ls = unique_pairs_ls, 
-                   data = data, num_cores = num_cores, parallel = parallel)
+  out <- 
+    pairwise_polycor(polycor_fn = polycor_fn, unique_pairs_ls = unique_pairs_ls, 
+                     data = data, num_cores = num_cores, parallel = parallel)
+  return(out)
+  
 } # FUN
 
 
