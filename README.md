@@ -1,5 +1,13 @@
 # robcat: Robust Categorical Data Analysis
 
+To install the latest development version from GitHub, you can pull this repository and install it from the `R` command line via
+```R
+install.packages("devtools")
+devtools::install_github("mwelz/robcat")
+```
+If you already have the package `devtools` installed, you can skip the first line.
+
+
 ## Example of robust estimation of polychoric correlation coefficient
 
 ### Generate simulated data
