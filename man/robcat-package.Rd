@@ -1,9 +1,9 @@
-\name{robord-package}
-\alias{robord-package}
-\alias{robord}
+\name{robcat-package}
+\alias{robcat-package}
+\alias{robcat}
 \docType{package}
 \title{
-  Robust Ordinal Data Analysis
+  Robust Categorical Data Analysis
 }
 \description{
   A more detailed description of what the package does. A length

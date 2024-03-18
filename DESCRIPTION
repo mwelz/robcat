@@ -1,6 +1,6 @@
-Package: robord
+Package: robcat
 Type: Package
-Title: Robust Ordinal Data Analysis
+Title: Robust Categorical Data Analysis
 Version: 0.0.1
 Date: 2024-01-10
 Authors@R: 

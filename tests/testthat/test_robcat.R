@@ -6,7 +6,7 @@ thres <- c(-Inf, -1.5, -1, -0.25, 0.75, Inf)
 latent <- mvtnorm::rmvnorm(N, sigma = diag(p))
 data <- sapply(seq_len(p), function(j) as.integer(cut(latent[,j], thres)))
 
-mat_par <- robord::polycormat(data, parallel = FALSE, constrained = FALSE)
+mat_par <- robcat::polycormat(data, parallel = FALSE, constrained = FALSE)
 san1 <- polycor(data[,2], data[,1], constrained = FALSE)
 san2 <- polycor(data[,3], data[,1], constrained = FALSE)
 san3 <- polycor(data[,3], data[,2], constrained = FALSE)

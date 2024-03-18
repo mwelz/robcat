@@ -1,4 +1,4 @@
-library("robord")
+library("robcat")
 
 ## 5 answer categories each, define latent thresholds as follows
 Kx <- Ky <- 5

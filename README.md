@@ -1,11 +1,11 @@
-# robord: Robust Ordinal Data Analysis
+# robcat: Robust Categorical Data Analysis
 
 ## Example of robust estimation of polychoric correlation coefficient
 
 ### Generate simulated data
 
 ```R
-library("robord")
+library("robcat")
 
 ## 5 answer categories each, define latent thresholds as follows
 Kx <- Ky <- 5

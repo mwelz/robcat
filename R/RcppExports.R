@@ -2,238 +2,238 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 pnorm_tail <- function(x, lowertail) {
-    .Call(`_robord_pnorm_tail`, x, lowertail)
+    .Call(`_robcat_pnorm_tail`, x, lowertail)
 }
 
 pval_twosided <- function(z) {
-    .Call(`_robord_pval_twosided`, z)
+    .Call(`_robcat_pval_twosided`, z)
 }
 
 pval_left <- function(z) {
-    .Call(`_robord_pval_left`, z)
+    .Call(`_robcat_pval_left`, z)
 }
 
 celltest_cpp <- function(rho, thresX, thresY, Kx, Ky, probs, f, sigma, N, twosided) {
-    .Call(`_robord_celltest_cpp`, rho, thresX, thresY, Kx, Ky, probs, f, sigma, N, twosided)
+    .Call(`_robcat_celltest_cpp`, rho, thresX, thresY, Kx, Ky, probs, f, sigma, N, twosided)
 }
 
 outer_vec <- function(v) {
-    .Call(`_robord_outer_vec`, v)
+    .Call(`_robcat_outer_vec`, v)
 }
 
 matplus <- function(A, B) {
-    .Call(`_robord_matplus`, A, B)
+    .Call(`_robcat_matplus`, A, B)
 }
 
 mmult <- function(A, B) {
-    .Call(`_robord_mmult`, A, B)
+    .Call(`_robcat_mmult`, A, B)
 }
 
 inv <- function(A) {
-    .Call(`_robord_inv`, A)
+    .Call(`_robcat_inv`, A)
 }
 
 mat2vec <- function(v) {
-    .Call(`_robord_mat2vec`, v)
+    .Call(`_robcat_mat2vec`, v)
 }
 
 fhat <- function(x, y, Kx, Ky) {
-    .Call(`_robord_fhat`, x, y, Kx, Ky)
+    .Call(`_robcat_fhat`, x, y, Kx, Ky)
 }
 
 make_cormat <- function(rho) {
-    .Call(`_robord_make_cormat`, rho)
+    .Call(`_robcat_make_cormat`, rho)
 }
 
 any_sug <- function(x) {
-    .Call(`_robord_any_sug`, x)
+    .Call(`_robcat_any_sug`, x)
 }
 
 pmvnorm_cpp <- function(lower, upper, mean, corr) {
-    .Call(`_robord_pmvnorm_cpp`, lower, upper, mean, corr)
+    .Call(`_robcat_pmvnorm_cpp`, lower, upper, mean, corr)
 }
 
 pk_theta <- function(x, y, cormat, thresX, thresY, mean) {
-    .Call(`_robord_pk_theta`, x, y, cormat, thresX, thresY, mean)
+    .Call(`_robcat_pk_theta`, x, y, cormat, thresX, thresY, mean)
 }
 
 pk_theta_contam <- function(x, y, sigma, thresX, thresY, mean) {
-    .Call(`_robord_pk_theta_contam`, x, y, sigma, thresX, thresY, mean)
+    .Call(`_robcat_pk_theta_contam`, x, y, sigma, thresX, thresY, mean)
 }
 
 rho_fun_fast <- function(x, c1, c2, logc1p1, logc2p1) {
-    .Call(`_robord_rho_fun_fast`, x, c1, c2, logc1p1, logc2p1)
+    .Call(`_robcat_rho_fun_fast`, x, c1, c2, logc1p1, logc2p1)
 }
 
 rho_fun_cpp <- function(x, c1, c2) {
-    .Call(`_robord_rho_fun_cpp`, x, c1, c2)
+    .Call(`_robcat_rho_fun_cpp`, x, c1, c2)
 }
 
 objective_cpp_fast <- function(rho, f, thresX, thresY, c1, c2, Kx, Ky, K, logc1p1, logc2p1, mean, feasible) {
-    .Call(`_robord_objective_cpp_fast`, rho, f, thresX, thresY, c1, c2, Kx, Ky, K, logc1p1, logc2p1, mean, feasible)
+    .Call(`_robcat_objective_cpp_fast`, rho, f, thresX, thresY, c1, c2, Kx, Ky, K, logc1p1, logc2p1, mean, feasible)
 }
 
 objective_cpp <- function(rho, f, thresX, thresY, c1, c2, mean, tol = 0.001) {
-    .Call(`_robord_objective_cpp`, rho, f, thresX, thresY, c1, c2, mean, tol)
+    .Call(`_robcat_objective_cpp`, rho, f, thresX, thresY, c1, c2, mean, tol)
 }
 
 feps_cpp <- function(thresX, thresY, eps, covmat_true, covmat_contam, mean_true, mean_contam) {
-    .Call(`_robord_feps_cpp`, thresX, thresY, eps, covmat_true, covmat_contam, mean_true, mean_contam)
+    .Call(`_robcat_feps_cpp`, thresX, thresY, eps, covmat_true, covmat_contam, mean_true, mean_contam)
 }
 
 model_probabilities <- function(rho, thresX, thresY, Kx, Ky) {
-    .Call(`_robord_model_probabilities`, rho, thresX, thresY, Kx, Ky)
+    .Call(`_robcat_model_probabilities`, rho, thresX, thresY, Kx, Ky)
 }
 
 is_infinite_pos <- function(x) {
-    .Call(`_robord_is_infinite_pos`, x)
+    .Call(`_robcat_is_infinite_pos`, x)
 }
 
 is_infinite_neg <- function(x) {
-    .Call(`_robord_is_infinite_neg`, x)
+    .Call(`_robcat_is_infinite_neg`, x)
 }
 
 is_infinite <- function(x) {
-    .Call(`_robord_is_infinite`, x)
+    .Call(`_robcat_is_infinite`, x)
 }
 
 dnorm <- function(x) {
-    .Call(`_robord_dnorm`, x)
+    .Call(`_robcat_dnorm`, x)
 }
 
 pnorm <- function(x) {
-    .Call(`_robord_pnorm`, x)
+    .Call(`_robcat_pnorm`, x)
 }
 
 dnorm2 <- function(x, y, rho) {
-    .Call(`_robord_dnorm2`, x, y, rho)
+    .Call(`_robcat_dnorm2`, x, y, rho)
 }
 
 F_prime_rho <- function(x, y, rho) {
-    .Call(`_robord_F_prime_rho`, x, y, rho)
+    .Call(`_robcat_F_prime_rho`, x, y, rho)
 }
 
 F_prime_thres <- function(thres_variable, thres_fixed, rho) {
-    .Call(`_robord_F_prime_thres`, thres_variable, thres_fixed, rho)
+    .Call(`_robcat_F_prime_thres`, thres_variable, thres_fixed, rho)
 }
 
 pk_prime_thresX <- function(x, y, thresX, thresY, rho, Kx) {
-    .Call(`_robord_pk_prime_thresX`, x, y, thresX, thresY, rho, Kx)
+    .Call(`_robcat_pk_prime_thresX`, x, y, thresX, thresY, rho, Kx)
 }
 
 pk_prime_thresY <- function(x, y, thresX, thresY, rho, Ky) {
-    .Call(`_robord_pk_prime_thresY`, x, y, thresX, thresY, rho, Ky)
+    .Call(`_robcat_pk_prime_thresY`, x, y, thresX, thresY, rho, Ky)
 }
 
 pk_prime_rho <- function(x, y, thresX, thresY, rho) {
-    .Call(`_robord_pk_prime_rho`, x, y, thresX, thresY, rho)
+    .Call(`_robcat_pk_prime_rho`, x, y, thresX, thresY, rho)
 }
 
 pk_prime_theta <- function(x, y, thresX, thresY, rho, Kx, Ky) {
-    .Call(`_robord_pk_prime_theta`, x, y, thresX, thresY, rho, Kx, Ky)
+    .Call(`_robcat_pk_prime_theta`, x, y, thresX, thresY, rho, Kx, Ky)
 }
 
 dnorm1_prime <- function(x) {
-    .Call(`_robord_dnorm1_prime`, x)
+    .Call(`_robcat_dnorm1_prime`, x)
 }
 
 dnorm2_prime_rho <- function(x, y, rho) {
-    .Call(`_robord_dnorm2_prime_rho`, x, y, rho)
+    .Call(`_robcat_dnorm2_prime_rho`, x, y, rho)
 }
 
 pnorm2_prime2_x_x <- function(variable, fixed, rho) {
-    .Call(`_robord_pnorm2_prime2_x_x`, variable, fixed, rho)
+    .Call(`_robcat_pnorm2_prime2_x_x`, variable, fixed, rho)
 }
 
 pnorm2_prime2_x_rho <- function(variable, fixed, rho) {
-    .Call(`_robord_pnorm2_prime2_x_rho`, variable, fixed, rho)
+    .Call(`_robcat_pnorm2_prime2_x_rho`, variable, fixed, rho)
 }
 
 pnorm2_prime2_x_y <- function(x, y, rho) {
-    .Call(`_robord_pnorm2_prime2_x_y`, x, y, rho)
+    .Call(`_robcat_pnorm2_prime2_x_y`, x, y, rho)
 }
 
 pk_prime2_rho2 <- function(x, y, thresX, thresY, rho) {
-    .Call(`_robord_pk_prime2_rho2`, x, y, thresX, thresY, rho)
+    .Call(`_robcat_pk_prime2_rho2`, x, y, thresX, thresY, rho)
 }
 
 pk_prime2_thresX_rho <- function(x, y, k, thresX, thresY, rho) {
-    .Call(`_robord_pk_prime2_thresX_rho`, x, y, k, thresX, thresY, rho)
+    .Call(`_robcat_pk_prime2_thresX_rho`, x, y, k, thresX, thresY, rho)
 }
 
 pk_prime2_thresY_rho <- function(x, y, k, thresX, thresY, rho) {
-    .Call(`_robord_pk_prime2_thresY_rho`, x, y, k, thresX, thresY, rho)
+    .Call(`_robcat_pk_prime2_thresY_rho`, x, y, k, thresX, thresY, rho)
 }
 
 pk_prime2_thresX2 <- function(x, y, k, thresX, thresY, rho) {
-    .Call(`_robord_pk_prime2_thresX2`, x, y, k, thresX, thresY, rho)
+    .Call(`_robcat_pk_prime2_thresX2`, x, y, k, thresX, thresY, rho)
 }
 
 pk_prime2_thresY2 <- function(x, y, k, thresX, thresY, rho) {
-    .Call(`_robord_pk_prime2_thresY2`, x, y, k, thresX, thresY, rho)
+    .Call(`_robcat_pk_prime2_thresY2`, x, y, k, thresX, thresY, rho)
 }
 
 pk_prime2_thresY_kl <- function(x, y, k, l, thresX, thresY, rho) {
-    .Call(`_robord_pk_prime2_thresY_kl`, x, y, k, l, thresX, thresY, rho)
+    .Call(`_robcat_pk_prime2_thresY_kl`, x, y, k, l, thresX, thresY, rho)
 }
 
 pk_prime2_thresX_kl <- function(x, y, k, l, thresX, thresY, rho) {
-    .Call(`_robord_pk_prime2_thresX_kl`, x, y, k, l, thresX, thresY, rho)
+    .Call(`_robcat_pk_prime2_thresX_kl`, x, y, k, l, thresX, thresY, rho)
 }
 
 pk_prime2_thresXk_thresYl <- function(x, y, k, l, thresX, thresY, rho) {
-    .Call(`_robord_pk_prime2_thresXk_thresYl`, x, y, k, l, thresX, thresY, rho)
+    .Call(`_robcat_pk_prime2_thresXk_thresYl`, x, y, k, l, thresX, thresY, rho)
 }
 
 get_indices_thresX <- function(Kx) {
-    .Call(`_robord_get_indices_thresX`, Kx)
+    .Call(`_robcat_get_indices_thresX`, Kx)
 }
 
 get_indices_thresY <- function(Kx, Ky) {
-    .Call(`_robord_get_indices_thresY`, Kx, Ky)
+    .Call(`_robcat_get_indices_thresY`, Kx, Ky)
 }
 
 get_indices_rho <- function() {
-    .Call(`_robord_get_indices_rho`)
+    .Call(`_robcat_get_indices_rho`)
 }
 
 is_in <- function(i, v) {
-    .Call(`_robord_is_in`, i, v)
+    .Call(`_robcat_is_in`, i, v)
 }
 
 to_a <- function(i) {
-    .Call(`_robord_to_a`, i)
+    .Call(`_robcat_to_a`, i)
 }
 
 pk_prime2_theta2 <- function(x, y, thresX, thresY, rho, Kx, Ky) {
-    .Call(`_robord_pk_prime2_theta2`, x, y, thresX, thresY, rho, Kx, Ky)
+    .Call(`_robcat_pk_prime2_theta2`, x, y, thresX, thresY, rho, Kx, Ky)
 }
 
 sk_theta <- function(x, y, thresX, thresY, rho, Kx, Ky) {
-    .Call(`_robord_sk_theta`, x, y, thresX, thresY, rho, Kx, Ky)
+    .Call(`_robcat_sk_theta`, x, y, thresX, thresY, rho, Kx, Ky)
 }
 
 w_fun <- function(x, c1, c2) {
-    .Call(`_robord_w_fun`, x, c1, c2)
+    .Call(`_robcat_w_fun`, x, c1, c2)
 }
 
 w_fun_prime <- function(x, c1, c2) {
-    .Call(`_robord_w_fun_prime`, x, c1, c2)
+    .Call(`_robcat_w_fun_prime`, x, c1, c2)
 }
 
 in_interval <- function(x, c1, c2) {
-    .Call(`_robord_in_interval`, x, c1, c2)
+    .Call(`_robcat_in_interval`, x, c1, c2)
 }
 
 get_MW <- function(rho, thresX, thresY, f, c1, c2, Kx, Ky) {
-    .Call(`_robord_get_MW`, rho, thresX, thresY, f, c1, c2, Kx, Ky)
+    .Call(`_robcat_get_MW`, rho, thresX, thresY, f, c1, c2, Kx, Ky)
 }
 
 get_fisher <- function(rho, thresX, thresY, Kx, Ky) {
-    .Call(`_robord_get_fisher`, rho, thresX, thresY, Kx, Ky)
+    .Call(`_robcat_get_fisher`, rho, thresX, thresY, Kx, Ky)
 }
 
 rcpp_hello_world <- function() {
-    .Call(`_robord_rcpp_hello_world`)
+    .Call(`_robcat_rcpp_hello_world`)
 }
 
