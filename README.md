@@ -1,5 +1,7 @@
 # robcat: Robust Categorical Data Analysis
 
+This package implements the methodology proposed in the working paper _Robust Estimation and Inference in Categorical Data_ by [Welz (2024)]( https://arxiv.org/abs/2403.11954).
+
 To install the latest development version from GitHub, you can pull this repository and install it from the `R` command line via
 ```R
 install.packages("devtools")
