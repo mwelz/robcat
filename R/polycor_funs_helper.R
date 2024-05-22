@@ -51,7 +51,7 @@ get_discretization <- function(thresholds, latent)
 
 # get the matrix and vector that enforce the linear constraints in stats::constrOptim()
 constrOptim_constraints <- function(Kx, Ky, 
-                                    tol_rho = 0.001,
+                                    maxcor = 0.999,
                                     tol_thresholds = 0.001)
 {
   Km1 <- Kx + Ky - 1L
@@ -72,8 +72,8 @@ constrOptim_constraints <- function(Kx, Ky,
   
   ### the C vector (ci in ?stats::constrOptim)
   C        <- rep(NA_real_, Km2)
-  C[1:2]   <- -(1.0 - tol_rho) # tolerance for \rho \in [-1,1]
-  C[3:Km2] <- tol_thresholds # tolerance for monotonicity of thresholds
+  C[1:2]   <- maxcor * (-1.0) # tolerance for \rho \in [-1,1]
+  C[3:Km2] <- tol_thresholds  # tolerance for monotonicity of thresholds
   
   return(list(ui = U, ci = C))
   

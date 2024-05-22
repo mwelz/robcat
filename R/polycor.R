@@ -1,16 +1,3 @@
-# don't forget that you must manually change the NAMESPACE file to register functions & methods!
-# TODO: allow for data table argument like in polycor package
-# TODO: use objective_cpp() in polycor function and merge tertracor() with polycor()
-# TODO: maybe profile to see where the bottlenecks are (prolly the integral)
-# Rcpp::as<T>();
-# This C++ package has an implementation of linearly constrained optimization. Ask AA if we're allowed to use header files of it (and if we even need it to begin with)
-# TODO: implement feps() function like in the old R code; requires that 'mean' can be passed to model probs function DONE
-# TODO: Ask AA if we can drop monotonicity constraint (like fox); I don't think we should
-# TODO: make polycor() handle classes that are empirically zero
-# perhaps implement MLE variance explicitly? (fisher-info-based?)
-# TODO: chi square test for bivariate normality (see here: https://github.com/cran/polycor/blob/abb5d7b2ecc08ff282f2ee9dfeb89bce051229d9/R/polychor.R#L116). Implemented it, but I'm not sure how sensible this test is because it relies on cell empirical counts which are contaminated if there are outliers (so problem is in empirics, not the robustly estimated probabilities)
-# TODO: ask AA how to incorporate inference when there is contamination: start with rho=0? correct sign?
-# table(x, y) / n == matrix(fhat(x,y),5,5,byrow = T): clever trick to recover cell names!
 
 ## chi square test for bivariate normality
 chisq_test <- function(x, y, theta, Kx, Ky)
@@ -116,7 +103,8 @@ polycor_fast <-
            N,
            init,
            method = "Nelder-Mead",
-           tol = 0.001,
+           maxcor = 0.999,
+           tol_thresholds = 0.01,
            constrained = TRUE,
            variance = FALSE) 
 {
@@ -131,7 +119,6 @@ polycor_fast <-
   # theta[(Kx+1):(Kx+Ky-1)] are Y-thresholds (increasing)
   idxX <- 2:Kx
   idxY <- (Kx+1):(Kx+Ky-1)
-  feasible <- 1.0 - tol
   fn <- function(theta)
   {
     rho <- theta[1]
@@ -143,13 +130,13 @@ polycor_fast <-
                        Kx = Kx, Ky = Ky, K = K, 
                        logc1p1 = logc1p1, logc2p1 = logc2p1,
                        mean = c(0.0, 0.0),
-                       feasible = feasible)
+                       maxcor = maxcor)
   }
   
   if(constrained)
   {
     ## the linear constraints
-    lincon <- constrOptim_constraints(Kx = Kx, Ky = Ky, tol_rho = tol, tol_thresholds = tol)
+    lincon <- constrOptim_constraints(Kx = Kx, Ky = Ky, maxcor = maxcor, tol_thresholds = tol_thresholds)
     
     ## linearly constrained optimization
     opt <-
@@ -164,8 +151,8 @@ polycor_fast <-
     ## without monotonicity constraints: runs faster, but less accurate
     opt <- 
       stats::optim(par = init, fn = fn, gr = NULL, 
-                   lower = c(-1.+tol, rep(-Inf, length(Kx+Ky-2))),
-                   upper = c(1.-tol, rep(Inf, length(Kx+Ky-2))), 
+                   lower = c(-maxcor, rep(-Inf, length(Kx+Ky-2))),
+                   upper = c(maxcor, rep(Inf, length(Kx+Ky-2))), 
                    hessian = FALSE, method = method)
   } # IF
   
@@ -236,7 +223,8 @@ polycor_fast <-
 #' @param variance shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}
 #' @param method numerical optimization method
 #' @param constrained shall strict monotonicity of thresholds be explicitly enforced by linear constraints? 
-#' @param tol tolerance in numerical optimization
+#' @param maxcor maximum absolute correlation (to insure numerical stability)
+#' @param tol_thresholds minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}
 #' @param init initialization of numerical optimization. Default is neutral
 #'
 #' @return 
@@ -254,7 +242,8 @@ polycor <- function(x, y = NULL, c = 1.6,
                     variance = TRUE,
                     constrained = TRUE,
                     method = ifelse(constrained, "Nelder-Mead", "L-BFGS-B"),
-                    tol = 0.001,
+                    maxcor = 0.999,
+                    tol_thresholds = 0.01,
                     init = initialize_param(x, y))
 {
   stopifnot(c >= 1)
@@ -268,7 +257,7 @@ polycor <- function(x, y = NULL, c = 1.6,
   
   polycor_fast(f = inputs$f, Kx = inputs$Kx, Ky = inputs$Ky, N = inputs$N,
                c1 = 0.0, c2 = c, 
-               method = method, tol = tol, constrained = constrained,
+               method = method, maxcor = maxcor, tol_thresholds = tol_thresholds, constrained = constrained,
                init = init, 
                variance = variance)
 }
@@ -281,14 +270,17 @@ polycor <- function(x, y = NULL, c = 1.6,
 #' @param variance shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}
 #' @param method numerical optimization method; default is Nelder-Mead
 #' @param constrained shall strict monotonicity of thresholds be explicitly enforced by linear constraints? 
-#' @param tol tolerance in numerical optimization
+#' @param maxcor maximum absolute correlation (to insure numerical stability)
+#' @param tol_thresholds minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}
 #' @param init initialization of numerical optimization. Default is neutral
+#' 
 #' @export
 polycor_mle <- function(x, y = NULL, 
                         variance = TRUE,
                         constrained = TRUE,
                         method = ifelse(constrained, "Nelder-Mead", "L-BFGS-B"),
-                        tol = 0.001,
+                        maxcor = 0.999,
+                        tol_thresholds = 0.01,
                         init = initialize_param(x, y))
 {
   if(is.table(x))
@@ -302,7 +294,7 @@ polycor_mle <- function(x, y = NULL,
   obj <- 
     polycor_fast(f = inputs$f, Kx = inputs$Kx, Ky = inputs$Ky, N = inputs$N,
                  c1 = 0.0, c2 = Inf, 
-                 method = method, tol = tol, constrained = constrained,
+                 method = method, maxcor = maxcor, tol_thresholds = tol_thresholds, constrained = constrained,
                  init = init, 
                  variance = FALSE)
   

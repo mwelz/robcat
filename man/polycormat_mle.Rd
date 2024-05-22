@@ -12,7 +12,8 @@ polycormat_mle(
   variance = TRUE,
   constrained = TRUE,
   method = ifelse(constrained, "Nelder-Mead", "L-BFGS-B"),
-  tol = 0.001
+  maxcor = 0.999,
+  tol_thresholds = 0.01
 )
 }
 \arguments{
@@ -30,7 +31,9 @@ polycormat_mle(
 
 \item{method}{numerical optimization method}
 
-\item{tol}{tolerance in numerical optimization}
+\item{maxcor}{maximum absolute correlation (to insure numerical stability)}
+
+\item{tol_thresholds}{minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}}
 }
 \description{
 Maximum likelihood estimation of polychoric correlation matrix

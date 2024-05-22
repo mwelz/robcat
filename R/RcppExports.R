@@ -69,12 +69,12 @@ rho_fun_cpp <- function(x, c1, c2) {
     .Call(`_robcat_rho_fun_cpp`, x, c1, c2)
 }
 
-objective_cpp_fast <- function(rho, f, thresX, thresY, c1, c2, Kx, Ky, K, logc1p1, logc2p1, mean, feasible) {
-    .Call(`_robcat_objective_cpp_fast`, rho, f, thresX, thresY, c1, c2, Kx, Ky, K, logc1p1, logc2p1, mean, feasible)
+objective_cpp_fast <- function(rho, f, thresX, thresY, c1, c2, Kx, Ky, K, logc1p1, logc2p1, mean, maxcor) {
+    .Call(`_robcat_objective_cpp_fast`, rho, f, thresX, thresY, c1, c2, Kx, Ky, K, logc1p1, logc2p1, mean, maxcor)
 }
 
-objective_cpp <- function(rho, f, thresX, thresY, c1, c2, mean, tol = 0.001) {
-    .Call(`_robcat_objective_cpp`, rho, f, thresX, thresY, c1, c2, mean, tol)
+objective_cpp <- function(rho, f, thresX, thresY, c1, c2, mean, maxcor = 0.999) {
+    .Call(`_robcat_objective_cpp`, rho, f, thresX, thresY, c1, c2, mean, maxcor)
 }
 
 feps_cpp <- function(thresX, thresY, eps, covmat_true, covmat_contam, mean_true, mean_contam) {

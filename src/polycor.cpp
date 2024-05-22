@@ -206,14 +206,14 @@ double objective_cpp_fast(
     double logc1p1, // = std::log(c1) + 1.0
     double logc2p1, // = std::log(c2) + 1.0
     NumericVector mean, // = {0,0}
-    double feasible) // = 1. - tol
+    double maxcor) // = 0.999
 {
   double OUT;
   NumericVector out(K);
   NumericVector probs(K);
   NumericMatrix cormat = make_cormat(rho);
   
-  if(rho < feasible * (-1) || rho > feasible )
+  if(rho < maxcor * (-1) || rho > maxcor )
   {
     OUT = 100000.; // TODO: come up with better way for implicit constraints
   } else
@@ -246,7 +246,7 @@ double objective_cpp_fast(
       out[f == 0] = 0;
       OUT = sum(out);
     } // IF penalization
-  } // IF feasible
+  } // IF maxcor
   
   return OUT;
 }
@@ -261,22 +261,21 @@ double objective_cpp(
     double c1,
     double c2,
     NumericVector mean, // = {0,0}
-    double tol = 0.001)
+    double maxcor = 0.999)
 {
   int Kx = thresX.length() - 1;
   int Ky = thresY.length() - 1;
   int K = Kx * Ky;
   double logc1p1 = std::log(c1) + 1.0;
   double logc2p1 = std::log(c2) + 1.0;
-  double feasible = 1.0 - tol;
-  
+
   double out = objective_cpp_fast(rho, f, 
                                   thresX, thresY,
                                   c1, c2,
                                   Kx, Ky, K,
                                   logc1p1, logc2p1, 
                                   mean,
-                                  feasible);
+                                  maxcor);
   return out;
 }
 

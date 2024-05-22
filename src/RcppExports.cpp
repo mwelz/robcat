@@ -232,8 +232,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // objective_cpp_fast
-double objective_cpp_fast(double rho, NumericVector f, NumericVector thresX, NumericVector thresY, double c1, double c2, int Kx, int Ky, int K, double logc1p1, double logc2p1, NumericVector mean, double feasible);
-RcppExport SEXP _robcat_objective_cpp_fast(SEXP rhoSEXP, SEXP fSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP c1SEXP, SEXP c2SEXP, SEXP KxSEXP, SEXP KySEXP, SEXP KSEXP, SEXP logc1p1SEXP, SEXP logc2p1SEXP, SEXP meanSEXP, SEXP feasibleSEXP) {
+double objective_cpp_fast(double rho, NumericVector f, NumericVector thresX, NumericVector thresY, double c1, double c2, int Kx, int Ky, int K, double logc1p1, double logc2p1, NumericVector mean, double maxcor);
+RcppExport SEXP _robcat_objective_cpp_fast(SEXP rhoSEXP, SEXP fSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP c1SEXP, SEXP c2SEXP, SEXP KxSEXP, SEXP KySEXP, SEXP KSEXP, SEXP logc1p1SEXP, SEXP logc2p1SEXP, SEXP meanSEXP, SEXP maxcorSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -249,14 +249,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type logc1p1(logc1p1SEXP);
     Rcpp::traits::input_parameter< double >::type logc2p1(logc2p1SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< double >::type feasible(feasibleSEXP);
-    rcpp_result_gen = Rcpp::wrap(objective_cpp_fast(rho, f, thresX, thresY, c1, c2, Kx, Ky, K, logc1p1, logc2p1, mean, feasible));
+    Rcpp::traits::input_parameter< double >::type maxcor(maxcorSEXP);
+    rcpp_result_gen = Rcpp::wrap(objective_cpp_fast(rho, f, thresX, thresY, c1, c2, Kx, Ky, K, logc1p1, logc2p1, mean, maxcor));
     return rcpp_result_gen;
 END_RCPP
 }
 // objective_cpp
-double objective_cpp(double rho, NumericVector f, NumericVector thresX, NumericVector thresY, double c1, double c2, NumericVector mean, double tol);
-RcppExport SEXP _robcat_objective_cpp(SEXP rhoSEXP, SEXP fSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP c1SEXP, SEXP c2SEXP, SEXP meanSEXP, SEXP tolSEXP) {
+double objective_cpp(double rho, NumericVector f, NumericVector thresX, NumericVector thresY, double c1, double c2, NumericVector mean, double maxcor);
+RcppExport SEXP _robcat_objective_cpp(SEXP rhoSEXP, SEXP fSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP c1SEXP, SEXP c2SEXP, SEXP meanSEXP, SEXP maxcorSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -267,8 +267,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type c1(c1SEXP);
     Rcpp::traits::input_parameter< double >::type c2(c2SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
-    rcpp_result_gen = Rcpp::wrap(objective_cpp(rho, f, thresX, thresY, c1, c2, mean, tol));
+    Rcpp::traits::input_parameter< double >::type maxcor(maxcorSEXP);
+    rcpp_result_gen = Rcpp::wrap(objective_cpp(rho, f, thresX, thresY, c1, c2, mean, maxcor));
     return rcpp_result_gen;
 END_RCPP
 }

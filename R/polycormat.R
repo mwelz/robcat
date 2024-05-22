@@ -68,7 +68,7 @@ pairwise_polycor <- function(polycor_fn, unique_pairs_ls, data, num_cores, paral
 }
 
 
-get_correlations <- function(data, c, variance, constrained, method, tol, num_cores, parallel, mle)
+get_correlations <- function(data, c, variance, constrained, method, maxcor, tol_thresholds, num_cores, parallel, mle)
 {
   p <- ncol(data)
   unique_pairs_ls <- unique_pairs(p)
@@ -79,7 +79,7 @@ get_correlations <- function(data, c, variance, constrained, method, tol, num_co
     polycor_fn <- function(x, y)
     {
       polycor_mle(x = x, y = y, variance = variance, constrained = constrained,
-                  method = method, tol = tol,
+                  method = method, maxcor = maxcor, tol_thresholds = tol_thresholds,
                   init = initialize_param(x, y))
     }
   } else
@@ -87,7 +87,7 @@ get_correlations <- function(data, c, variance, constrained, method, tol, num_co
     polycor_fn <- function(x, y)
     {
       polycor(x = x, y = y, c = c, variance = variance, constrained = constrained,
-              method = method, tol = tol,
+              method = method, maxcor = maxcor, tol_thresholds = tol_thresholds,
               init = initialize_param(x, y))
     }
   }
@@ -128,10 +128,11 @@ correlations2cormat <- function(correlations, p)
 
 
 ## main fucntionality of polychoric correlation matrix
-get_cormat <- function(data, c, variance, constrained, method, tol, num_cores, parallel, mle, return_polycor)
+get_cormat <- function(data, c, variance, constrained, method, maxcor, tol_thresholds, num_cores, parallel, mle, return_polycor)
 {
   correlations <- get_correlations(data = data, c = c, variance = variance, constrained = constrained, 
-                                   method = method, tol = tol, num_cores = num_cores, parallel = parallel, mle = mle)
+                                   method = method, maxcor = maxcor, tol_thresholds = tol_thresholds,
+                                   num_cores = num_cores, parallel = parallel, mle = mle)
   mat <- correlations2cormat(correlations, p = ncol(data))
   colnames(mat) <- rownames(mat) <- colnames(data)
   
@@ -155,8 +156,9 @@ get_cormat <- function(data, c, variance, constrained, method, tol, num_cores, p
 #' @param variance shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}
 #' @param method numerical optimization method
 #' @param constrained shall strict monotonicity of thresholds be explicitly enforced by linear constraints? 
-#' @param tol tolerance in numerical optimization
-#'
+#' @param maxcor maximum absolute correlation (to insure numerical stability)
+#' @param tol_thresholds minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}
+#' 
 #' @export
 polycormat <- function(data, c = 1.6, 
                        parallel = FALSE, 
@@ -165,10 +167,12 @@ polycormat <- function(data, c = 1.6,
                        variance = TRUE,
                        constrained = TRUE,
                        method = ifelse(constrained, "Nelder-Mead", "L-BFGS-B"),
-                       tol = 0.001)
+                       maxcor = 0.999,
+                       tol_thresholds = 0.01)
 {
   get_cormat(data = data, c = c, variance = variance, constrained = constrained, 
-             method = method, tol = tol, num_cores = num_cores, parallel = parallel, mle = FALSE, return_polycor = return_polycor)
+             method = method, maxcor = maxcor, tol_thresholds = tol_thresholds,
+             num_cores = num_cores, parallel = parallel, mle = FALSE, return_polycor = return_polycor)
 }
   
 
@@ -181,7 +185,8 @@ polycormat <- function(data, c = 1.6,
 #' @param variance shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}
 #' @param method numerical optimization method
 #' @param constrained shall strict monotonicity of thresholds be explicitly enforced by linear constraints? 
-#' @param tol tolerance in numerical optimization
+#' @param maxcor maximum absolute correlation (to insure numerical stability)
+#' @param tol_thresholds minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}
 #'
 #' @export
 polycormat_mle <- function(data,
@@ -191,10 +196,12 @@ polycormat_mle <- function(data,
                            variance = TRUE,
                            constrained = TRUE,
                            method = ifelse(constrained, "Nelder-Mead", "L-BFGS-B"),
-                           tol = 0.001)
+                           maxcor = 0.999,
+                           tol_thresholds = 0.01)
 {
   get_cormat(data = data, c = Inf, variance = variance, constrained = constrained, 
-             method = method, tol = tol, num_cores = num_cores, parallel = parallel, mle = TRUE, return_polycor = return_polycor)
+             method = method, maxcor = maxcor, tol_thresholds = tol_thresholds,
+             num_cores = num_cores, parallel = parallel, mle = TRUE, return_polycor = return_polycor)
 }
 
 ## TODO:  possible eigenvalue correction and windows; palallel in description & namespace, export funs
