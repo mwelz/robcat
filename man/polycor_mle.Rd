@@ -9,6 +9,7 @@ polycor_mle(
   y = NULL,
   variance = TRUE,
   constrained = TRUE,
+  twostep = FALSE,
   method = ifelse(constrained, "Nelder-Mead", "L-BFGS-B"),
   maxcor = 0.999,
   tol_thresholds = 0.01,
@@ -22,7 +23,9 @@ polycor_mle(
 
 \item{variance}{shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}}
 
-\item{constrained}{shall strict monotonicity of thresholds be explicitly enforced by linear constraints?}
+\item{constrained}{shall strict monotonicity of thresholds be explicitly enforced by linear constraints? Only relevant if \code{twostep = FALSE}}
+
+\item{twostep}{shall two-step estimation be performed?}
 
 \item{method}{numerical optimization method; default is Nelder-Mead}
 
@@ -30,7 +33,7 @@ polycor_mle(
 
 \item{tol_thresholds}{minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}}
 
-\item{init}{initialization of numerical optimization. Default is neutral}
+\item{init}{initialization of numerical optimization. Default is neutral. If \code{twostep = TRUE}, only first element (correlation) will be used}
 }
 \description{
 Maximum likelihood estimation of polychoric correlation coefficient

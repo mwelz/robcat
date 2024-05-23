@@ -97,8 +97,10 @@ polycor_variance_mle <- function(theta, Kx, Ky, N)
 
 ## main functionality for two-step-approach
 # NOTE: init must be scalar
-polycor_twostep <- function(f, contingency, Kx, Ky, N, init, method, maxcor, variance)
+polycor_twostep <- function(f, contingency, Kx, Ky, N, init, maxcor)
 {
+  ## frequency counts (intentionally coded as a double)
+  freq <- f * N
   
   ## calculate marginals from contingency table and construct threshold estimates
   x_marg <- rowSums(contingency)
@@ -112,24 +114,15 @@ polycor_twostep <- function(f, contingency, Kx, Ky, N, init, method, maxcor, var
   K <- Kx * Ky
   fn <- function(rho)
   {
-    objective_cpp_fast(rho = rho, f = f,
-                       thresX = thresX, thresY = thresY, 
-                       c1 = 0, c2 = Inf,
-                       Kx = Kx, Ky = Ky, K = K, 
-                       logc1p1 = -Inf, logc2p1 = Inf,
-                       mean = c(0.0, 0.0),
-                       maxcor = maxcor)
+    objective_mle_cpp(rho = rho, freq = freq, thresX = thresX, thresY = thresY,
+                      Kx = Kx, Ky = Ky, K = K, mean = c(0.0, 0.0))
   }
-  
-  
+
   ## optimize
-  opt <- 
-    stats::optim(par = init, fn = fn, gr = NULL, 
-                 lower = -maxcor, upper = maxcor, 
-                 hessian = FALSE, method = method)
+  opt <- stats::optimize(f = fn, interval = c(-1, 1))
   
   ## extract and name estimated parameters
-  thetahat <- c(opt$par, thresx, thresy)
+  thetahat <- c(opt$minimum, thresx, thresy)
   names(thetahat) <- theta_names(Kx = Kx, Ky = Ky)
   
   ## extract model parameters
@@ -141,7 +134,20 @@ polycor_twostep <- function(f, contingency, Kx, Ky, N, init, method, maxcor, var
   ## calculate pearson residuals
   pearson <- f / probs
   
-  return(0)
+  return(structure(
+    list(thetahat = thetahat, 
+         stderr = NULL,
+         sigma = NULL,
+         residuals = vec2tab(pearson, Kx = Kx, Ky = Ky),
+         probs = vec2tab(probs, Kx = Kx, Ky = Ky),
+         f = vec2tab(f, Kx = Kx, Ky = Ky),
+         chisq = NULL, 
+         df = NULL,
+         pval = NULL,
+         objective = -opt$objective, # since likelihood is MAXimized
+         optim = opt, 
+         inputs = list(Kx = Kx, Ky = Ky, N = N)),
+    class = c("robpolycor", "polycor")))
 }
   
 
@@ -320,15 +326,17 @@ polycor <- function(x, y = NULL, c = 1.6,
 #' @param y vector of integer-valued responses to second item; only required if \code{x} is not a contingency table 
 #' @param variance shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}
 #' @param method numerical optimization method; default is Nelder-Mead
-#' @param constrained shall strict monotonicity of thresholds be explicitly enforced by linear constraints? 
+#' @param constrained shall strict monotonicity of thresholds be explicitly enforced by linear constraints? Only relevant if \code{twostep = FALSE}
+#' @param twostep shall two-step estimation be performed? 
 #' @param maxcor maximum absolute correlation (to insure numerical stability)
 #' @param tol_thresholds minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}
-#' @param init initialization of numerical optimization. Default is neutral
+#' @param init initialization of numerical optimization. Default is neutral. If \code{twostep = TRUE}, only first element (correlation) will be used
 #' 
 #' @export
 polycor_mle <- function(x, y = NULL, 
                         variance = TRUE,
                         constrained = TRUE,
+                        twostep = FALSE,
                         method = ifelse(constrained, "Nelder-Mead", "L-BFGS-B"),
                         maxcor = 0.999,
                         tol_thresholds = 0.01,
@@ -342,21 +350,41 @@ polycor_mle <- function(x, y = NULL,
     inputs <- input_vector(x = x, y = y)
   }
   
-  obj <- 
-    polycor_fast(f = inputs$f, Kx = inputs$Kx, Ky = inputs$Ky, N = inputs$N,
-                 c1 = 0.0, c2 = Inf, 
-                 method = method, maxcor = maxcor, tol_thresholds = tol_thresholds, constrained = constrained,
-                 init = init, 
-                 variance = FALSE)
+  if(!twostep)
+  {
+    # TODO: adjust to MLE loss function 
+    obj <- 
+      polycor_fast(f = inputs$f, Kx = inputs$Kx, Ky = inputs$Ky, N = inputs$N,
+                   c1 = 0.0, c2 = Inf, 
+                   method = method, maxcor = maxcor, tol_thresholds = tol_thresholds, constrained = constrained,
+                   init = init, 
+                   variance = FALSE)
+  } else
+  {
+    obj <- 
+      polycor_twostep(f = inputs$f, contingency = inputs$contingency, 
+                      Kx = inputs$Kx, Ky = inputs$Ky, N = inputs$N, 
+                      init = init[1L], maxcor = maxcor)
+  }
+  
   
   # if variance requested, calculate it based on fisher information
   if(variance)
   {
     tmp <- 
       polycor_variance_mle(theta = obj$thetahat, Kx = inputs$Kx, Ky = inputs$Ky, N = inputs$N)
-    obj$stderr <- sqrt(diag(tmp$variance))
-    obj$sigma <- tmp$Sigma
-  } 
+    stderr <- sqrt(diag(tmp$variance))
+    sigma <- tmp$Sigma 
+    
+    if(twostep)
+    {
+      # in twostep, variance of thresholds isn't estimated consistently, so drop
+      stderr[2:length(stderr)] <- NA_real_
+      sigma <- sigma[1L,1L,drop = FALSE]
+    }
+    obj$stderr <- stderr
+    obj$sigma <- sigma
+  } # IF variance 
   
   return(obj)
 }

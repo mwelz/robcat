@@ -77,6 +77,10 @@ objective_cpp <- function(rho, f, thresX, thresY, c1, c2, mean, maxcor = 0.999) 
     .Call(`_robcat_objective_cpp`, rho, f, thresX, thresY, c1, c2, mean, maxcor)
 }
 
+objective_mle_cpp <- function(rho, freq, thresX, thresY, Kx, Ky, K, mean) {
+    .Call(`_robcat_objective_mle_cpp`, rho, freq, thresX, thresY, Kx, Ky, K, mean)
+}
+
 feps_cpp <- function(thresX, thresY, eps, covmat_true, covmat_contam, mean_true, mean_contam) {
     .Call(`_robcat_feps_cpp`, thresX, thresY, eps, covmat_true, covmat_contam, mean_true, mean_contam)
 }

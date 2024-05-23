@@ -272,6 +272,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// objective_mle_cpp
+double objective_mle_cpp(double rho, NumericVector freq, NumericVector thresX, NumericVector thresY, int Kx, int Ky, int K, NumericVector mean);
+RcppExport SEXP _robcat_objective_mle_cpp(SEXP rhoSEXP, SEXP freqSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP KxSEXP, SEXP KySEXP, SEXP KSEXP, SEXP meanSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type freq(freqSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< int >::type Kx(KxSEXP);
+    Rcpp::traits::input_parameter< int >::type Ky(KySEXP);
+    Rcpp::traits::input_parameter< int >::type K(KSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
+    rcpp_result_gen = Rcpp::wrap(objective_mle_cpp(rho, freq, thresX, thresY, Kx, Ky, K, mean));
+    return rcpp_result_gen;
+END_RCPP
+}
 // feps_cpp
 NumericVector feps_cpp(NumericVector thresX, NumericVector thresY, double eps, NumericMatrix covmat_true, NumericMatrix covmat_contam, NumericVector mean_true, NumericVector mean_contam);
 RcppExport SEXP _robcat_feps_cpp(SEXP thresXSEXP, SEXP thresYSEXP, SEXP epsSEXP, SEXP covmat_trueSEXP, SEXP covmat_contamSEXP, SEXP mean_trueSEXP, SEXP mean_contamSEXP) {
@@ -848,6 +866,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_robcat_rho_fun_cpp", (DL_FUNC) &_robcat_rho_fun_cpp, 3},
     {"_robcat_objective_cpp_fast", (DL_FUNC) &_robcat_objective_cpp_fast, 13},
     {"_robcat_objective_cpp", (DL_FUNC) &_robcat_objective_cpp, 8},
+    {"_robcat_objective_mle_cpp", (DL_FUNC) &_robcat_objective_mle_cpp, 8},
     {"_robcat_feps_cpp", (DL_FUNC) &_robcat_feps_cpp, 7},
     {"_robcat_model_probabilities", (DL_FUNC) &_robcat_model_probabilities, 5},
     {"_robcat_is_infinite_pos", (DL_FUNC) &_robcat_is_infinite_pos, 1},

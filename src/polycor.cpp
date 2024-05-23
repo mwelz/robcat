@@ -279,6 +279,56 @@ double objective_cpp(
   return out;
 }
 
+// MLE loss as in paper
+//[[Rcpp::export]]
+double objective_mle_cpp(
+  double rho,
+  NumericVector freq,   // frequency vector
+  NumericVector thresX, // X-thresholds; first and last values are ∓∞
+  NumericVector thresY, // Y-thresholds; first and last values are ∓∞
+  int Kx,
+  int Ky,
+  int K, // = Kx * Ky
+  NumericVector mean) // = {0,0}
+{
+  double OUT;
+  NumericVector out(K);
+  NumericVector probs(K);
+  NumericMatrix cormat = make_cormat(rho);
+  
+  // initialize
+  int k = 0;
+  
+  // loop over responses
+  for(int x = 1; x <= Kx; ++x)
+  {
+    for(int y = 1; y <= Ky; ++y)
+    {
+      // x and y are the given responses at (x,y)
+      double prob_k = pk_theta(x, y, cormat, thresX, thresY, mean);
+      out[k] = freq[k] * std::log(prob_k);
+      probs[k] = prob_k;
+      k++;
+    } // FOR y
+  } // FOR x
+  
+  
+  // penalize values of rho that lead to zero class probabilities
+  if(any_sug(probs == 0))
+  {
+    // avoid a stepwise pattern, so whenever zero probs assumption is violated, return same large penalty value
+    OUT = 100000.; // TODO: make better 
+  } else
+  {
+    // assign zero to empirically empty classes
+    out[freq == 0] = 0;
+    OUT = -sum(out); // make negative to make it a minimization problem
+  } // IF penalization
+  
+  return OUT;
+}
+
+
 
 // probability mass function under contaminated model
 //[[Rcpp::export]]
