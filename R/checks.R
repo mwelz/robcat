@@ -30,7 +30,7 @@ input_table <- function(x, y)
   if(!isTRUE(all.equal(target = 1, current = sum(f)))) stop("Relative frequencies do not sum up to 1")
   Kx <- nrow(x)
   Ky <- ncol(x)
-  return(list(N = N, f = f, Kx = Kx, Ky = Ky))
+  return(list(N = N, f = f, Kx = Kx, Ky = Ky, contingency = x))
 }
 
 ## input check when x is a vector (enforces that y is also a table)
@@ -46,5 +46,6 @@ input_vector <- function(x, y)
   check_support(x, Kx)
   check_support(y, Ky)
   f <- fhat(x = x, y = y, Kx = Kx, Ky = Ky)
-  return(list(N = N, f = f, Kx = Kx, Ky = Ky))
+  contab <- table(x = factor(x, levels = seq_len(Kx)), y = factor(y, levels = seq_len(Ky)))
+  return(list(N = N, f = f, Kx = Kx, Ky = Ky, contingency = contab))
 }

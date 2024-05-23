@@ -95,6 +95,57 @@ polycor_variance_mle <- function(theta, Kx, Ky, N)
 }
 
 
+## main functionality for two-step-approach
+# NOTE: init must be scalar
+polycor_twostep <- function(f, contingency, Kx, Ky, N, init, method, maxcor, variance)
+{
+  
+  ## calculate marginals from contingency table and construct threshold estimates
+  x_marg <- rowSums(contingency)
+  y_marg <- colSums(contingency)
+  thresx <- stats::qnorm(cumsum(x_marg[seq_len(Kx-1L)]) / N)
+  thresy <- stats::qnorm(cumsum(y_marg[seq_len(Ky-1L)]) / N)
+  thresX <- unname(c(-Inf, thresx, Inf))
+  thresY <- unname(c(-Inf, thresy, Inf))
+  
+  ## define local function for the optimization
+  K <- Kx * Ky
+  fn <- function(rho)
+  {
+    objective_cpp_fast(rho = rho, f = f,
+                       thresX = thresX, thresY = thresY, 
+                       c1 = 0, c2 = Inf,
+                       Kx = Kx, Ky = Ky, K = K, 
+                       logc1p1 = -Inf, logc2p1 = Inf,
+                       mean = c(0.0, 0.0),
+                       maxcor = maxcor)
+  }
+  
+  
+  ## optimize
+  opt <- 
+    stats::optim(par = init, fn = fn, gr = NULL, 
+                 lower = -maxcor, upper = maxcor, 
+                 hessian = FALSE, method = method)
+  
+  ## extract and name estimated parameters
+  thetahat <- c(opt$par, thresx, thresy)
+  names(thetahat) <- theta_names(Kx = Kx, Ky = Ky)
+  
+  ## extract model parameters
+  theta_obj <- extractfromtheta(theta = thetahat, Kx = Kx, Ky = Ky)
+  probs <- model_probabilities(rho = theta_obj$rho, 
+                               thresX = theta_obj$thresX, thresY = theta_obj$thresY,
+                               Kx = Kx, Ky = Ky)
+  
+  ## calculate pearson residuals
+  pearson <- f / probs
+  
+  return(0)
+}
+  
+
+
 # main functionality for polychoric correlation
 polycor_fast <- 
   function(f, 
