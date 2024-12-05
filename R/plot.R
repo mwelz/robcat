@@ -10,8 +10,8 @@
 #' @import ggplot2
 #' @export
 plot.robpolycor <- function(x, 
-                            cutoff = stats::qnorm(0.001, lower.tail = FALSE),
-                            outliertest = TRUE,
+                            cutoff = 3, #stats::qnorm(0.001, lower.tail = FALSE),
+                            #outliertest = FALSE,
                             twosided = FALSE,
                             adjust = "fdr",
                             sig_level = 0.001,
@@ -22,6 +22,7 @@ plot.robpolycor <- function(x,
   freq <- x[["f"]]
   Kx <- x$inputs$Kx; Ky <- x$inputs$Ky
   
+  outliertest <- FALSE # not yet reliable (also update plot_test())!
   if(!outliertest)
   {
     plot_truncated(resid = resid, freq = freq, Kx = Kx, Ky = Ky, cutoff = cutoff)
@@ -55,38 +56,40 @@ plot_truncated <- function(resid, freq, Kx, Ky, cutoff)
   x <- y <- Residual <- Frequency <- Outlier <- NULL
   
   ## is a cell outlying?
-  outlier_bool <- df$Residual > cutoff
+  is_outlier <- df$Residual > cutoff
   
   # prepare data frame
   Xseq <- rev(seq_len(Kx))
   Yseq <- seq_len(Ky)
   df$x <- factor(df$x, levels = Xseq)
   df$y <- factor(df$y, levels = Yseq)
-  df$Outlier <- paste0("PR > ", round(cutoff, 2))
-  df$Outlier[!outlier_bool] <- NA 
-  titlecolor <- paste0("Pearson\nResidual", ifelse(any(outlier_bool), "\n(PR)", ""))
+  df$Residual[is_outlier] <- cutoff
+  #titlecolor <- paste0("Pearson\nResidual", ifelse(any(outlier_bool), "\n(PR)", ""))
   
   ## the idea to use separate scales for outliers is from here:
   # https://stackoverflow.com/a/9812648
-  p <- 
+  p <-
     ggplot() +
     theme_bw() +
-    scale_color_gradient2("Residual", low = "lightblue", midpoint = 1, mid = "gray", high = "blue")+
-    geom_point(data = subset(df, outlier_bool), 
-               mapping = aes(x = y, y = x, 
-                             fill = stringr::str_wrap(Outlier, 3),
-                             size = Frequency), 
-               color = "red") +
-    geom_point(data = subset(df, !outlier_bool), 
+    scale_color_gradient2("Residual", 
+                          low = "blue", 
+                          mid = "gray", 
+                          high = "red", 
+                          midpoint = 0, 
+                          transform = "log1p", # log(x+1), to take care of negative PR values 
+                          limits = c(0.5, 4)-1, 
+                          breaks = c(0.5, 1, 2, 4)-1, 
+                          labels = c("-0.5", "0.0", "1.0", "\u2265 3.0")) +
+    geom_point(data = df, 
                mapping = aes(x = y, y = x, 
                              color = Residual, 
                              size = Frequency)) +
-    xlab("Y") + ylab("X") +
-    scale_y_discrete(limits = as.character(Xseq)) + # flip y-axis
+    scale_y_discrete(limits = as.character(Xseq)) + 
     scale_x_discrete(limits = as.character(Yseq)) +
+    coord_fixed() +
     guides(size = guide_legend(order = 1, title = "Relative\nFrequency"),
-           color  = guide_colorbar(order = 2, title = titlecolor), 
-           fill = guide_legend(order = 3, title = "Poor\nFit")) 
+           color  = guide_colorbar(order = 2, title = "Pearson\nResidual")) +
+    xlab("Y") + ylab("X")
   return(p)
 }
 

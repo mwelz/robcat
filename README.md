@@ -1,6 +1,6 @@
 # robcat: Robust Categorical Data Analysis
 
-This package implements the methodology proposed in the working paper _Robust Estimation and Inference in Categorical Data_ by [Welz (2024)]( https://arxiv.org/abs/2403.11954).
+This package implements the methodology proposed in the working paper _Robust Estimation and Inference in Categorical Data_ by [Welz (2024)](https://arxiv.org/abs/2403.11954). Here we will demonstrate how the methodology can be used to robustly estimate polychoric correlation, which is described in detail in our companion paper _Robust Estimation of Polychoric Correlation by [Welz, Mair, and Alfons (2024)](https://arxiv.org/abs/2407.18835).
 
 To install the latest development version from GitHub, you can pull this repository and install it from the `R` command line via
 ```R
@@ -43,11 +43,11 @@ mle$thetahat
 # 0.3151109 -1.4868862 -0.9829336 -0.2318141  0.7887485 -1.5112743 -0.9889993  0.4276572  1.4582239 
 
 ## robust
-polycor <- polycor(x = x, y = y, c = 1.5)
+polycor <- polycor(x = x, y = y)
 polycor$thetahat
 # > polycor$thetahat
 #       rho         a1         a2         a3         a4         b1         b2         b3         b4 
-# 0.3151414 -1.4868373 -0.9829001 -0.2316910  0.7888495 -1.5112325 -0.9889749  0.4277239  1.4582497
+# 0.3151731 -1.4867730 -0.9828117 -0.2317529  0.7887506 -1.5110644 -0.9888898  0.4276510  1.4583212 
 ```
 
 Thus, in the absence of contamination, both estimators yield equivalent solutions. Next, we introduce 20% contamination.
@@ -67,11 +67,11 @@ mle$thetahat
 # -0.34675954 -0.63244517 -0.39741400  0.10278048  0.93030935 -1.57214524 -1.12479616  0.03080319  0.63796166 
 
 ## robust
-polycor <- polycor(x = x, y = y, c = 1.5)
+polycor <- polycor(x = x, y = y)
 polycor$thetahat
 # > polycor$thetahat
 #       rho         a1         a2         a3         a4         b1         b2         b3         b4 
-# 0.3180104 -1.4461457 -0.9605778 -0.2342293  0.7795890 -1.5299883 -0.9981569  0.4092214  1.4566111 
+# 0.3170347 -1.4412686 -0.9580768 -0.2337379  0.7789224 -1.5291725 -0.9982777  0.4074513  1.4534537
 
 ```
 
@@ -84,45 +84,29 @@ polycor
 # > polycor
 # 
 # Polychoric Correlation
-#        Estimate Std.Err.
-# rho       0.318  0.03857
+# Estimate Std.Err.
+# rho    0.317  0.03892
 # 
 # X-thresholds
 #     Estimate Std.Err.
-# a1   -1.4460  0.06619
-# a2   -0.9606  0.05262
-# a3   -0.2342  0.04449
-# a4    0.7796  0.04961
+# a1  -1.4410  0.06601
+# a2  -0.9581  0.05252
+# a3  -0.2337  0.04446
+# a4   0.7789  0.04958
 # 
 # Y-thresholds
 #     Estimate Std.Err.
-# b1   -1.5300  0.06931
-# b2   -0.9982  0.05309
-# b3    0.4092  0.04538
-# b4    1.4570  0.06759
+# b1  -1.5290  0.06921
+# b2  -0.9983  0.05308
+# b3   0.4075  0.04536
+# b4   1.4530  0.06761
 
 plot(polycor)
 ```
 
 <img src="./inst/doc/readme_plots/READMEplot.svg" width="67%" style="display: block; margin: auto;" />
 
-Indeed, the Pearson residual of contaminated cell `(x,y) = (1,5)` is excessively large compared to the others, which are all around the value 1.
-
-We can also do a test on a each cell being outlying, that is, a Pearson residual of larger than 1 (one-sided alternative). Here are its p-values (adjusted for multiple comparisons via the Benjamini-Hochberg procedure):
-
-```R
-> celltest(polycor)$pval_adjusted
-   y
-x           1         2         3         4         5
-  1 0.9999975 0.9999975 0.9999975 0.9999975 0.0000000
-  2 0.9999975 0.9999975 0.9999975 0.9999975 0.9999975
-  3 0.9999975 0.9999975 0.9999975 0.9999975 0.9999975
-  4 0.9999975 0.9999975 0.9999975 0.9999975 0.9999975
-  5 0.9999975 0.9999975 0.9999975 0.9999975 0.9999975
-```
-
-Hence, at the recommended extremely conservative significance level of 0.001, only the cell  `(x,y) = (1,5)` is correctly identified as outlying.
-
+Indeed, the Pearson residual of contaminated cell `(x,y) = (1,5)` is excessively large compared to the others, which are all around the value 0.
 
 ## Authors
-Max Welz (welz@ese.eur.nl)
+Max Welz (max.welz@uzh.ch)

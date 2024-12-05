@@ -153,6 +153,7 @@ polycor_twostep <- function(f, contingency, Kx, Ky, N, init, maxcor)
 
 
 # main functionality for polychoric correlation
+# assumes that c takes values in [1,Inf] (different than notation in paper, but advantageous for computing)
 polycor_fast <- 
   function(f, 
            Kx, Ky,
@@ -224,7 +225,7 @@ polycor_fast <-
                                Kx = Kx, Ky = Ky)
   
   ## calculate pearson residuals
-  pearson <- f / probs
+  pearson <- f / probs - 1.0
   
   ## if requested, estimate covariance matrix
   if(variance)
@@ -266,17 +267,17 @@ polycor_fast <-
          pval = pval,
          objective = opt$value,
          optim = opt, 
-         inputs = list(Kx = Kx, Ky = Ky, N = N, c = c2)),
+         inputs = list(Kx = Kx, Ky = Ky, N = N, c = c2 - 1.0)), # re-center c to be in [0,Inf]
     class = c("robpolycor", "polycor")))
 } # FUN
 
 
 
-#' Robust estimation of polychoric correlation coefficient
+#' Robust estimation of polychoric correlation
 #' 
 #' @param x vector of integer-valued responses to first item or contingency table (a \code{table} object)
 #' @param y vector of integer-valued responses to second item; only required if \code{x} is not a contingency table 
-#' @param c tuning constant that governs robustness; defaults to 1.6
+#' @param c tuning constant that governs robustness; must be in [0,Inf]. Defaults to 0.6
 #' @param variance shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}
 #' @param method numerical optimization method
 #' @param constrained shall strict monotonicity of thresholds be explicitly enforced by linear constraints? 
@@ -295,7 +296,7 @@ polycor_fast <-
 #'   \item{\code{optim}}{Object of class \code{optim}}
 #' }
 #' @export
-polycor <- function(x, y = NULL, c = 1.6, 
+polycor <- function(x, y = NULL, c = 0.6, 
                     variance = TRUE,
                     constrained = TRUE,
                     method = ifelse(constrained, "Nelder-Mead", "L-BFGS-B"),
@@ -303,7 +304,7 @@ polycor <- function(x, y = NULL, c = 1.6,
                     tol_thresholds = 0.01,
                     init = initialize_param(x, y))
 {
-  stopifnot(c >= 1)
+  stopifnot(c >= 0)
   if(is.table(x))
   {
     inputs <- input_table(x = x, y = y)
@@ -312,8 +313,11 @@ polycor <- function(x, y = NULL, c = 1.6,
     inputs <- input_vector(x = x, y = y)
   }
   
+  ## add 1 so that c is in [1,Inf] to comply with expectation of polycor_fast()
+  c_reparam <- c + 1.0
+  
   polycor_fast(f = inputs$f, Kx = inputs$Kx, Ky = inputs$Ky, N = inputs$N,
-               c1 = 0.0, c2 = c, 
+               c1 = 0.0, c2 = c_reparam, 
                method = method, maxcor = maxcor, tol_thresholds = tol_thresholds, constrained = constrained,
                init = init, 
                variance = variance)

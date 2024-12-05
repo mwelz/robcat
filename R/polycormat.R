@@ -149,7 +149,7 @@ get_cormat <- function(data, c, variance, constrained, method, maxcor, tol_thres
 #' Robust estimation of polychoric correlation matrix
 #' 
 #' @param data Data matrix of integer-valued responses, individual respondents are in rows
-#' @param c tuning constant that governs robustness; defaults to 1.6
+#' @param c tuning constant that governs robustness; takes values in [0,Inf]. Defaults to 0.6.
 #' @param parallel Logical. Shall parallelization be used?
 #' @param num_cores Number of cores to be used, only relevant if \code{parallel = TRUE}
 #' @param return_polycor Logical. Shall the individual \code{polycor} objects for each item pair estimate be returned?
@@ -160,7 +160,7 @@ get_cormat <- function(data, c, variance, constrained, method, maxcor, tol_thres
 #' @param tol_thresholds minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}
 #' 
 #' @export
-polycormat <- function(data, c = 1.6, 
+polycormat <- function(data, c = 0.6, 
                        parallel = FALSE, 
                        num_cores = 1L,
                        return_polycor = TRUE,
