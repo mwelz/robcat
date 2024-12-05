@@ -2,19 +2,15 @@
 #' 
 #' @param x object of class \code{polycor}
 #' @param cutoff cutoff beyond which a Pearson residual is classified as outlying
-#' @param outliertest shall the outlyingness test results be used in plot?
-#' @param twosided shall outlyingness test be two sided?
-#' @param adjust shall outlyingness tests be adjusted for multiple comparisons?
-#' @param sig_level significance level which is used in plotting tets results 
 #' @param ... additional parameters to be passed down
 #' @import ggplot2
 #' @export
 plot.robpolycor <- function(x, 
                             cutoff = 3, #stats::qnorm(0.001, lower.tail = FALSE),
                             #outliertest = FALSE,
-                            twosided = FALSE,
-                            adjust = "fdr",
-                            sig_level = 0.001,
+                            #twosided = FALSE,
+                            #adjust = "fdr",
+                            #sig_level = 0.001,
                             ...)
 {
   stopifnot(inherits(x = x, what = "polycor"))
@@ -27,8 +23,9 @@ plot.robpolycor <- function(x,
   {
     plot_truncated(resid = resid, freq = freq, Kx = Kx, Ky = Ky, cutoff = cutoff)
   } else{
-    pvals <- celltest(x, twosided = twosided, adjust = adjust)[["pval_adjusted"]]
-    plot_test(resid = resid, freq = freq, pval = pvals, Kx = Kx, Ky = Ky, sig_level = sig_level)
+    stop("not yet ready!")
+    #pvals <- celltest(x, twosided = twosided, adjust = adjust)[["pval_adjusted"]]
+    #plot_test(resid = resid, freq = freq, pval = pvals, Kx = Kx, Ky = Ky, sig_level = sig_level)
   }
   
   

@@ -2,12 +2,12 @@
 % Please edit documentation in R/polycor.R
 \name{polycor}
 \alias{polycor}
-\title{Robust estimation of polychoric correlation coefficient}
+\title{Robust estimation of polychoric correlation}
 \usage{
 polycor(
   x,
   y = NULL,
-  c = 1.6,
+  c = 0.6,
   variance = TRUE,
   constrained = TRUE,
   method = ifelse(constrained, "Nelder-Mead", "L-BFGS-B"),
@@ -21,7 +21,7 @@ polycor(
 
 \item{y}{vector of integer-valued responses to second item; only required if \code{x} is not a contingency table}
 
-\item{c}{tuning constant that governs robustness; defaults to 1.6}
+\item{c}{tuning constant that governs robustness; must be in [0,Inf]. Defaults to 0.6}
 
 \item{variance}{shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}}
 
@@ -47,5 +47,5 @@ A list with the following components.
 }
 }
 \description{
-Robust estimation of polychoric correlation coefficient
+Robust estimation of polychoric correlation
 }

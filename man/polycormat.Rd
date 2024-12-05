@@ -6,7 +6,7 @@
 \usage{
 polycormat(
   data,
-  c = 1.6,
+  c = 0.6,
   parallel = FALSE,
   num_cores = 1L,
   return_polycor = TRUE,
@@ -20,7 +20,7 @@ polycormat(
 \arguments{
 \item{data}{Data matrix of integer-valued responses, individual respondents are in rows}
 
-\item{c}{tuning constant that governs robustness; defaults to 1.6}
+\item{c}{tuning constant that governs robustness; takes values in [0,Inf]. Defaults to 0.6.}
 
 \item{parallel}{Logical. Shall parallelization be used?}
 

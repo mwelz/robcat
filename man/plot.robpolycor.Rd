@@ -4,28 +4,12 @@
 \alias{plot.robpolycor}
 \title{Plot method for class "polycor"}
 \usage{
-\method{plot}{robpolycor}(
-  x,
-  cutoff = stats::qnorm(0.001, lower.tail = FALSE),
-  outliertest = TRUE,
-  twosided = FALSE,
-  adjust = "fdr",
-  sig_level = 0.001,
-  ...
-)
+\method{plot}{robpolycor}(x, cutoff = 3, ...)
 }
 \arguments{
 \item{x}{object of class \code{polycor}}
 
 \item{cutoff}{cutoff beyond which a Pearson residual is classified as outlying}
-
-\item{outliertest}{shall the outlyingness test results be used in plot?}
-
-\item{twosided}{shall outlyingness test be two sided?}
-
-\item{adjust}{shall outlyingness tests be adjusted for multiple comparisons?}
-
-\item{sig_level}{significance level which is used in plotting tets results}
 
 \item{...}{additional parameters to be passed down}
 }
