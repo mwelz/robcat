@@ -1,6 +1,6 @@
 # robcat: Robust Categorical Data Analysis
 
-This package implements the methodology proposed in the working paper _Robust Estimation and Inference in Categorical Data_ by [Welz (2024)](https://arxiv.org/abs/2403.11954). Here we will demonstrate how the methodology can be used to robustly estimate polychoric correlation, which is described in detail in our companion paper _Robust Estimation of Polychoric Correlation by [Welz, Mair, and Alfons (2024)](https://arxiv.org/abs/2407.18835).
+This package implements the methodology proposed in the working paper _Robust Estimation and Inference in Categorical Data_ by [Welz (2024)](https://arxiv.org/abs/2403.11954). Here we will demonstrate how the methodology can be used to robustly estimate polychoric correlation, which is described in detail in our companion paper _Robust Estimation of Polychoric Correlation_ by [Welz, Mair, and Alfons (2024)](https://arxiv.org/abs/2407.18835).
 
 To install the latest development version from GitHub, you can pull this repository and install it from the `R` command line via
 ```R
