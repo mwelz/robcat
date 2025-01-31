@@ -237,7 +237,3 @@ get_fisher <- function(rho, thresX, thresY, Kx, Ky) {
     .Call(`_robcat_get_fisher`, rho, thresX, thresY, Kx, Ky)
 }
 
-rcpp_hello_world <- function() {
-    .Call(`_robcat_rcpp_hello_world`)
-}
-

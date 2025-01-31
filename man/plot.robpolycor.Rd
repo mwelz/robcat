@@ -2,17 +2,17 @@
 % Please edit documentation in R/plot.R
 \name{plot.robpolycor}
 \alias{plot.robpolycor}
-\title{Plot method for class "polycor"}
+\title{Plot method for classes \code{"robpolycor"} and \code{"polycor"}.}
 \usage{
 \method{plot}{robpolycor}(x, cutoff = 3, ...)
 }
 \arguments{
-\item{x}{object of class \code{polycor}}
+\item{x}{Object of class \code{"robpolycor"} or \code{"polycor"}.}
 
-\item{cutoff}{cutoff beyond which a Pearson residual is classified as outlying}
+\item{cutoff}{Cutoff beyond which the color scale for Pearson residuals is truncated.}
 
-\item{...}{additional parameters to be passed down}
+\item{...}{Additional parameters to be passed down.}
 }
 \description{
-Plot method for class "polycor"
+Plot method for classes \code{"robpolycor"} and \code{"polycor"}.
 }

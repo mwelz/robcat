@@ -835,16 +835,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpp_hello_world
-List rcpp_hello_world();
-RcppExport SEXP _robcat_rcpp_hello_world() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpp_hello_world());
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_robcat_pnorm_tail", (DL_FUNC) &_robcat_pnorm_tail, 2},
@@ -906,7 +896,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_robcat_in_interval", (DL_FUNC) &_robcat_in_interval, 3},
     {"_robcat_get_MW", (DL_FUNC) &_robcat_get_MW, 8},
     {"_robcat_get_fisher", (DL_FUNC) &_robcat_get_fisher, 5},
-    {"_robcat_rcpp_hello_world", (DL_FUNC) &_robcat_rcpp_hello_world, 0},
     {NULL, NULL, 0}
 };
 

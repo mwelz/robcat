@@ -1,8 +1,8 @@
-#' Print method for class "polycor"
+#' Print method for classes \code{"robpolycor"} and \code{"polycor"}.
 #' 
-#' @param x object of class \code{polycor}
-#' @param digits number of digits to be printed
-#' @param ... additional parameters to be passed down
+#' @param x Object of class \code{"robpolycor"} or \code{"polycor"}.
+#' @param digits Number of digits to be printed.
+#' @param ... Additional parameters to be passed down.
 #' @export
 print.robpolycor <- function(x, digits = max(3L, getOption("digits") - 3L), ...)
 {

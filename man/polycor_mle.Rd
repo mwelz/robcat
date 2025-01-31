@@ -17,24 +17,37 @@ polycor_mle(
 )
 }
 \arguments{
-\item{x}{vector of integer-valued responses to first item or contingency table (a \code{table} object)}
+\item{x}{Vector of integer-valued responses to first item, or contingency table (a \code{"\link[base]{table}"} object).}
 
-\item{y}{vector of integer-valued responses to second item; only required if \code{x} is not a contingency table}
+\item{y}{Vector of integer-valued responses to second item; only required if \code{x} is not a contingency table.}
 
-\item{variance}{shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}}
+\item{variance}{Shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}.}
 
-\item{constrained}{shall strict monotonicity of thresholds be explicitly enforced by linear constraints? Only relevant if \code{twostep = FALSE}}
+\item{constrained}{shall strict monotonicity of thresholds be explicitly enforced by linear constraints? Only relevant if \code{twostep = FALSE}. Default is \code{TRUE}.}
 
-\item{twostep}{shall two-step estimation be performed?}
+\item{twostep}{Shall two-step estimation of Olsson (1979) <doi:10.1007/BF02296207> be performed? Default is \code{FALSE}.}
 
-\item{method}{numerical optimization method; default is Nelder-Mead}
+\item{method}{Numerical optimization method; default is Nelder-Mead.}
 
-\item{maxcor}{maximum absolute correlation (to insure numerical stability)}
+\item{maxcor}{Maximum absolute correlation (to insure numerical stability). Deafult is 0.999.}
 
-\item{tol_thresholds}{minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}}
+\item{tol_thresholds}{Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}. Default is 0.01.}
 
-\item{init}{initialization of numerical optimization. Default is neutral. If \code{twostep = TRUE}, only first element (correlation) will be used}
+\item{init}{Initialization of numerical optimization. Default is neutral. If \code{twostep = TRUE}, only the first element (the correlation coefficient) will be used.}
+}
+\value{
+An object of class \code{"robpolycor"}. See \code{\link{polycor}()} for details.
 }
 \description{
-Maximum likelihood estimation of polychoric correlation coefficient
+Implements the maximum likelihood estimator of Olsson (1979, Psychometrika, \doi{10.1007/BF02296207}) for the polychoric correlation model.
+}
+\examples{
+## example data
+set.seed(123)
+x <- sample(c(1,2,3), size = 100, replace = TRUE)
+y <- sample(c(1,2,3), size = 100, replace = TRUE)
+
+polycor(x,y)     # robust
+polycor_mle(x,y) # non-robust MLE
+
 }

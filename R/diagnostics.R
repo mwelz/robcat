@@ -1,11 +1,11 @@
-#' perform test if individual cells are outlying
-#' 
-#' @param x object of class \code{polycor}
-#' @param twosided shall test be one- or two-sided with left-tailed alternative?
-#' @param adjust method for adjustment of p-values for multiple comparisons; default is FDR
-#' @param ... additional parameters to be passed down
-#' 
-#' @export
+## perform test if individual cells are outlying (NB: don't yet export!)
+## 
+## @param x object of class \code{polycor}
+## @param twosided shall test be one- or two-sided with left-tailed alternative?
+## @param adjust method for adjustment of p-values for multiple comparisons; default is FDR
+## @param ... additional parameters to be passed down
+##
+## @export
 celltest <- function(x, twosided = FALSE, adjust = "fdr", ...)
 {
   stopifnot(inherits(x, what = "polycor"))

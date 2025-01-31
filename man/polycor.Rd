@@ -17,35 +17,45 @@ polycor(
 )
 }
 \arguments{
-\item{x}{vector of integer-valued responses to first item or contingency table (a \code{table} object)}
+\item{x}{Vector of integer-valued responses to first item, or contingency table (a \code{"\link[base]{table}"} object).}
 
-\item{y}{vector of integer-valued responses to second item; only required if \code{x} is not a contingency table}
+\item{y}{Vector of integer-valued responses to second item; only required if \code{x} is not a contingency table.}
 
-\item{c}{tuning constant that governs robustness; must be in [0,Inf]. Defaults to 0.6}
+\item{c}{Tuning constant that governs robustness; must be in \code{[0, Inf]}. Defaults to 0.6.}
 
-\item{variance}{shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}}
+\item{variance}{Shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}.}
 
-\item{constrained}{shall strict monotonicity of thresholds be explicitly enforced by linear constraints?}
+\item{constrained}{Shall strict monotonicity of thresholds be explicitly enforced by linear constraints? Default is \code{TRUE}.}
 
-\item{method}{numerical optimization method}
+\item{method}{Numerical optimization method.}
 
-\item{maxcor}{maximum absolute correlation (to insure numerical stability)}
+\item{maxcor}{Maximum absolute correlation (to insure numerical stability). Default is 0.999.}
 
-\item{tol_thresholds}{minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}}
+\item{tol_thresholds}{Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}. Default is 0.01.}
 
-\item{init}{initialization of numerical optimization. Default is neutral}
+\item{init}{Initialization of numerical optimization. Default is neutral.}
 }
 \value{
-A list with the following components. 
+An object of class \code{"robpolycor"}, which is a list with the following components. 
 \describe{
   \item{\code{theahat}}{A vector of estimates for the polychoric correlation coefficient (\code{rho}) as well as thresholds for \code{x} (named \code{a1,a2,...,a_{Kx-1}}) and \code{y} (named \code{b1,b2,...,b_{Ky-1}}).}
-  \item{\code{stderr}}{A vector of standard errors for each estimate in \code{theahat}}
+  \item{\code{stderr}}{A vector of standard errors for each estimate in \code{theahat}.}
   \item{\code{sigma}}{Estimated asymptotic covariance matrix \eqn{\Sigma}, evaluated at the estimates in \code{theahat}.}
-  \item{\code{chisq,pval,df}}{Test statistic, p-value, and degrees of freedom of a test for bivariate normality}
-  \item{\code{objective}}{Value of minimized loss function}
-  \item{\code{optim}}{Object of class \code{optim}}
+  \item{\code{chisq,pval,df}}{Currently \code{NULL}, will in a future release be the test statistic, p-value, and degrees of freedom of a test for bivariate normality.}
+  \item{\code{objective}}{Value of minimized loss function.}
+  \item{\code{optim}}{Object of class \code{optim}.}
 }
 }
 \description{
-Robust estimation of polychoric correlation
+Implements to robust estimator of  Welz, Mair and Alfons (2024, \doi{10.48550/arXiv.2407.18835})  for the polychoric correlation model, based on the general theory of C-estimation proposed by Welz (2024, \doi{10.48550/arXiv.2403.11954}).
+}
+\examples{
+## example data
+set.seed(123)
+x <- sample(c(1,2,3), size = 100, replace = TRUE)
+y <- sample(c(1,2,3), size = 100, replace = TRUE)
+
+polycor(x,y)     # robust
+polycor_mle(x,y) # non-robust MLE
+
 }

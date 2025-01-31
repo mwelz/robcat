@@ -1,17 +1,27 @@
 Package: robcat
 Type: Package
 Title: Robust Categorical Data Analysis
-Version: 0.0.2
-Date: 2024-01-10
+Version: 0.1.0
+Date: 2025-01-31
 Authors@R: 
     c(person(given = "Max",
            family = "Welz",
            role = c("aut", "cre"),
-           email = "welz@ese.eur.nl",
-           comment = c(ORCID = "0000-0003-2945-1860")))
-Author: Max Welz [aut, cre] (<https://orcid.org/0000-0003-2945-1860>)
-Maintainer: Max Welz <welz@ese.eur.nl>
-Description: One paragraph description of what the package does as one or more full sentences.
+           email = "max.welz@uzh.ch",
+           comment = c(ORCID = "0000-0003-2945-1860")),
+      person(given = "Andreas",
+             family = "Alfons",
+             role = "aut",
+             email = "alfons@ese.eur.nl",
+             comment = c(ORCID = "0000-0002-2513-3788")),
+      person(given = "Patrick",
+             family = "Mair",
+             role = "aut",
+             email = "mair@fas.harvard.edu",
+             comment = c(ORCID = "0000-0003-0100-6511"))
+             )
+Maintainer: Max Welz <max.welz@uzh.ch>
+Description: Robust categorical data anlysis based on the theory of C-estimation developed in Welz (2024) <arXiv:2403.11954>. For now, the package only implements robust estimation of polychoric correlation as proposed in Welz, Mair and Alfons (2024) <arXiv:2407.18835> with methods for printing and plotting. We will implement further models in future releases. In addition, the package is still experimental, so input arguments and class structure may change in future releases.
 License: GPL (>= 2)
 Encoding: UTF-8
 Depends: ggplot2
@@ -19,3 +29,5 @@ Imports: Rcpp (>= 1.0.10), stats, mvtnorm, stringr, parallel
 Suggests: testthat (>= 3.0.0)
 LinkingTo: Rcpp
 RoxygenNote: 7.3.2
+NeedsCompilation: yes
+Packaged: 2025-01-31 09:29:28 UTC; mwelz

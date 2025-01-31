@@ -2,15 +2,15 @@
 % Please edit documentation in R/polycor_funs_helper.R
 \name{initialize_param}
 \alias{initialize_param}
-\title{neutral initialization of starting values}
+\title{Neutral initialization of starting values}
 \usage{
 initialize_param(x, y)
 }
 \arguments{
-\item{x}{vector of integer-valued responses to first item or contingency table (a \code{table} object)}
+\item{x}{Vector of integer-valued responses to first rating variable, or contingency table (a \code{table} object).}
 
-\item{y}{vector of integer-valued responses to second item; only required if \code{x} is not a contingency table}
+\item{y}{Vector of integer-valued responses to second rating variable; only required if \code{x} is not a contingency table.}
 }
 \description{
-neutral initialization of starting values
+Initializes starting values for numerical optimization in a neutral way. The optimization problem itself is convex, so the initialization should not matter much.
 }

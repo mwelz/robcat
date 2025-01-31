@@ -1,8 +1,8 @@
-#' Plot method for class "polycor"
+#' Plot method for classes \code{"robpolycor"} and \code{"polycor"}.
 #' 
-#' @param x object of class \code{polycor}
-#' @param cutoff cutoff beyond which a Pearson residual is classified as outlying
-#' @param ... additional parameters to be passed down
+#' @param x Object of class \code{"robpolycor"} or \code{"polycor"}.
+#' @param cutoff Cutoff beyond which the color scale for Pearson residuals is truncated.
+#' @param ... Additional parameters to be passed down.
 #' @import ggplot2
 #' @export
 plot.robpolycor <- function(x, 

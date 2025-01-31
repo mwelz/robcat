@@ -2,17 +2,17 @@
 % Please edit documentation in R/print.R
 \name{print.robpolycor}
 \alias{print.robpolycor}
-\title{Print method for class "polycor"}
+\title{Print method for classes \code{"robpolycor"} and \code{"polycor"}.}
 \usage{
 \method{print}{robpolycor}(x, digits = max(3L, getOption("digits") - 3L), ...)
 }
 \arguments{
-\item{x}{object of class \code{polycor}}
+\item{x}{Object of class \code{"robpolycor"} or \code{"polycor"}.}
 
-\item{digits}{number of digits to be printed}
+\item{digits}{Number of digits to be printed.}
 
-\item{...}{additional parameters to be passed down}
+\item{...}{Additional parameters to be passed down.}
 }
 \description{
-Print method for class "polycor"
+Print method for classes \code{"robpolycor"} and \code{"polycor"}.
 }

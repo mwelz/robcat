@@ -273,28 +273,40 @@ polycor_fast <-
 
 
 
-#' Robust estimation of polychoric correlation
+#' Robust estimation of polychoric correlation 
 #' 
-#' @param x vector of integer-valued responses to first item or contingency table (a \code{table} object)
-#' @param y vector of integer-valued responses to second item; only required if \code{x} is not a contingency table 
-#' @param c tuning constant that governs robustness; must be in [0,Inf]. Defaults to 0.6
-#' @param variance shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}
-#' @param method numerical optimization method
-#' @param constrained shall strict monotonicity of thresholds be explicitly enforced by linear constraints? 
-#' @param maxcor maximum absolute correlation (to insure numerical stability)
-#' @param tol_thresholds minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}
-#' @param init initialization of numerical optimization. Default is neutral
+#' Implements to robust estimator of  Welz, Mair and Alfons (2024, \doi{10.48550/arXiv.2407.18835})  for the polychoric correlation model, based on the general theory of C-estimation proposed by Welz (2024, \doi{10.48550/arXiv.2403.11954}).
+#' 
+#' @param x Vector of integer-valued responses to first item, or contingency table (a \code{"\link[base]{table}"} object).
+#' @param y Vector of integer-valued responses to second item; only required if \code{x} is not a contingency table.
+#' @param c Tuning constant that governs robustness; must be in \code{[0, Inf]}. Defaults to 0.6.
+#' @param variance Shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}.
+#' @param method Numerical optimization method. 
+#' @param constrained Shall strict monotonicity of thresholds be explicitly enforced by linear constraints? Default is \code{TRUE}.
+#' @param maxcor Maximum absolute correlation (to insure numerical stability). Default is 0.999.
+#' @param tol_thresholds Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}. Default is 0.01.
+#' @param init Initialization of numerical optimization. Default is neutral.
 #'
 #' @return 
-#' A list with the following components. 
+#' An object of class \code{"robpolycor"}, which is a list with the following components. 
 #' \describe{
 #'   \item{\code{theahat}}{A vector of estimates for the polychoric correlation coefficient (\code{rho}) as well as thresholds for \code{x} (named \code{a1,a2,...,a_{Kx-1}}) and \code{y} (named \code{b1,b2,...,b_{Ky-1}}).}
-#'   \item{\code{stderr}}{A vector of standard errors for each estimate in \code{theahat}}
+#'   \item{\code{stderr}}{A vector of standard errors for each estimate in \code{theahat}.}
 #'   \item{\code{sigma}}{Estimated asymptotic covariance matrix \eqn{\Sigma}, evaluated at the estimates in \code{theahat}.}
-#'   \item{\code{chisq,pval,df}}{Test statistic, p-value, and degrees of freedom of a test for bivariate normality}
-#'   \item{\code{objective}}{Value of minimized loss function}
-#'   \item{\code{optim}}{Object of class \code{optim}}
+#'   \item{\code{chisq,pval,df}}{Currently \code{NULL}, will in a future release be the test statistic, p-value, and degrees of freedom of a test for bivariate normality.}
+#'   \item{\code{objective}}{Value of minimized loss function.}
+#'   \item{\code{optim}}{Object of class \code{optim}.}
 #' }
+#' 
+#' @examples
+#' ## example data
+#' set.seed(123)
+#' x <- sample(c(1,2,3), size = 100, replace = TRUE)
+#' y <- sample(c(1,2,3), size = 100, replace = TRUE)
+#' 
+#' polycor(x,y)     # robust
+#' polycor_mle(x,y) # non-robust MLE
+#' 
 #' @export
 polycor <- function(x, y = NULL, c = 0.6, 
                     variance = TRUE,
@@ -326,15 +338,28 @@ polycor <- function(x, y = NULL, c = 0.6,
 
 #' Maximum likelihood estimation of polychoric correlation coefficient
 #' 
-#' @param x vector of integer-valued responses to first item or contingency table (a \code{table} object)
-#' @param y vector of integer-valued responses to second item; only required if \code{x} is not a contingency table 
-#' @param variance shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}
-#' @param method numerical optimization method; default is Nelder-Mead
-#' @param constrained shall strict monotonicity of thresholds be explicitly enforced by linear constraints? Only relevant if \code{twostep = FALSE}
-#' @param twostep shall two-step estimation be performed? 
-#' @param maxcor maximum absolute correlation (to insure numerical stability)
-#' @param tol_thresholds minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}
-#' @param init initialization of numerical optimization. Default is neutral. If \code{twostep = TRUE}, only first element (correlation) will be used
+#' Implements the maximum likelihood estimator of Olsson (1979, Psychometrika, \doi{10.1007/BF02296207}) for the polychoric correlation model.
+#' 
+#' @param x Vector of integer-valued responses to first item, or contingency table (a \code{"\link[base]{table}"} object).
+#' @param y Vector of integer-valued responses to second item; only required if \code{x} is not a contingency table.
+#' @param variance Shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}.
+#' @param method Numerical optimization method; default is Nelder-Mead.
+#' @param constrained shall strict monotonicity of thresholds be explicitly enforced by linear constraints? Only relevant if \code{twostep = FALSE}. Default is \code{TRUE}.
+#' @param twostep Shall two-step estimation of Olsson (1979) <doi:10.1007/BF02296207> be performed? Default is \code{FALSE}.
+#' @param maxcor Maximum absolute correlation (to insure numerical stability). Deafult is 0.999.
+#' @param tol_thresholds Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}. Default is 0.01.
+#' @param init Initialization of numerical optimization. Default is neutral. If \code{twostep = TRUE}, only the first element (the correlation coefficient) will be used.
+#' 
+#' @return An object of class \code{"robpolycor"}. See \code{\link{polycor}()} for details.
+#' 
+#' @examples
+#' ## example data
+#' set.seed(123)
+#' x <- sample(c(1,2,3), size = 100, replace = TRUE)
+#' y <- sample(c(1,2,3), size = 100, replace = TRUE)
+#' 
+#' polycor(x,y)     # robust
+#' polycor_mle(x,y) # non-robust MLE
 #' 
 #' @export
 polycor_mle <- function(x, y = NULL, 

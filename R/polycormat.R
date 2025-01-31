@@ -148,16 +148,27 @@ get_cormat <- function(data, c, variance, constrained, method, maxcor, tol_thres
 
 #' Robust estimation of polychoric correlation matrix
 #' 
-#' @param data Data matrix of integer-valued responses, individual respondents are in rows
-#' @param c tuning constant that governs robustness; takes values in [0,Inf]. Defaults to 0.6.
-#' @param parallel Logical. Shall parallelization be used?
-#' @param num_cores Number of cores to be used, only relevant if \code{parallel = TRUE}
-#' @param return_polycor Logical. Shall the individual \code{polycor} objects for each item pair estimate be returned?
-#' @param variance shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}
-#' @param method numerical optimization method
-#' @param constrained shall strict monotonicity of thresholds be explicitly enforced by linear constraints? 
-#' @param maxcor maximum absolute correlation (to insure numerical stability)
-#' @param tol_thresholds minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}
+#' A useful wrapper of \code{\link{polycor}} to robustly estimate a polychoric correlation matrix by calculating all unique pairwise polychoric correlation coefficients.
+#' 
+#' @param data Data matrix or \code{\link[base]{data.frame}} of integer-valued responses, individual respondents are in rows and responses to the items in the columns.
+#' @param c tuning constant that governs robustness; takes values in \code{[0, Inf]}. Defaults to 0.6.
+#' @param parallel Logical. Shall parallelization be used? Default is \code{FALSE}.
+#' @param num_cores Number of cores to be used, only relevant if \code{parallel = TRUE}. Defaults to the number of system cores.
+#' @param return_polycor Logical. Shall the individual \code{"\link{polycor}"} objects for each item pair estimate be returned? Deafult is \code{TRUE}.
+#' @param variance Shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}.
+#' @param method Numerical optimization method.
+#' @param constrained Shall strict monotonicity of thresholds be explicitly enforced by linear constraints? 
+#' @param maxcor Maximum absolute correlation (to insure numerical stability).
+#' @param tol_thresholds Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}.
+#' 
+#' @return If \code{return_polycor = TRUE}, returns a list with a polychoric correlation matrix and list of \code{"\link{polycor}"} objects. If \code{return_polycor = FALSE}, then only a correlation matrix is returned.
+#' 
+#' @examples
+#' ## example data
+#' set.seed(123)
+#' data <- matrix(sample(c(1,2,3), size = 3*100, replace = TRUE), nrow = 100)
+#' polycormat(data)     # robust 
+#' polycormat_mle(data) # non-robust MLE
 #' 
 #' @export
 polycormat <- function(data, c = 0.6, 
@@ -178,15 +189,26 @@ polycormat <- function(data, c = 0.6,
 
 #' Maximum likelihood estimation of polychoric correlation matrix
 #' 
-#' @param data Data matrix of integer-valued responses, individual respondents are in rows
-#' @param parallel Logical. Shall parallelization be used?
-#' @param num_cores Number of cores to be used, only relevant if \code{parallel = TRUE}
-#' @param return_polycor Logical. Shall the individual \code{polycor} objects for each item pair estimate be returned?
-#' @param variance shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}
-#' @param method numerical optimization method
-#' @param constrained shall strict monotonicity of thresholds be explicitly enforced by linear constraints? 
-#' @param maxcor maximum absolute correlation (to insure numerical stability)
-#' @param tol_thresholds minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}
+#' A useful wrapper of \code{\link{polycor_mle}} to estimate a polychoric correlation matrix via maximum likelihood by calculating all unique pairwise polychoric correlation coefficients.
+#' 
+#' @param data Data matrix or \code{\link[base]{data.frame}} of integer-valued responses, individual respondents are in rows and responses to the items in the columns.
+#' @param parallel Logical. Shall parallelization be used? Default is \code{FALSE}.
+#' @param num_cores Number of cores to be used, only relevant if \code{parallel = TRUE}. Defaults to the number of system cores.
+#' @param return_polycor Logical. Shall the individual \code{"\link{polycor}"} objects for each item pair estimate be returned? Deafult is \code{TRUE}.
+#' @param variance Shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}.
+#' @param method Numerical optimization method.
+#' @param constrained Shall strict monotonicity of thresholds be explicitly enforced by linear constraints? 
+#' @param maxcor Maximum absolute correlation (to insure numerical stability).
+#' @param tol_thresholds Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}.
+#' 
+#' @return If \code{return_polycor = TRUE}, returns a list with a polychoric correlation matrix and list of \code{"\link{polycor}"} objects. If \code{return_polycor = FALSE}, then only a correlation matrix is returned.
+#' 
+#' @examples
+#' ## example data
+#' set.seed(123)
+#' data <- matrix(sample(c(1,2,3), size = 3*100, replace = TRUE), nrow = 100)
+#' polycormat(data)     # robust 
+#' polycormat_mle(data) # non-robust MLE
 #'
 #' @export
 polycormat_mle <- function(data,
@@ -204,4 +226,4 @@ polycormat_mle <- function(data,
              num_cores = num_cores, parallel = parallel, mle = TRUE, return_polycor = return_polycor)
 }
 
-## TODO:  possible eigenvalue correction and windows; palallel in description & namespace, export funs
+## TODO:  possible eigenvalue correction and windows; parallel in description & namespace, export funs

@@ -45,7 +45,9 @@ List celltest_cpp(
   bool twosided)
 {
   int x, y;
-  NumericMatrix stderr(Kx,Ky), teststat(Kx,Ky), pval(Kx,Ky);
+  NumericMatrix stderr( Kx, Ky );
+  NumericMatrix teststat( Kx, Ky );
+  NumericMatrix pval( Kx, Ky );
   double sigma2, stderr_xy, z, p;
   double sqrtN = std::sqrt((double)N);
   

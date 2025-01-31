@@ -17,24 +17,35 @@ polycormat_mle(
 )
 }
 \arguments{
-\item{data}{Data matrix of integer-valued responses, individual respondents are in rows}
+\item{data}{Data matrix or \code{\link[base]{data.frame}} of integer-valued responses, individual respondents are in rows and responses to the items in the columns.}
 
-\item{parallel}{Logical. Shall parallelization be used?}
+\item{parallel}{Logical. Shall parallelization be used? Default is \code{FALSE}.}
 
-\item{num_cores}{Number of cores to be used, only relevant if \code{parallel = TRUE}}
+\item{num_cores}{Number of cores to be used, only relevant if \code{parallel = TRUE}. Defaults to the number of system cores.}
 
-\item{return_polycor}{Logical. Shall the individual \code{polycor} objects for each item pair estimate be returned?}
+\item{return_polycor}{Logical. Shall the individual \code{"\link{polycor}"} objects for each item pair estimate be returned? Deafult is \code{TRUE}.}
 
-\item{variance}{shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}}
+\item{variance}{Shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}.}
 
-\item{constrained}{shall strict monotonicity of thresholds be explicitly enforced by linear constraints?}
+\item{constrained}{Shall strict monotonicity of thresholds be explicitly enforced by linear constraints?}
 
-\item{method}{numerical optimization method}
+\item{method}{Numerical optimization method.}
 
-\item{maxcor}{maximum absolute correlation (to insure numerical stability)}
+\item{maxcor}{Maximum absolute correlation (to insure numerical stability).}
 
-\item{tol_thresholds}{minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}}
+\item{tol_thresholds}{Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}.}
+}
+\value{
+If \code{return_polycor = TRUE}, returns a list with a polychoric correlation matrix and list of \code{"\link{polycor}"} objects. If \code{return_polycor = FALSE}, then only a correlation matrix is returned.
 }
 \description{
-Maximum likelihood estimation of polychoric correlation matrix
+A useful wrapper of \code{\link{polycor_mle}} to estimate a polychoric correlation matrix via maximum likelihood by calculating all unique pairwise polychoric correlation coefficients.
+}
+\examples{
+## example data
+set.seed(123)
+data <- matrix(sample(c(1,2,3), size = 3*100, replace = TRUE), nrow = 100)
+polycormat(data)     # robust 
+polycormat_mle(data) # non-robust MLE
+
 }

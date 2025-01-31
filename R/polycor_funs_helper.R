@@ -14,9 +14,12 @@ init_thresholds <- function(K)
 } # FUN
 
 
-#' neutral initialization of starting values
-#' @param x vector of integer-valued responses to first item or contingency table (a \code{table} object)
-#' @param y vector of integer-valued responses to second item; only required if \code{x} is not a contingency table 
+#' Neutral initialization of starting values
+#' 
+#' Initializes starting values for numerical optimization in a neutral way. The optimization problem itself is convex, so the initialization should not matter much.
+#' 
+#' @param x Vector of integer-valued responses to first rating variable, or contingency table (a \code{table} object).
+#' @param y Vector of integer-valued responses to second rating variable; only required if \code{x} is not a contingency table. 
 #' @export
 initialize_param <- function(x, y)
 {
@@ -84,7 +87,14 @@ constrOptim_constraints <- function(Kx, Ky,
 # downward stepwise pattern of c(-1,1)
 constrOptim_submatrix <- function(K)
 {
-  stopifnot(K > 2L) # fails if K = 2 (but no constraints needed there anyway)
+  
+  if(K < 3L)
+  {
+    # fails if K = 2 (but no constraints needed there anyway)
+    stop(paste0(
+      "Too few threshold parameters for constrained optimization to ",
+      "be meaningful. Did you specify constrained = TRUE while your items are dichotomous?"))
+  }
   
   # initialize
   Km1 <- K - 1L
