@@ -25,7 +25,7 @@ NumericVector fhat(NumericVector x,
       // given responses (accounts for 0-indexing)
       int s = i + 1;
       int r = j + 1;
-      double count = Rcpp::sum(x == s & y == r); // double to avoid integer division
+      double count = Rcpp::sum((x == s) & (y == r)); // double to avoid integer division
       out[k] = count / n;
       k++;
     } // FOR r

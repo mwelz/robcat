@@ -44,26 +44,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// celltest_cpp
-List celltest_cpp(double rho, NumericVector thresX, NumericVector thresY, int Kx, int Ky, NumericMatrix probs, NumericMatrix f, NumericMatrix sigma, int N, bool twosided);
-RcppExport SEXP _robcat_celltest_cpp(SEXP rhoSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP KxSEXP, SEXP KySEXP, SEXP probsSEXP, SEXP fSEXP, SEXP sigmaSEXP, SEXP NSEXP, SEXP twosidedSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
-    Rcpp::traits::input_parameter< int >::type Kx(KxSEXP);
-    Rcpp::traits::input_parameter< int >::type Ky(KySEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type probs(probsSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type f(fSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type sigma(sigmaSEXP);
-    Rcpp::traits::input_parameter< int >::type N(NSEXP);
-    Rcpp::traits::input_parameter< bool >::type twosided(twosidedSEXP);
-    rcpp_result_gen = Rcpp::wrap(celltest_cpp(rho, thresX, thresY, Kx, Ky, probs, f, sigma, N, twosided));
-    return rcpp_result_gen;
-END_RCPP
-}
 // outer_vec
 NumericMatrix outer_vec(NumericVector v);
 RcppExport SEXP _robcat_outer_vec(SEXP vSEXP) {
@@ -840,7 +820,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_robcat_pnorm_tail", (DL_FUNC) &_robcat_pnorm_tail, 2},
     {"_robcat_pval_twosided", (DL_FUNC) &_robcat_pval_twosided, 1},
     {"_robcat_pval_left", (DL_FUNC) &_robcat_pval_left, 1},
-    {"_robcat_celltest_cpp", (DL_FUNC) &_robcat_celltest_cpp, 10},
     {"_robcat_outer_vec", (DL_FUNC) &_robcat_outer_vec, 1},
     {"_robcat_matplus", (DL_FUNC) &_robcat_matplus, 2},
     {"_robcat_mmult", (DL_FUNC) &_robcat_mmult, 2},

@@ -31,6 +31,7 @@ double pval_left(double z)
 }
 
 
+/* COMMENTED OUT BECAUSE DECALRATION OF NUMERICMATRIX CAUSES INSTALLATION FAIL ON WINDOWS
 // test if a cell us outlying
 //[[Rcpp::export]]
 List celltest_cpp(
@@ -45,9 +46,9 @@ List celltest_cpp(
   bool twosided)
 {
   int x, y;
-  NumericMatrix stderr( Kx, Ky );
-  NumericMatrix teststat( Kx, Ky );
-  NumericMatrix pval( Kx, Ky );
+  Rcpp::NumericMatrix stderr( Kx, Ky );
+  Rcpp::NumericMatrix teststat( Kx, Ky );
+  Rcpp::NumericMatrix pval( Kx, Ky );
   double sigma2, stderr_xy, z, p;
   double sqrtN = std::sqrt((double)N);
   
@@ -100,3 +101,4 @@ List celltest_cpp(
     Rcpp::Named("pval") = pval
   );
 }
+ */

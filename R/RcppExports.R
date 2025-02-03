@@ -13,10 +13,6 @@ pval_left <- function(z) {
     .Call(`_robcat_pval_left`, z)
 }
 
-celltest_cpp <- function(rho, thresX, thresY, Kx, Ky, probs, f, sigma, N, twosided) {
-    .Call(`_robcat_celltest_cpp`, rho, thresX, thresY, Kx, Ky, probs, f, sigma, N, twosided)
-}
-
 outer_vec <- function(v) {
     .Call(`_robcat_outer_vec`, v)
 }
