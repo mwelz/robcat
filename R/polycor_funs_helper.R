@@ -57,26 +57,45 @@ constrOptim_constraints <- function(Kx, Ky,
                                     maxcor = 0.999,
                                     tol_thresholds = 0.001)
 {
-  Km1 <- Kx + Ky - 1L
-  Km2 <- Km1 - 1L
+  ## number of constraints needed for each parameter
+  # if an item is dichotomous -> no constraints required for its thresholds
+  num_constr_rho <- 2L         # -1 < rho & rho < 1
+  num_constr_thresX <- Kx - 2L # monotoncity of X-thresholds
+  num_constr_thresY <- Ky - 2L # monotoncity of Y-thresholds
+  num_constr <- num_constr_rho + num_constr_thresX + num_constr_thresY
+  num_param <- Kx + Ky - 1L
   
-  ### the U matrix (ui in ?stats::constrOptim)
+  
+  ## Matrix U and vector C (ui and ci, respectively, in ?stats::constrOptim)
   # U is a (Kx+Ky-2) x (Kx+Ky-1) block matrix of zeros as base
   # from top left to bottom right, we have the following three submatrices:
   # for \rho: [1:2, 1]
   # for X-submatrix: [(2+1):(Kx-2+2), (1+1):(Kx-1+1)] = [3:Kx,2:Kx] is (Kx-2) x (Kx-1)
   # for Y-submatrix: [(2+(Kx-2)+1):(Kx+Ky-2), (1+(Kx-1)+1):(Kx+Ky-1)] = [(Kx+1):Km2, (Kx+1):Km1] is (Ky-2) x (Ky-1)
-  U    <- matrix(0L, nrow = Km2, ncol = Km1)
-  subx <- constrOptim_submatrix(Kx)
-  suby <- constrOptim_submatrix(Ky)
-  U[1:2,1]                  <- c(1L, -1L) # enforce \rho \in [-1,1]
-  U[3:Kx, 2:Kx]             <- subx       # enforce monotonicity of X-thresholds
-  U[(Kx+1):Km2, (Kx+1):Km1] <- suby       # enforce monotonicity of Y-thresholds
+  U <- matrix(0L, nrow = num_constr, ncol = num_param)
+  C <- rep(NA_real_, num_constr)
   
-  ### the C vector (ci in ?stats::constrOptim)
-  C        <- rep(NA_real_, Km2)
-  C[1:2]   <- maxcor * (-1.0) # tolerance for \rho \in [-1,1]
-  C[3:Km2] <- tol_thresholds  # tolerance for monotonicity of thresholds
+  ## rho-constraints
+  U[seq_len(num_constr_rho), 1L] <- c(1L, -1L)  # enforce \rho \in [-1,1]
+  C[seq_len(num_constr_rho)] <- maxcor * (-1.0) # tolerance for \rho \in [-1,1]
+  
+  
+  ## X-threshold constraints: enforce monotonicity of adjacent thresholds
+  # only applicable if item isn't dichotomous
+  if(num_constr_thresX > 0L)
+  {
+    U[1:num_constr_thresX + num_constr_rho, 2:Kx] <- constrOptim_submatrix(Kx)
+    C[1:num_constr_thresX + num_constr_rho] <- tol_thresholds # tolerance
+  } 
+  
+  ## Y-threshold constraints: enforce monotonicity of adjacent thresholds
+  # only applicable if item isn't dichotomous
+  if(num_constr_thresY > 0L)
+  {
+    U[1:num_constr_thresY + num_constr_thresX + num_constr_rho,
+      (Kx+1L):num_param] <- constrOptim_submatrix(Ky)
+    C[1:num_constr_thresY + num_constr_thresX + num_constr_rho] <- tol_thresholds # tolerance
+  }
   
   return(list(ui = U, ci = C))
   
@@ -88,13 +107,8 @@ constrOptim_constraints <- function(Kx, Ky,
 constrOptim_submatrix <- function(K)
 {
   
-  if(K < 3L)
-  {
-    # fails if K = 2 (but no constraints needed there anyway)
-    stop(paste0(
-      "Too few threshold parameters for constrained optimization to ",
-      "be meaningful. Did you specify constrained = TRUE while your items are dichotomous?"))
-  }
+  # fails if K = 2 (but no constraints needed there anyway)
+  stopifnot(K > 2L)
   
   # initialize
   Km1 <- K - 1L
