@@ -206,11 +206,11 @@ polycor_fast <-
                          method = method,
                          hessian = FALSE)
   } else{
-    ## without monotonicity constraints: runs faster, but less accurate
+    ## without monotonicity or rho-boundary constraints: runs faster, but less accurate
     opt <- 
       stats::optim(par = init, fn = fn, gr = NULL, 
-                   lower = c(-maxcor, rep(-Inf, length(Kx+Ky-2))),
-                   upper = c(maxcor, rep(Inf, length(Kx+Ky-2))), 
+                   #lower = c(-maxcor, rep(-Inf, length(Kx+Ky-2))), # TODO: the length() argument here is a bug, should be removed
+                   #upper = c(maxcor, rep(Inf, length(Kx+Ky-2))), 
                    hessian = FALSE, method = method)
   } # IF
   
