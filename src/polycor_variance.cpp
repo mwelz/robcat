@@ -157,18 +157,21 @@ NumericVector pk_prime_thresX(
     int Kx)
 {
   NumericVector out(Kx-1);
+  int xminus1 = x - 1;
+  int yminus1 = y - 1;
   
+  // first and last threshold values are constant (∓∞), so skip them
   for(int k = 1; k < Kx; ++k)
   {
     if(k == x)
     {
       double deriv1 = F_prime_thres(thresX[k], thresY[y], rho);
-      double deriv2 = F_prime_thres(thresX[k], thresY[y-1], rho);
+      double deriv2 = F_prime_thres(thresX[k], thresY[yminus1], rho);
       out[k-1] = deriv1 - deriv2;
-    } else if (k == x - 1)
+    } else if (k == xminus1)
     {
       double deriv1 = F_prime_thres(thresX[k], thresY[y], rho);
-      double deriv2 = F_prime_thres(thresX[k], thresY[y-1], rho);
+      double deriv2 = F_prime_thres(thresX[k], thresY[yminus1], rho);
       out[k-1] = deriv2 - deriv1;
     } else
     {
@@ -192,6 +195,8 @@ NumericVector pk_prime_thresY(
     int Ky)
 {
   NumericVector out(Ky-1);
+  int xminus1 = x - 1;
+  int yminus1 = y - 1;
   
   // first and last threshold values are constant (∓∞), so skip them
   for(int k = 1; k < Ky; ++k)
@@ -199,12 +204,12 @@ NumericVector pk_prime_thresY(
     if(k == y)
     {
       double deriv1 = F_prime_thres(thresY[k], thresX[x], rho);
-      double deriv2 = F_prime_thres(thresY[k], thresX[x-1], rho);
+      double deriv2 = F_prime_thres(thresY[k], thresX[xminus1], rho);
       out[k-1] = deriv1 - deriv2;
-    } else if (k == y - 1)
+    } else if (k == yminus1)
     {
       double deriv1 = F_prime_thres(thresY[k], thresX[x], rho);
-      double deriv2 = F_prime_thres(thresY[k], thresX[x-1], rho);
+      double deriv2 = F_prime_thres(thresY[k], thresX[xminus1], rho);
       out[k-1] = deriv2 - deriv1;
     } else
     {
@@ -244,6 +249,7 @@ NumericVector pk_prime_theta(
     NumericVector thresX,
     NumericVector thresY,
     double rho,
+    int num_param, // = Kx + Ky - 1
     int Kx, int Ky)
 {
   
@@ -253,7 +259,7 @@ NumericVector pk_prime_theta(
   NumericVector grad_thresY = pk_prime_thresY(x, y, thresX, thresY, rho, Ky);
   
   // fill up the final gradient
-  NumericVector out(Kx + Ky -1); 
+  NumericVector out(num_param); 
   out[0] = grad_rho;
   
   int ct = 0;
@@ -264,7 +270,7 @@ NumericVector pk_prime_theta(
   }
   
   ct = 0;
-  for(int k = Kx; k < Kx+Ky-1; ++k)
+  for(int k = Kx; k < num_param; ++k)
   {
     out[k] = grad_thresY[ct];
     ct++;
@@ -793,8 +799,9 @@ NumericVector sk_theta(
 {
   NumericMatrix cormat   = make_cormat(rho);
   NumericVector mean     = {0., 0.};
-  double pk              = pk_theta(x, y, cormat, thresX, thresY, mean);      
-  NumericVector pk_prime = pk_prime_theta(x, y, thresX, thresY, rho, Kx, Ky);
+  int d                  = Kx + Ky - 1; // number of parameters
+  double pk              = pk_theta(x, y, cormat, thresX, thresY, mean); 
+  NumericVector pk_prime = pk_prime_theta(x, y, thresX, thresY, rho, d, Kx, Ky);
   return pk_prime / pk;
 }
 
@@ -878,7 +885,7 @@ List get_MW(
     { 
       // calculate sk(theta)
       pk = pk_theta(x, y, cormat, thresX, thresY, mean);
-      NumericVector pk_prime = pk_prime_theta(x, y, thresX, thresY, rho, Kx, Ky);
+      NumericVector pk_prime = pk_prime_theta(x, y, thresX, thresY, rho, d, Kx, Ky);
       NumericVector sk = pk_prime / pk;
       
       // outer product of sk
@@ -941,7 +948,7 @@ NumericMatrix get_fisher(
     { 
       // calculate sk(theta)
       pk = pk_theta(x, y, cormat, thresX, thresY, mean);
-      NumericVector pk_prime = pk_prime_theta(x, y, thresX, thresY, rho, Kx, Ky);
+      NumericVector pk_prime = pk_prime_theta(x, y, thresX, thresY, rho, d, Kx, Ky);
       NumericVector sk = pk_prime / pk;
       
       // outer product of sk
@@ -968,6 +975,76 @@ NumericMatrix get_fisher(
   
   return J * (-1.);
 }
+
+
+////////////// GRADIENT COMPUTATION:
+
+// RAF of Ruckstuhl + Welsh (2001, AoS)
+// [[Rcpp::export]]
+double raf_fast(double x, // PR (1-based)
+                double c1, // c's are 1-based
+                double c2)
+{
+  double out;
+  
+  if(x < c1)
+  {
+    out = c1;
+  } else if(x > c2)
+  {
+    out = c2;
+  } else
+  {
+    // occurs iff c1 <= x && x <= c2
+    out = x;
+  }
+  
+  return out;
+} // FUN
+
+
+
+// the thres variables; first and last values are ∓∞
+// returns gradient of loss differentiated with respect to theta
+// [[Rcpp::export]]
+NumericVector gradient_loss_cpp(
+    NumericVector f,      // density function
+    double rho,
+    NumericVector thresX, // X-thresholds; first and last values are ∓∞
+    NumericVector thresY, // Y-thresholds; first and last values are ∓∞
+    NumericVector mean, // = {0,0}
+    int Kx, int Ky,
+    int num_params, // = Kx + Ky -1
+    double c1, // c's are 1-based
+    double c2)
+{
+  NumericVector OUT(num_params);
+  NumericMatrix cormat = make_cormat(rho);
+  
+  // initialize
+  int k = 0;
+  
+  // loop over responses
+  for(int x = 1; x <= Kx; ++x)
+  {
+    for(int y = 1; y <= Ky; ++y)
+    {
+      // x and y are the given responses at (x,y)
+      double prob_k = pk_theta(x, y, cormat, thresX, thresY, mean);
+      double pr = f[k] / prob_k;           // pearson residual (1-based)
+      double raf_k = raf_fast(pr, c1, c2); // residual adjustment function
+      
+      // gradient of polychoric model w.r.t. theta at (x,y)
+      NumericVector grad_pk = pk_prime_theta(x, y, thresX, thresY, rho, num_params, Kx, Ky);
+      
+      // update output
+      OUT = OUT + grad_pk * raf_k;
+      k++;
+    } 
+  }
+  
+  return OUT * (-1.);
+} // FUN
 
 
 

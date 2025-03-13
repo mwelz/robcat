@@ -444,8 +444,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // pk_prime_theta
-NumericVector pk_prime_theta(int x, int y, NumericVector thresX, NumericVector thresY, double rho, int Kx, int Ky);
-RcppExport SEXP _robcat_pk_prime_theta(SEXP xSEXP, SEXP ySEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP rhoSEXP, SEXP KxSEXP, SEXP KySEXP) {
+NumericVector pk_prime_theta(int x, int y, NumericVector thresX, NumericVector thresY, double rho, int num_param, int Kx, int Ky);
+RcppExport SEXP _robcat_pk_prime_theta(SEXP xSEXP, SEXP ySEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP rhoSEXP, SEXP num_paramSEXP, SEXP KxSEXP, SEXP KySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -454,9 +454,10 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
     Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    Rcpp::traits::input_parameter< int >::type num_param(num_paramSEXP);
     Rcpp::traits::input_parameter< int >::type Kx(KxSEXP);
     Rcpp::traits::input_parameter< int >::type Ky(KySEXP);
-    rcpp_result_gen = Rcpp::wrap(pk_prime_theta(x, y, thresX, thresY, rho, Kx, Ky));
+    rcpp_result_gen = Rcpp::wrap(pk_prime_theta(x, y, thresX, thresY, rho, num_param, Kx, Ky));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -815,6 +816,39 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// raf_fast
+double raf_fast(double x, double c1, double c2);
+RcppExport SEXP _robcat_raf_fast(SEXP xSEXP, SEXP c1SEXP, SEXP c2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type c1(c1SEXP);
+    Rcpp::traits::input_parameter< double >::type c2(c2SEXP);
+    rcpp_result_gen = Rcpp::wrap(raf_fast(x, c1, c2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gradient_loss_cpp
+NumericVector gradient_loss_cpp(NumericVector f, double rho, NumericVector thresX, NumericVector thresY, NumericVector mean, int Kx, int Ky, int num_params, double c1, double c2);
+RcppExport SEXP _robcat_gradient_loss_cpp(SEXP fSEXP, SEXP rhoSEXP, SEXP thresXSEXP, SEXP thresYSEXP, SEXP meanSEXP, SEXP KxSEXP, SEXP KySEXP, SEXP num_paramsSEXP, SEXP c1SEXP, SEXP c2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type f(fSEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresX(thresXSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type thresY(thresYSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< int >::type Kx(KxSEXP);
+    Rcpp::traits::input_parameter< int >::type Ky(KySEXP);
+    Rcpp::traits::input_parameter< int >::type num_params(num_paramsSEXP);
+    Rcpp::traits::input_parameter< double >::type c1(c1SEXP);
+    Rcpp::traits::input_parameter< double >::type c2(c2SEXP);
+    rcpp_result_gen = Rcpp::wrap(gradient_loss_cpp(f, rho, thresX, thresY, mean, Kx, Ky, num_params, c1, c2));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_robcat_pnorm_tail", (DL_FUNC) &_robcat_pnorm_tail, 2},
@@ -849,7 +883,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_robcat_pk_prime_thresX", (DL_FUNC) &_robcat_pk_prime_thresX, 6},
     {"_robcat_pk_prime_thresY", (DL_FUNC) &_robcat_pk_prime_thresY, 6},
     {"_robcat_pk_prime_rho", (DL_FUNC) &_robcat_pk_prime_rho, 5},
-    {"_robcat_pk_prime_theta", (DL_FUNC) &_robcat_pk_prime_theta, 7},
+    {"_robcat_pk_prime_theta", (DL_FUNC) &_robcat_pk_prime_theta, 8},
     {"_robcat_dnorm1_prime", (DL_FUNC) &_robcat_dnorm1_prime, 1},
     {"_robcat_dnorm2_prime_rho", (DL_FUNC) &_robcat_dnorm2_prime_rho, 3},
     {"_robcat_pnorm2_prime2_x_x", (DL_FUNC) &_robcat_pnorm2_prime2_x_x, 3},
@@ -875,6 +909,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_robcat_in_interval", (DL_FUNC) &_robcat_in_interval, 3},
     {"_robcat_get_MW", (DL_FUNC) &_robcat_get_MW, 8},
     {"_robcat_get_fisher", (DL_FUNC) &_robcat_get_fisher, 5},
+    {"_robcat_raf_fast", (DL_FUNC) &_robcat_raf_fast, 3},
+    {"_robcat_gradient_loss_cpp", (DL_FUNC) &_robcat_gradient_loss_cpp, 10},
     {NULL, NULL, 0}
 };
 

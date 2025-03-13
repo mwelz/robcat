@@ -129,8 +129,8 @@ pk_prime_rho <- function(x, y, thresX, thresY, rho) {
     .Call(`_robcat_pk_prime_rho`, x, y, thresX, thresY, rho)
 }
 
-pk_prime_theta <- function(x, y, thresX, thresY, rho, Kx, Ky) {
-    .Call(`_robcat_pk_prime_theta`, x, y, thresX, thresY, rho, Kx, Ky)
+pk_prime_theta <- function(x, y, thresX, thresY, rho, num_param, Kx, Ky) {
+    .Call(`_robcat_pk_prime_theta`, x, y, thresX, thresY, rho, num_param, Kx, Ky)
 }
 
 dnorm1_prime <- function(x) {
@@ -231,5 +231,13 @@ get_MW <- function(rho, thresX, thresY, f, c1, c2, Kx, Ky) {
 
 get_fisher <- function(rho, thresX, thresY, Kx, Ky) {
     .Call(`_robcat_get_fisher`, rho, thresX, thresY, Kx, Ky)
+}
+
+raf_fast <- function(x, c1, c2) {
+    .Call(`_robcat_raf_fast`, x, c1, c2)
+}
+
+gradient_loss_cpp <- function(f, rho, thresX, thresY, mean, Kx, Ky, num_params, c1, c2) {
+    .Call(`_robcat_gradient_loss_cpp`, f, rho, thresX, thresY, mean, Kx, Ky, num_params, c1, c2)
 }
 

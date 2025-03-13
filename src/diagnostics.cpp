@@ -51,6 +51,7 @@ List celltest_cpp(
   Rcpp::NumericMatrix pval( Kx, Ky );
   double sigma2, stderr_xy, z, p;
   double sqrtN = std::sqrt((double)N);
+  int d = Kx + Ky - 1; // dim(theta)
   
   // declare function pointer
   double (*p_fun)(double);
@@ -72,7 +73,7 @@ List celltest_cpp(
       y = j + 1;
       
       // calculate gradient at cell
-      NumericVector grad = pk_prime_theta(x, y, thresX, thresY, rho, Kx, Ky);
+      NumericVector grad = pk_prime_theta(x, y, thresX, thresY, rho, d, Kx, Ky);
       
       // cast to matrix
       NumericMatrix gradm = mat2vec(grad);
