@@ -267,7 +267,7 @@ polycor_fast <-
          pval = pval,
          objective = opt$value,
          optim = opt, 
-         inputs = list(Kx = Kx, Ky = Ky, N = N, c = c2 - 1.0)), # re-center c to be in [0,Inf]
+         inputs = list(Kx = Kx, Ky = Ky, N = N, c = c2 - 1.0, method = method)), # re-center c to be in [0,Inf]
     class = c("robpolycor", "polycor")))
 } # FUN
 
