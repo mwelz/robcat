@@ -64,7 +64,7 @@ polycor_variance <- function(theta, c1, c2, Kx, Ky, f, N)
   
   ## Sigma is the asy. covariance matrix of \sqrt(N)*thetahat
   # thus, the asymptotic covariance matrix of thetahat is given by Sigma / N
-  return(list(variance = Sigma / N, Sigma = Sigma))
+  return(Sigma / N)
 }
 
 
@@ -91,7 +91,7 @@ polycor_variance_mle <- function(theta, Kx, Ky, N)
   
   ## Sigma is the asy. covariance matrix of \sqrt(N)*thetahat
   # thus, the asymptotic covariance matrix of thetahat is given by Sigma / N
-  return(list(variance = Sigma / N, Sigma = Sigma))
+  return(Sigma / N)
 }
 
 
@@ -137,7 +137,7 @@ polycor_twostep <- function(f, contingency, Kx, Ky, N, init, maxcor)
   return(structure(
     list(thetahat = thetahat, 
          stderr = NULL,
-         sigma = NULL,
+         vcov = NULL,
          residuals = vec2tab(pearson, Kx = Kx, Ky = Ky),
          probs = vec2tab(probs, Kx = Kx, Ky = Ky),
          f = vec2tab(f, Kx = Kx, Ky = Ky),
@@ -227,17 +227,16 @@ polycor_fast <-
   ## calculate pearson residuals
   pearson <- f / probs - 1.0
   
-  ## if requested, estimate covariance matrix
+  ## if requested, estimate asymptotic covariance matrix
   if(variance)
   {
-    tmp <- polycor_variance(theta = thetahat, c1 = c1, c2 = c2,
-                            Kx = Kx, Ky = Ky, f = f, N = N)
-    stderr <- sqrt(diag(tmp$variance))
-    Sigma  <- tmp$Sigma
-    
+    asv <- polycor_variance(theta = thetahat, c1 = c1, c2 = c2,
+                             Kx = Kx, Ky = Ky, f = f, N = N)
+    stderr <- sqrt(diag(asv))
+
   } else
   {
-    Sigma <- stderr <- NULL
+    asv <- stderr <- NULL
   }
   
   ## perform chisq test for bivariate normality
@@ -258,7 +257,7 @@ polycor_fast <-
   return(structure(
     list(thetahat = thetahat, 
          stderr = stderr,
-         sigma = Sigma,
+         vcov = asv,
          residuals = vec2tab(pearson, Kx = Kx, Ky = Ky),
          probs = vec2tab(probs, Kx = Kx, Ky = Ky),
          f = vec2tab(f, Kx = Kx, Ky = Ky),
@@ -292,7 +291,7 @@ polycor_fast <-
 #' \describe{
 #'   \item{\code{theahat}}{A vector of estimates for the polychoric correlation coefficient (\code{rho}) as well as thresholds for \code{x} (named \code{a1,a2,...,a_{Kx-1}}) and \code{y} (named \code{b1,b2,...,b_{Ky-1}}).}
 #'   \item{\code{stderr}}{A vector of standard errors for each estimate in \code{theahat}.}
-#'   \item{\code{sigma}}{Estimated asymptotic covariance matrix \eqn{\Sigma}, evaluated at the estimates in \code{theahat}.}
+#'   \item{\code{vcov}}{Estimated asymptotic covariance matrix of \code{theahat}. The matrix \eqn{\Sigma} in the paper (asymptotic covariance matrix of \eqn{\sqrt{N} \hat{\theta}}) can be obtained via \code{vcov * N}, where \code{N} is the sample size.}
 #'   \item{\code{chisq,pval,df}}{Currently \code{NULL}, will in a future release be the test statistic, p-value, and degrees of freedom of a test for bivariate normality.}
 #'   \item{\code{objective}}{Value of minimized loss function.}
 #'   \item{\code{optim}}{Object of class \code{optim}.}
@@ -400,20 +399,20 @@ polycor_mle <- function(x, y = NULL,
   # if variance requested, calculate it based on fisher information
   if(variance)
   {
-    tmp <- 
+    asv <- 
       polycor_variance_mle(theta = obj$thetahat, Kx = inputs$Kx, Ky = inputs$Ky, N = inputs$N)
-    stderr <- sqrt(diag(tmp$variance))
-    sigma <- tmp$Sigma 
+    stderr <- sqrt(diag(asv))
+
+    # if(twostep)
+    # {
+    #   # in twostep, variance of thresholds isn't estimated consistently, so drop
+    #   stderr[2:length(stderr)] <- NA_real_
+    #   asv <- sigma[1L,1L,drop = FALSE]
+    # }
     
-    if(twostep)
-    {
-      # in twostep, variance of thresholds isn't estimated consistently, so drop
-      stderr[2:length(stderr)] <- NA_real_
-      sigma <- sigma[1L,1L,drop = FALSE]
-    }
     obj$stderr <- stderr
-    obj$sigma <- sigma
+    obj$vcov <- asv
   } # IF variance 
   
-  return(obj)
+  return(structure(obj, class = c("robpolycor", "robpolycor_mle", "polycor")))
 }

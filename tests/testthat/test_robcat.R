@@ -28,3 +28,8 @@ test_that("Correlation matrix computation behaves as expected", {
   expect_equal(mat_par$cormat[1,3], unname(san2$thetahat[1]))
   expect_equal(mat_par$cormat[3,2], unname(san3$thetahat[1]))
 })
+
+
+test_that("vcov() method behaves as expected", {
+  expect_equal(san1$vcov, vcov(san1))
+})
