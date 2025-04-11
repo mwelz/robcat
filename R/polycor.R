@@ -414,5 +414,5 @@ polycor_mle <- function(x, y = NULL,
     obj$vcov <- asv
   } # IF variance 
   
-  return(obj)
+  return(structure(obj, class = c("robpolycor", "robpolycor_mle", "polycor")))
 }
