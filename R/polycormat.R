@@ -142,7 +142,7 @@ get_cormat <- function(data, c, variance, constrained, method, maxcor, tol_thres
   } else{
     out <- mat
   }
-  return(out)
+  return(structure(out, class = "robpolycormat"))
 }
 
 
