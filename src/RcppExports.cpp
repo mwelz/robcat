@@ -655,7 +655,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_indices_thresX
-std::vector<int> get_indices_thresX(int Kx);
+IntegerVector get_indices_thresX(int Kx);
 RcppExport SEXP _robcat_get_indices_thresX(SEXP KxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -666,7 +666,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_indices_thresY
-std::vector<int> get_indices_thresY(int Kx, int Ky);
+IntegerVector get_indices_thresY(int Kx, int Ky);
 RcppExport SEXP _robcat_get_indices_thresY(SEXP KxSEXP, SEXP KySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -678,7 +678,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_indices_rho
-std::vector<int> get_indices_rho();
+IntegerVector get_indices_rho();
 RcppExport SEXP _robcat_get_indices_rho() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -688,13 +688,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // is_in
-bool is_in(int i, std::vector<int> v);
+bool is_in(int i, IntegerVector v);
 RcppExport SEXP _robcat_is_in(SEXP iSEXP, SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< int >::type i(iSEXP);
-    Rcpp::traits::input_parameter< std::vector<int> >::type v(vSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type v(vSEXP);
     rcpp_result_gen = Rcpp::wrap(is_in(i, v));
     return rcpp_result_gen;
 END_RCPP

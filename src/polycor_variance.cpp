@@ -1,7 +1,6 @@
 #include <Rcpp.h>
 #include <math.h> // for std::sqrt() and pow()
 #include <limits.h> // for infinity
-#include <vector> // for vector class
 #include "polycor.h" // import relevant helper functions
 #include "matrixalgebra.h" // same
 #include "polycor_variance.h"
@@ -57,10 +56,11 @@ bool is_infinite(double x)
 // [[Rcpp::export]]
 double dnorm(double x)
 {
-  Rcpp::Environment stats = Rcpp::Environment::namespace_env("stats");
-  Rcpp::Function f = stats["dnorm"];
-  NumericVector d = f(x);
-  return d[0];
+  // Rcpp::Environment stats = Rcpp::Environment::namespace_env("stats");
+  // Rcpp::Function f = stats["dnorm"];
+  // NumericVector d = f(x);
+  // return d[0];
+  return R::dnorm(x, 0, 1, FALSE);
 }
 
 
@@ -68,10 +68,11 @@ double dnorm(double x)
 // [[Rcpp::export]]
 double pnorm(double x)
 {
-  Rcpp::Environment stats = Rcpp::Environment::namespace_env("stats");
-  Rcpp::Function f = stats["pnorm"];
-  NumericVector p = f(x);
-  return p[0];
+  // Rcpp::Environment stats = Rcpp::Environment::namespace_env("stats");
+  // Rcpp::Function f = stats["pnorm"];
+  // NumericVector p = f(x);
+  // return p[0];
+  return R::pnorm(x, 0, 1, TRUE, FALSE);
 }
 
 
@@ -142,8 +143,8 @@ double F_prime_thres(double thres_variable,
   
   return out;
 }
-  
-  
+
+
 // x and y are given responses in [Kx]x[Ky]
 // the thres variables; first and last values are ∓∞
 // eq. 10 in Olsson (1979, Psychometrika)
@@ -612,10 +613,10 @@ double pk_prime2_thresXk_thresYl(
 
 // index set (0-based) in theta that is associated with a_1,...,a_{Kx-1}
 // [[Rcpp::export]]
-std::vector<int> get_indices_thresX(int Kx)
+IntegerVector get_indices_thresX(int Kx)
 {
-  std::vector<int> out(Kx-1);
-  for(int i = 0; i < Kx; i++)
+  IntegerVector out(Kx-1);
+  for(int i = 0; i < Kx-1; i++)
   {
     out[i] = i + 1;
   }
@@ -625,9 +626,9 @@ std::vector<int> get_indices_thresX(int Kx)
 
 // index set (0-based) in theta that is associated with b_1,...,b_{Ky-1}
 // [[Rcpp::export]]
-std::vector<int> get_indices_thresY(int Kx, int Ky)
+IntegerVector get_indices_thresY(int Kx, int Ky)
 {
-  std::vector<int> out(Ky-1);
+  IntegerVector out(Ky-1);
   int ct = 0;
   for(int i = Kx; i < Kx+Ky-1; i++)
   {
@@ -640,9 +641,9 @@ std::vector<int> get_indices_thresY(int Kx, int Ky)
 
 // index set (0-based) in theta that is associated with rho
 // [[Rcpp::export]]
-std::vector<int> get_indices_rho()
+IntegerVector get_indices_rho()
 {
-  std::vector<int> out(1);
+  IntegerVector out(1);
   out[0] = 0;
   return out;
 }
@@ -650,7 +651,7 @@ std::vector<int> get_indices_rho()
 
 // check if index i (0-based) is in index set v
 // [[Rcpp::export]]
-bool is_in(int i, std::vector<int> v)
+bool is_in(int i, IntegerVector v)
 {
   bool out = false;
   int n = v.size();
@@ -698,9 +699,9 @@ NumericMatrix pk_prime2_theta2(
   int d = Kx + Ky - 1;
   
   // index sets
-  std::vector<int> Irho = get_indices_rho(); // rho (=0)
-  std::vector<int> Ia = get_indices_thresX(Kx); // x-thresholds
-  std::vector<int> Ib = get_indices_thresY(Kx, Ky); // y-thresholds
+  IntegerVector Irho = get_indices_rho(); // rho (=0)
+  IntegerVector Ia = get_indices_thresX(Kx); // x-thresholds
+  IntegerVector Ib = get_indices_thresY(Kx, Ky); // y-thresholds
   
   // init
   NumericMatrix m(d);
@@ -710,74 +711,67 @@ NumericMatrix pk_prime2_theta2(
   
   for(int i = 0; i < d; i++)
   {
-    for(int j = 0; j < d; j++)
+    for(int j = i; j < d; j++)
     {
-      if(i <= j)
+      
+      if(is_in(i,Ia) && is_in(j, Ib))
       {
-        if(is_in(i,Ia) && is_in(j, Ib))
-        {
-          k = to_a(i);     // i counts the a_k, k = 1,...,Kx-1
-          l = to_b(j, Kx); // j counts the b_l, l = 1,...,Ky-1
-          z = pk_prime2_thresXk_thresYl(x, y, k, l, thresX, thresY, rho);
-          m(i,j) = z;
-          m(j,i) = z;
-        } else if(is_in(i,Ib) && is_in(j,Ia))
-        {
-          k = to_a(j);     // j counts the a_k, k = 1,...,Kx-1
-          l = to_b(i, Kx); // i counts the b_l, l = 1,...,Ky-1
-          z = pk_prime2_thresXk_thresYl(x, y, k, l, thresX, thresY, rho);
-          m(i,j) = z;
-          m(j,i) = z;
-        } else if(is_in(i, Ia) && is_in(j,Ia))
-        {
-          k = to_a(i); // i,j count the a_k, k = 1,...,Kx-1
-          l = to_a(j); 
-          z = pk_prime2_thresX_kl(x, y, k, l, thresX, thresY, rho);
-          m(i,j) = z;
-          m(j,i) = z;
-        } else if(is_in(i,Ib) && is_in(j,Ib))
-        {
-          k = to_b(i, Kx); // i,j count the b_k, k = 1,...,Ky-1
-          l = to_b(j, Kx); 
-          z = pk_prime2_thresY_kl(x, y, k, l, thresX, thresY, rho);
-          m(i,j) = z;
-          m(j,i) = z;
-        } else if(is_in(i,Irho) && is_in(j, Ia))
-        {
-          k = to_a(j);
-          z = pk_prime2_thresX_rho(x, y, k, thresX, thresY, rho);
-          m(i,j) = z;
-          m(j,i) = z;
-        } else if(is_in(i,Ia) && is_in(j, Irho))
-        {
-          k = to_a(i);
-          z = pk_prime2_thresX_rho(x, y, k, thresX, thresY, rho);
-          m(i,j) = z;
-          m(j,i) = z;
-        } else if(is_in(i,Irho) && is_in(j,Ib))
-        {
-          k = to_b(j, Kx);
-          z = pk_prime2_thresY_rho(x, y, k, thresX, thresY, rho);
-          m(i,j) = z;
-          m(j,i) = z;
-        } else if(is_in(i,Ib) && is_in(j,Irho))
-        {
-          k = to_b(i, Kx);
-          z = pk_prime2_thresY_rho(x, y, k, thresX, thresY, rho);
-          m(i,j) = z;
-          m(j,i) = z;
-        } else if(is_in(i,Irho) && is_in(j,Irho))
-        {
-          z = pk_prime2_rho2(x, y, thresX, thresY, rho);
-          m(i,i) = z; // this case only occurs when i=j=0
-        } else{
-          continue;
-        } // if i <= j
-
-      } else 
+        k = to_a(i);     // i counts the a_k, k = 1,...,Kx-1
+        l = to_b(j, Kx); // j counts the b_l, l = 1,...,Ky-1
+        z = pk_prime2_thresXk_thresYl(x, y, k, l, thresX, thresY, rho);
+        m(i,j) = z;
+        m(j,i) = z;
+      } else if(is_in(i,Ib) && is_in(j,Ia))
       {
-        continue;
-      }// if
+        k = to_a(j);     // j counts the a_k, k = 1,...,Kx-1
+        l = to_b(i, Kx); // i counts the b_l, l = 1,...,Ky-1
+        z = pk_prime2_thresXk_thresYl(x, y, k, l, thresX, thresY, rho);
+        m(i,j) = z;
+        m(j,i) = z;
+      } else if(is_in(i, Ia) && is_in(j,Ia))
+      {
+        k = to_a(i); // i,j count the a_k, k = 1,...,Kx-1
+        l = to_a(j); 
+        z = pk_prime2_thresX_kl(x, y, k, l, thresX, thresY, rho);
+        m(i,j) = z;
+        m(j,i) = z;
+      } else if(is_in(i,Ib) && is_in(j,Ib))
+      {
+        k = to_b(i, Kx); // i,j count the b_k, k = 1,...,Ky-1
+        l = to_b(j, Kx); 
+        z = pk_prime2_thresY_kl(x, y, k, l, thresX, thresY, rho);
+        m(i,j) = z;
+        m(j,i) = z;
+      } else if(is_in(i,Irho) && is_in(j, Ia))
+      {
+        k = to_a(j);
+        z = pk_prime2_thresX_rho(x, y, k, thresX, thresY, rho);
+        m(i,j) = z;
+        m(j,i) = z;
+      } else if(is_in(i,Ia) && is_in(j, Irho))
+      {
+        k = to_a(i);
+        z = pk_prime2_thresX_rho(x, y, k, thresX, thresY, rho);
+        m(i,j) = z;
+        m(j,i) = z;
+      } else if(is_in(i,Irho) && is_in(j,Ib))
+      {
+        k = to_b(j, Kx);
+        z = pk_prime2_thresY_rho(x, y, k, thresX, thresY, rho);
+        m(i,j) = z;
+        m(j,i) = z;
+      } else if(is_in(i,Ib) && is_in(j,Irho))
+      {
+        k = to_b(i, Kx);
+        z = pk_prime2_thresY_rho(x, y, k, thresX, thresY, rho);
+        m(i,j) = z;
+        m(j,i) = z;
+      } else if(is_in(i,Irho) && is_in(j,Irho))
+      {
+        z = pk_prime2_rho2(x, y, thresX, thresY, rho);
+        m(i,i) = z; // this case only occurs when i=j=0
+      } // if
+      
     } // for
   } // for
   
@@ -936,7 +930,7 @@ NumericMatrix get_fisher(
   int d = Kx + Ky - 1; // dim(theta)
   double pk;
   NumericMatrix J(d);
-
+  
   // correlation matrix
   NumericMatrix cormat = make_cormat(rho);
   NumericVector mean = {0., 0.};
