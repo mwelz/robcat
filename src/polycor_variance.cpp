@@ -707,6 +707,7 @@ NumericMatrix pk_prime2_theta2(
   {
     for(int j = i; j < d; j++)
     {
+      
       if(is_in(i,Ia) && is_in(j, Ib))
       {
         k = to_a(i);     // i counts the a_k, k = 1,...,Kx-1
@@ -730,6 +731,8 @@ NumericMatrix pk_prime2_theta2(
         m(j,i) = z;
       } else if(is_in(i,Ib) && is_in(j,Ib))
       {
+        k = to_b(i, Kx); // i,j count the b_k, k = 1,...,Ky-1
+        l = to_b(j, Kx); 
         z = pk_prime2_thresY_kl(x, y, k, l, thresX, thresY, rho);
         m(i,j) = z;
         m(j,i) = z;
