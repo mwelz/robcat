@@ -158,7 +158,7 @@ get_cormat <- function(data, c, variance, constrained, method, maxcor, tol_thres
 #' @param variance Shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}.
 #' @param method Numerical optimization method.
 #' @param constrained Shall strict monotonicity of thresholds be explicitly enforced by linear constraints? 
-#' @param maxcor Maximum absolute correlation (to insure numerical stability).
+#' @param maxcor Maximum absolute correlation (to ensure numerical stability).
 #' @param tol_thresholds Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}.
 #' 
 #' @return If \code{return_polycor = TRUE}, returns a list with a polychoric correlation matrix and list of \code{"\link{polycor}"} objects. If \code{return_polycor = FALSE}, then only a correlation matrix is returned.
@@ -198,7 +198,7 @@ polycormat <- function(data, c = 0.6,
 #' @param variance Shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}.
 #' @param method Numerical optimization method.
 #' @param constrained Shall strict monotonicity of thresholds be explicitly enforced by linear constraints? 
-#' @param maxcor Maximum absolute correlation (to insure numerical stability).
+#' @param maxcor Maximum absolute correlation (to ensure numerical stability).
 #' @param tol_thresholds Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}.
 #' 
 #' @return If \code{return_polycor = TRUE}, returns a list with a polychoric correlation matrix and list of \code{"\link{polycor}"} objects. If \code{return_polycor = FALSE}, then only a correlation matrix is returned.

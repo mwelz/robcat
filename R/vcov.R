@@ -4,6 +4,14 @@
 #' 
 #' @param object Object of class \code{"robpolycor"} or \code{"polycor"}.
 #' @param ... Additional parameters to be passed down.
+#' @return A numeric matrix, being the estimated asymptotic covariance matrix for the model parameters
+#' @examples
+#' set.seed(123)
+#' x <- sample(c(1,2,3), size = 100, replace = TRUE)
+#' y <- sample(c(1,2,3), size = 100, replace = TRUE)
+#' fit <- polycor(x,y) 
+#' 
+#' vcov(fit)
 #' 
 #' @export
 vcov.robpolycor <- function(object, ...)

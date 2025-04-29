@@ -282,7 +282,7 @@ polycor_fast <-
 #' @param variance Shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}.
 #' @param method Numerical optimization method. 
 #' @param constrained Shall strict monotonicity of thresholds be explicitly enforced by linear constraints? Default is \code{TRUE}.
-#' @param maxcor Maximum absolute correlation (to insure numerical stability). Default is 0.999.
+#' @param maxcor Maximum absolute correlation (to ensure numerical stability). Default is 0.999.
 #' @param tol_thresholds Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}. Default is 0.01.
 #' @param init Initialization of numerical optimization. Default is neutral.
 #'
@@ -345,7 +345,7 @@ polycor <- function(x, y = NULL, c = 0.6,
 #' @param method Numerical optimization method; default is Nelder-Mead.
 #' @param constrained shall strict monotonicity of thresholds be explicitly enforced by linear constraints? Only relevant if \code{twostep = FALSE}. Default is \code{TRUE}.
 #' @param twostep Shall two-step estimation of Olsson (1979) <doi:10.1007/BF02296207> be performed? Default is \code{FALSE}.
-#' @param maxcor Maximum absolute correlation (to insure numerical stability). Deafult is 0.999.
+#' @param maxcor Maximum absolute correlation (to ensure numerical stability). Deafult is 0.999.
 #' @param tol_thresholds Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}. Default is 0.01.
 #' @param init Initialization of numerical optimization. Default is neutral. If \code{twostep = TRUE}, only the first element (the correlation coefficient) will be used.
 #' 

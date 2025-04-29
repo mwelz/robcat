@@ -20,6 +20,14 @@ init_thresholds <- function(K)
 #' 
 #' @param x Vector of integer-valued responses to first rating variable, or contingency table (a \code{table} object).
 #' @param y Vector of integer-valued responses to second rating variable; only required if \code{x} is not a contingency table. 
+#' @return A vector of initial values for the polychoric correlation coefficient, the X-threshold parameters, and the Y-threshold parameters
+#' @examples
+#' ## example data
+#' set.seed(123)
+#' x <- sample(c(1,2,3), size = 100, replace = TRUE)
+#' y <- sample(c(1,2,3), size = 100, replace = TRUE)
+#' initialize_param(x, y)
+#' 
 #' @export
 initialize_param <- function(x, y)
 {

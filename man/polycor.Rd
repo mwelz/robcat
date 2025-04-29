@@ -29,7 +29,7 @@ polycor(
 
 \item{method}{Numerical optimization method.}
 
-\item{maxcor}{Maximum absolute correlation (to insure numerical stability). Default is 0.999.}
+\item{maxcor}{Maximum absolute correlation (to ensure numerical stability). Default is 0.999.}
 
 \item{tol_thresholds}{Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}. Default is 0.01.}
 

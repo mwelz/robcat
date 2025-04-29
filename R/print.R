@@ -3,6 +3,17 @@
 #' @param x Object of class \code{"robpolycor"} or \code{"polycor"}.
 #' @param digits Number of digits to be printed.
 #' @param ... Additional parameters to be passed down.
+#' @return A print to the console.
+#' 
+#' @examples
+#' set.seed(123)
+#' x <- sample(c(1,2,3), size = 100, replace = TRUE)
+#' y <- sample(c(1,2,3), size = 100, replace = TRUE)
+#' fit <- polycor(x,y) 
+#' 
+#' print(fit)
+#' fit # equivalent
+#' 
 #' @export
 print.robpolycor <- function(x, digits = max(3L, getOption("digits") - 3L), ...)
 {

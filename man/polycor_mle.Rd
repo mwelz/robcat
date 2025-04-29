@@ -29,7 +29,7 @@ polycor_mle(
 
 \item{method}{Numerical optimization method; default is Nelder-Mead.}
 
-\item{maxcor}{Maximum absolute correlation (to insure numerical stability). Deafult is 0.999.}
+\item{maxcor}{Maximum absolute correlation (to ensure numerical stability). Deafult is 0.999.}
 
 \item{tol_thresholds}{Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}. Default is 0.01.}
 

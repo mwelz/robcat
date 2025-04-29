@@ -13,6 +13,19 @@
 
 \item{...}{Additional parameters to be passed down.}
 }
+\value{
+An object of class \code{"\link[ggplot2]{ggplot}"}.
+}
 \description{
 Plot method for classes \code{"robpolycor"} and \code{"polycor"}.
+}
+\examples{
+## example data
+set.seed(123)
+x <- sample(c(1,2,3), size = 100, replace = TRUE)
+y <- sample(c(1,2,3), size = 100, replace = TRUE)
+
+fit <- polycor(x,y) 
+plot(fit)
+
 }

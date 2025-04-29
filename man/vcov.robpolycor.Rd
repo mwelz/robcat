@@ -11,6 +11,18 @@
 
 \item{...}{Additional parameters to be passed down.}
 }
+\value{
+A numeric matrix, being the estimated asymptotic covariance matrix for the model parameters
+}
 \description{
 Method for classes \code{"robpolycor"} and \code{"polycor"}. Returns the estimated asymptotic variance-covariance matrix of a point estimate \code{theahat}. The matrix \eqn{\Sigma} in the paper (asymptotic variance-covariance matrix of \eqn{\sqrt{N} \hat{\theta}}) can be obtained via multiplying the returned matrix by the sample size.
+}
+\examples{
+set.seed(123)
+x <- sample(c(1,2,3), size = 100, replace = TRUE)
+y <- sample(c(1,2,3), size = 100, replace = TRUE)
+fit <- polycor(x,y) 
+
+vcov(fit)
+
 }

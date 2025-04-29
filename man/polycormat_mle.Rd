@@ -31,7 +31,7 @@ polycormat_mle(
 
 \item{method}{Numerical optimization method.}
 
-\item{maxcor}{Maximum absolute correlation (to insure numerical stability).}
+\item{maxcor}{Maximum absolute correlation (to ensure numerical stability).}
 
 \item{tol_thresholds}{Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}.}
 }

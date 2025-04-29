@@ -4,6 +4,18 @@
 #' @param cutoff Cutoff beyond which the color scale for Pearson residuals is truncated.
 #' @param ... Additional parameters to be passed down.
 #' @import ggplot2
+#' 
+#' @return An object of class \code{"\link[ggplot2]{ggplot}"}.
+#' 
+#' @examples
+#' ## example data
+#' set.seed(123)
+#' x <- sample(c(1,2,3), size = 100, replace = TRUE)
+#' y <- sample(c(1,2,3), size = 100, replace = TRUE)
+#' 
+#' fit <- polycor(x,y) 
+#' plot(fit)
+#' 
 #' @export
 plot.robpolycor <- function(x, 
                             cutoff = 3, #stats::qnorm(0.001, lower.tail = FALSE),

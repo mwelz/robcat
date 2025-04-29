@@ -13,6 +13,19 @@
 
 \item{...}{Additional parameters to be passed down.}
 }
+\value{
+A print to the console.
+}
 \description{
 Print method for classes \code{"robpolycor"} and \code{"polycor"}.
+}
+\examples{
+set.seed(123)
+x <- sample(c(1,2,3), size = 100, replace = TRUE)
+y <- sample(c(1,2,3), size = 100, replace = TRUE)
+fit <- polycor(x,y) 
+
+print(fit)
+fit # equivalent
+
 }
