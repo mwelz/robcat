@@ -1,6 +1,6 @@
 #' Obtain estimated asymptotic variance-covariance matrix 
 #' 
-#' Method for classes \code{"robpolycor"} and \code{"polycor"}. Returns the estimated asymptotic variance-covariance matrix of a point estimate \code{theahat}. The matrix \eqn{\Sigma} in the paper (asymptotic variance-covariance matrix of \eqn{\sqrt{N} \hat{\theta}}) can be obtained via multiplying the returned matrix by the sample size.
+#' Method for classes \code{"robpolycor"} and \code{"polycor"}. Returns the estimated asymptotic variance-covariance matrix of a point estimate \code{thetahat}. The matrix \eqn{\Sigma} in the paper (asymptotic variance-covariance matrix of \eqn{\sqrt{N} \hat{\theta}}) can be obtained via multiplying the returned matrix by the sample size.
 #' 
 #' @param object Object of class \code{"robpolycor"} or \code{"polycor"}.
 #' @param ... Additional parameters to be passed down.

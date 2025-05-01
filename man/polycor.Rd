@@ -38,9 +38,9 @@ polycor(
 \value{
 An object of class \code{"robpolycor"}, which is a list with the following components. 
 \describe{
-  \item{\code{theahat}}{A vector of estimates for the polychoric correlation coefficient (\code{rho}) as well as thresholds for \code{x} (named \code{a1,a2,...,a_{Kx-1}}) and \code{y} (named \code{b1,b2,...,b_{Ky-1}}).}
-  \item{\code{stderr}}{A vector of standard errors for each estimate in \code{theahat}.}
-  \item{\code{vcov}}{Estimated asymptotic covariance matrix of \code{theahat}. The matrix \eqn{\Sigma} in the paper (asymptotic covariance matrix of \eqn{\sqrt{N} \hat{\theta}}) can be obtained via \code{vcov * N}, where \code{N} is the sample size.}
+  \item{\code{thetahat}}{A vector of estimates for the polychoric correlation coefficient (\code{rho}) as well as thresholds for \code{x} (named \code{a1,a2,...,a_{Kx-1}}) and \code{y} (named \code{b1,b2,...,b_{Ky-1}}).}
+  \item{\code{stderr}}{A vector of standard errors for each estimate in \code{thetahat}.}
+  \item{\code{vcov}}{Estimated asymptotic covariance matrix of \code{thetahat}. The matrix \eqn{\Sigma} in the paper (asymptotic covariance matrix of \eqn{\sqrt{N} \hat{\theta}}) can be obtained via \code{vcov * N}, where \code{N} is the sample size.}
   \item{\code{chisq,pval,df}}{Currently \code{NULL}, will in a future release be the test statistic, p-value, and degrees of freedom of a test for bivariate normality.}
   \item{\code{objective}}{Value of minimized loss function.}
   \item{\code{optim}}{Object of class \code{optim}.}
