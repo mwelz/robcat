@@ -1,6 +1,14 @@
 # robcat: Robust Categorical Data Analysis
 
+[![CRAN](https://www.R-pkg.org/badges/version/robcat)](https://CRAN.R-project.org/package=robcat) 
+
 This package implements the methodology proposed in the working paper _Robust Estimation and Inference in Categorical Data_ by [Welz (2024)](https://arxiv.org/abs/2403.11954). Here we will demonstrate how the methodology can be used to robustly estimate polychoric correlation, which is described in detail in our companion paper _Robust Estimation of Polychoric Correlation_ by [Welz, Mair, and Alfons (2024)](https://arxiv.org/abs/2407.18835).
+
+Package `robcat` is on CRAN (The Comprehensive R Archive Network), hence the latest release can be easily installed from the `R` command line via
+
+```R
+install.packages("robcat")
+```
 
 To install the latest development version from GitHub, you can pull this repository and install it from the `R` command line via
 ```R
@@ -108,5 +116,17 @@ plot(polycor)
 
 Indeed, the Pearson residual of contaminated cell `(x,y) = (1,5)` is excessively large compared to the others, which are all around the value 0.
 
-## Authors
-Max Welz (max.welz@uzh.ch)
+
+## Report issues and request features
+
+If you experience any bugs or issues or if you have any suggestions for additional features, please submit an issue via the [*Issues*](https://github.com/mwelz/robcat/issues) tab of this repository.  Please have a look at existing issues first to see if your problem or feature request has already been discussed.
+
+
+## Contribute to the package
+
+If you want to contribute to the package, you can fork this repository and create a pull request after implementing the desired functionality.
+
+
+## Ask for help
+
+If you need help using the package, or if you are interested in collaborations related to this project, please get in touch with the [package maintainer](https://mwelz.github.io/).
