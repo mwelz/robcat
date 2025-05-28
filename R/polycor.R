@@ -203,6 +203,11 @@ polycor_fast <-
                    method = method, hessian = FALSE), 
       silent = TRUE
     )
+    # TODO: Should we also perform constrained optimization if the solution is 
+    #       identical to starting values? I'm not sure since the issue may also 
+    #       be solved with a different (unconstrained) optimization method, and 
+    #       we give a corresponding warning below.
+    # if (inherits(opt, "try-error") || identical(init, opt$par)) {
     if (inherits(opt, "try-error")) {
       if (is_null_method) method <- "Nelder-Mead"
       lincon <- constrOptim_constraints(Kx = Kx, Ky = Ky, maxcor = maxcor, 
@@ -243,6 +248,10 @@ polycor_fast <-
   
   ## extract and name estimated parameters
   thetahat <- opt$par
+  if (identical(init, thetahat)) {
+    warning("estimates are identical to starting values; ", 
+            "try a different optimization method or different starting values")
+  }
   names(thetahat) <- theta_names(Kx = Kx, Ky = Ky)
   
   ## extract model parameters
@@ -308,7 +317,7 @@ polycor_fast <-
 #' @param c Tuning constant that governs robustness; must be in \code{[0, Inf]}. Defaults to 0.6.
 #' @param variance Shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}.
 #' @param method Numerical optimization method, see \code{\link[stats]{optim}()} and \code{\link[stats]{constrOptim}()}. Default is to use \code{"L-BFGS-B"} in case of unconstrained optimization and \code{"Nelder-Mead"} in case of constrained optimization.
-#' @param constrained Shall strict monotonicity of thresholds be explicitly enforced by linear constraints? This can be a logical, or \code{"ifneeded"} to first try unconstrained optimization and in case of an error perform constrained optimization. Default is \code{"ifneeded"}.
+#' @param constrained Shall strict monotonicity of thresholds be explicitly enforced by linear constraints? This can be a logical (\code{TRUE} or \code{FALSE}), or \code{"ifneeded"} to first try unconstrained optimization and in case of an error perform constrained optimization. Default is \code{"ifneeded"}.
 #' @param maxcor Maximum absolute correlation (to ensure numerical stability). Default is 0.999.
 #' @param tol_thresholds Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant in case of constrained optimization. Default is 0.01.
 #' @param init Initialization of numerical optimization. Default is neutral.
@@ -357,6 +366,9 @@ polycor <- function(x, y = NULL, c = 0.6,
   } else
   {
     inputs <- input_vector(x = x, y = y)
+  }
+  if (sum(diag(inputs$contingency)) == inputs$N) {
+    warning("observed variables are identical; polychoric model is not identified")
   }
   
   ## add 1 so that c is in [1,Inf] to comply with expectation of polycor_fast()
@@ -411,6 +423,9 @@ polycor_mle <- function(x, y = NULL,
   } else
   {
     inputs <- input_vector(x = x, y = y)
+  }
+  if (sum(diag(inputs$contingency)) == inputs$N) {
+    warning("observed variables are identical; polychoric model is not identified")
   }
   
   if(twostep)

@@ -30,7 +30,7 @@ polycormat(
 
 \item{variance}{Shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}.}
 
-\item{constrained}{Shall strict monotonicity of thresholds be explicitly enforced by linear constraints? This can be a logical, or \code{"ifneeded"} to first try unconstrained optimization and in case of an error perform constrained optimization. Default is \code{"ifneeded"}.}
+\item{constrained}{Shall strict monotonicity of thresholds be explicitly enforced by linear constraints? This can be a logical (\code{TRUE} or \code{FALSE}), or \code{"ifneeded"} to first try unconstrained optimization and in case of an error perform constrained optimization. Default is \code{"ifneeded"}.}
 
 \item{method}{Numerical optimization method, see \code{\link[stats]{optim}()} and \code{\link[stats]{constrOptim}()}. Default is to use \code{"L-BFGS-B"} in case of unconstrained optimization and \code{"Nelder-Mead"} in case of constrained optimization.}
 
