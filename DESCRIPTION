@@ -1,8 +1,8 @@
 Package: robcat
 Type: Package
 Title: Robust Categorical Data Analysis
-Version: 0.1.0
-Date: 2025-04-25
+Version: 0.1.1
+Date: 2025-05-28
 Authors@R: 
     c(person(given = "Max",
            family = "Welz",

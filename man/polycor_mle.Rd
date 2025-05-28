@@ -8,9 +8,9 @@ polycor_mle(
   x,
   y = NULL,
   variance = TRUE,
-  constrained = TRUE,
+  constrained = "ifneeded",
   twostep = FALSE,
-  method = ifelse(constrained, "Nelder-Mead", "L-BFGS-B"),
+  method = NULL,
   maxcor = 0.999,
   tol_thresholds = 0.01,
   init = initialize_param(x, y)
@@ -23,17 +23,17 @@ polycor_mle(
 
 \item{variance}{Shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}.}
 
-\item{constrained}{shall strict monotonicity of thresholds be explicitly enforced by linear constraints? Only relevant if \code{twostep = FALSE}. Default is \code{TRUE}.}
+\item{constrained}{Shall strict monotonicity of thresholds be explicitly enforced by linear constraints? This can be a logical, or \code{"ifneeded"} to first try unconstrained optimization and in case of an error perform constrained optimization. Default is \code{"ifneeded"}.}
 
 \item{twostep}{Shall two-step estimation of Olsson (1979) <doi:10.1007/BF02296207> be performed? Default is \code{FALSE}.}
 
-\item{method}{Numerical optimization method; default is Nelder-Mead.}
+\item{method}{Numerical optimization method, see \code{\link[stats]{optim}()} and \code{\link[stats]{constrOptim}()}. Default is to use \code{"L-BFGS-B"} in case of unconstrained optimization and \code{"Nelder-Mead"} in case of constrained optimization.}
 
-\item{maxcor}{Maximum absolute correlation (to ensure numerical stability). Deafult is 0.999.}
+\item{maxcor}{Maximum absolute correlation (to ensure numerical stability). Default is 0.999.}
 
-\item{tol_thresholds}{Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}. Default is 0.01.}
+\item{tol_thresholds}{Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant in case of constrained optimization. Default is 0.01.}
 
-\item{init}{Initialization of numerical optimization. Default is neutral. If \code{twostep = TRUE}, only the first element (the correlation coefficient) will be used.}
+\item{init}{Initialization of numerical optimization. Default is neutral.}
 }
 \value{
 An object of class \code{"robpolycor"}. See \code{\link{polycor}()} for details.

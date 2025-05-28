@@ -150,16 +150,11 @@ get_cormat <- function(data, c, variance, constrained, method, maxcor, tol_thres
 #' 
 #' A useful wrapper of \code{\link{polycor}} to robustly estimate a polychoric correlation matrix by calculating all unique pairwise polychoric correlation coefficients.
 #' 
+#' @inheritParams polycor
 #' @param data Data matrix or \code{\link[base]{data.frame}} of integer-valued responses, individual respondents are in rows and responses to the items in the columns.
-#' @param c tuning constant that governs robustness; takes values in \code{[0, Inf]}. Defaults to 0.6.
 #' @param parallel Logical. Shall parallelization be used? Default is \code{FALSE}.
 #' @param num_cores Number of cores to be used, only relevant if \code{parallel = TRUE}. Defaults to the number of system cores.
-#' @param return_polycor Logical. Shall the individual \code{"\link{polycor}"} objects for each item pair estimate be returned? Deafult is \code{TRUE}.
-#' @param variance Shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}.
-#' @param method Numerical optimization method.
-#' @param constrained Shall strict monotonicity of thresholds be explicitly enforced by linear constraints? 
-#' @param maxcor Maximum absolute correlation (to ensure numerical stability).
-#' @param tol_thresholds Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}.
+#' @param return_polycor Logical. Shall the individual \code{"\link{polycor}"} objects for each item pair estimate be returned? Default is \code{TRUE}.
 #' 
 #' @return If \code{return_polycor = TRUE}, returns a list with a polychoric correlation matrix and list of \code{"\link{polycor}"} objects. If \code{return_polycor = FALSE}, then only a correlation matrix is returned.
 #' 
@@ -176,8 +171,8 @@ polycormat <- function(data, c = 0.6,
                        num_cores = 1L,
                        return_polycor = TRUE,
                        variance = TRUE,
-                       constrained = TRUE,
-                       method = ifelse(constrained, "Nelder-Mead", "L-BFGS-B"),
+                       constrained = "ifneeded",
+                       method = NULL,
                        maxcor = 0.999,
                        tol_thresholds = 0.01)
 {
@@ -191,16 +186,8 @@ polycormat <- function(data, c = 0.6,
 #' 
 #' A useful wrapper of \code{\link{polycor_mle}} to estimate a polychoric correlation matrix via maximum likelihood by calculating all unique pairwise polychoric correlation coefficients.
 #' 
-#' @param data Data matrix or \code{\link[base]{data.frame}} of integer-valued responses, individual respondents are in rows and responses to the items in the columns.
-#' @param parallel Logical. Shall parallelization be used? Default is \code{FALSE}.
-#' @param num_cores Number of cores to be used, only relevant if \code{parallel = TRUE}. Defaults to the number of system cores.
-#' @param return_polycor Logical. Shall the individual \code{"\link{polycor}"} objects for each item pair estimate be returned? Deafult is \code{TRUE}.
-#' @param variance Shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}.
-#' @param method Numerical optimization method.
-#' @param constrained Shall strict monotonicity of thresholds be explicitly enforced by linear constraints? 
-#' @param maxcor Maximum absolute correlation (to ensure numerical stability).
-#' @param tol_thresholds Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}.
-#' 
+#' @inheritParams polycormat
+#'
 #' @return If \code{return_polycor = TRUE}, returns a list with a polychoric correlation matrix and list of \code{"\link{polycor}"} objects. If \code{return_polycor = FALSE}, then only a correlation matrix is returned.
 #' 
 #' @examples
@@ -216,8 +203,8 @@ polycormat_mle <- function(data,
                            num_cores = 1L,
                            return_polycor = TRUE,
                            variance = TRUE,
-                           constrained = TRUE,
-                           method = ifelse(constrained, "Nelder-Mead", "L-BFGS-B"),
+                           constrained = "ifneeded",
+                           method = NULL,
                            maxcor = 0.999,
                            tol_thresholds = 0.01)
 {

@@ -11,8 +11,8 @@ polycormat(
   num_cores = 1L,
   return_polycor = TRUE,
   variance = TRUE,
-  constrained = TRUE,
-  method = ifelse(constrained, "Nelder-Mead", "L-BFGS-B"),
+  constrained = "ifneeded",
+  method = NULL,
   maxcor = 0.999,
   tol_thresholds = 0.01
 )
@@ -20,23 +20,23 @@ polycormat(
 \arguments{
 \item{data}{Data matrix or \code{\link[base]{data.frame}} of integer-valued responses, individual respondents are in rows and responses to the items in the columns.}
 
-\item{c}{tuning constant that governs robustness; takes values in \code{[0, Inf]}. Defaults to 0.6.}
+\item{c}{Tuning constant that governs robustness; must be in \code{[0, Inf]}. Defaults to 0.6.}
 
 \item{parallel}{Logical. Shall parallelization be used? Default is \code{FALSE}.}
 
 \item{num_cores}{Number of cores to be used, only relevant if \code{parallel = TRUE}. Defaults to the number of system cores.}
 
-\item{return_polycor}{Logical. Shall the individual \code{"\link{polycor}"} objects for each item pair estimate be returned? Deafult is \code{TRUE}.}
+\item{return_polycor}{Logical. Shall the individual \code{"\link{polycor}"} objects for each item pair estimate be returned? Default is \code{TRUE}.}
 
 \item{variance}{Shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}.}
 
-\item{constrained}{Shall strict monotonicity of thresholds be explicitly enforced by linear constraints?}
+\item{constrained}{Shall strict monotonicity of thresholds be explicitly enforced by linear constraints? This can be a logical, or \code{"ifneeded"} to first try unconstrained optimization and in case of an error perform constrained optimization. Default is \code{"ifneeded"}.}
 
-\item{method}{Numerical optimization method.}
+\item{method}{Numerical optimization method, see \code{\link[stats]{optim}()} and \code{\link[stats]{constrOptim}()}. Default is to use \code{"L-BFGS-B"} in case of unconstrained optimization and \code{"Nelder-Mead"} in case of constrained optimization.}
 
-\item{maxcor}{Maximum absolute correlation (to ensure numerical stability).}
+\item{maxcor}{Maximum absolute correlation (to ensure numerical stability). Default is 0.999.}
 
-\item{tol_thresholds}{Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}.}
+\item{tol_thresholds}{Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant in case of constrained optimization. Default is 0.01.}
 }
 \value{
 If \code{return_polycor = TRUE}, returns a list with a polychoric correlation matrix and list of \code{"\link{polycor}"} objects. If \code{return_polycor = FALSE}, then only a correlation matrix is returned.
