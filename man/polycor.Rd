@@ -9,8 +9,8 @@ polycor(
   y = NULL,
   c = 0.6,
   variance = TRUE,
-  constrained = TRUE,
-  method = ifelse(constrained, "Nelder-Mead", "L-BFGS-B"),
+  constrained = "ifneeded",
+  method = NULL,
   maxcor = 0.999,
   tol_thresholds = 0.01,
   init = initialize_param(x, y)
@@ -25,13 +25,13 @@ polycor(
 
 \item{variance}{Shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}.}
 
-\item{constrained}{Shall strict monotonicity of thresholds be explicitly enforced by linear constraints? Default is \code{TRUE}.}
+\item{constrained}{Shall strict monotonicity of thresholds be explicitly enforced by linear constraints? This can be a logical (\code{TRUE} or \code{FALSE}), or \code{"ifneeded"} to first try unconstrained optimization and in case of an error perform constrained optimization. Default is \code{"ifneeded"}.}
 
-\item{method}{Numerical optimization method.}
+\item{method}{Numerical optimization method, see \code{\link[stats]{optim}()} and \code{\link[stats]{constrOptim}()}. Default is to use \code{"L-BFGS-B"} in case of unconstrained optimization and \code{"Nelder-Mead"} in case of constrained optimization.}
 
 \item{maxcor}{Maximum absolute correlation (to ensure numerical stability). Default is 0.999.}
 
-\item{tol_thresholds}{Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}. Default is 0.01.}
+\item{tol_thresholds}{Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant in case of constrained optimization. Default is 0.01.}
 
 \item{init}{Initialization of numerical optimization. Default is neutral.}
 }

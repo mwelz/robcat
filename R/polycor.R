@@ -160,12 +160,14 @@ polycor_fast <-
            c1, c2,
            N,
            init,
-           method = "Nelder-Mead",
+           method = NULL,
            maxcor = 0.999,
            tol_thresholds = 0.01,
-           constrained = TRUE,
+           constrained = "ifneeded",
            variance = FALSE) 
 {
+  ## initializations
+  is_null_method <- is.null(method)
   K <- Kx * Ky
   logc1p1 <- log(c1) + 1.0
   logc2p1 <- log(c2) + 1.0
@@ -191,11 +193,40 @@ polycor_fast <-
                        maxcor = maxcor)
   }
   
-  if(constrained)
-  {
-    ## the linear constraints
-    lincon <- constrOptim_constraints(Kx = Kx, Ky = Ky, maxcor = maxcor, tol_thresholds = tol_thresholds)
-    
+  
+  if (constrained == "ifneeded") {
+    ## try unconstrained optimization first and use constrained optimization if 
+    ## unconstrained fails (quick & dirty, mostly copy & paste from below)
+    if (is_null_method) method <- "L-BFGS-B"
+    opt <- try(
+      stats::optim(par = init, fn = fn, gr = NULL, 
+                   method = method, hessian = FALSE), 
+      silent = TRUE
+    )
+    # TODO: Should we also perform constrained optimization if the solution is 
+    #       identical to starting values? I'm not sure since the issue may also 
+    #       be solved with a different (unconstrained) optimization method, and 
+    #       we give a corresponding warning below.
+    # if (inherits(opt, "try-error") || identical(init, opt$par)) {
+    if (inherits(opt, "try-error")) {
+      if (is_null_method) method <- "Nelder-Mead"
+      lincon <- constrOptim_constraints(Kx = Kx, Ky = Ky, maxcor = maxcor, 
+                                        tol_thresholds = tol_thresholds)
+      opt <- 
+        stats::constrOptim(theta = init,
+                           f = fn,
+                           grad = NULL,
+                           ui = lincon$ui,
+                           ci = lincon$ci,
+                           method = method,
+                           hessian = FALSE)
+    }
+  } else if (constrained) {
+    ## set default optimization method if necessary
+    if (is_null_method) method <- "Nelder-Mead"
+    ## construct the linear constraints
+    lincon <- constrOptim_constraints(Kx = Kx, Ky = Ky, maxcor = maxcor, 
+                                      tol_thresholds = tol_thresholds)
     ## linearly constrained optimization
     opt <-
       stats::constrOptim(theta = init,
@@ -205,17 +236,22 @@ polycor_fast <-
                          ci = lincon$ci,
                          method = method,
                          hessian = FALSE)
-  } else{
-    ## without monotonicity or rho-boundary constraints: runs faster, but less accurate
+  } else {
+    ## set default optimization method if necessary
+    if (is_null_method) method <- "L-BFGS-B"
+    ## without monotonicity or rho-boundary constraints: 
+    ## runs faster, but less accurate
     opt <- 
       stats::optim(par = init, fn = fn, gr = NULL, 
-                   #lower = c(-maxcor, rep(-Inf, length(Kx+Ky-2))), # TODO: the length() argument here is a bug, should be removed
-                   #upper = c(maxcor, rep(Inf, length(Kx+Ky-2))), 
-                   hessian = FALSE, method = method)
-  } # IF
+                   method = method, hessian = FALSE)
+  }
   
   ## extract and name estimated parameters
   thetahat <- opt$par
+  if (identical(init, thetahat)) {
+    warning("estimates are identical to starting values; ", 
+            "try a different optimization method or different starting values")
+  }
   names(thetahat) <- theta_names(Kx = Kx, Ky = Ky)
   
   ## extract model parameters
@@ -280,10 +316,10 @@ polycor_fast <-
 #' @param y Vector of integer-valued responses to second item; only required if \code{x} is not a contingency table.
 #' @param c Tuning constant that governs robustness; must be in \code{[0, Inf]}. Defaults to 0.6.
 #' @param variance Shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}.
-#' @param method Numerical optimization method. 
-#' @param constrained Shall strict monotonicity of thresholds be explicitly enforced by linear constraints? Default is \code{TRUE}.
+#' @param method Numerical optimization method, see \code{\link[stats]{optim}()} and \code{\link[stats]{constrOptim}()}. Default is to use \code{"L-BFGS-B"} in case of unconstrained optimization and \code{"Nelder-Mead"} in case of constrained optimization.
+#' @param constrained Shall strict monotonicity of thresholds be explicitly enforced by linear constraints? This can be a logical (\code{TRUE} or \code{FALSE}), or \code{"ifneeded"} to first try unconstrained optimization and in case of an error perform constrained optimization. Default is \code{"ifneeded"}.
 #' @param maxcor Maximum absolute correlation (to ensure numerical stability). Default is 0.999.
-#' @param tol_thresholds Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}. Default is 0.01.
+#' @param tol_thresholds Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant in case of constrained optimization. Default is 0.01.
 #' @param init Initialization of numerical optimization. Default is neutral.
 #'
 #' @return 
@@ -309,13 +345,21 @@ polycor_fast <-
 #' @export
 polycor <- function(x, y = NULL, c = 0.6, 
                     variance = TRUE,
-                    constrained = TRUE,
-                    method = ifelse(constrained, "Nelder-Mead", "L-BFGS-B"),
+                    constrained = "ifneeded",
+                    method = NULL,
                     maxcor = 0.999,
                     tol_thresholds = 0.01,
                     init = initialize_param(x, y))
 {
+  ## initializations
   stopifnot(c >= 0)
+  if (is.character(constrained)) 
+  {
+    constrained <- match.arg(constrained)
+  } else 
+  {
+    constrained <- isTRUE(constrained)
+  }
   if(is.table(x))
   {
     inputs <- input_table(x = x, y = y)
@@ -323,15 +367,17 @@ polycor <- function(x, y = NULL, c = 0.6,
   {
     inputs <- input_vector(x = x, y = y)
   }
+  if (sum(diag(inputs$contingency)) == inputs$N) {
+    warning("observed variables are identical; polychoric model is not identified")
+  }
   
   ## add 1 so that c is in [1,Inf] to comply with expectation of polycor_fast()
   c_reparam <- c + 1.0
   
   polycor_fast(f = inputs$f, Kx = inputs$Kx, Ky = inputs$Ky, N = inputs$N,
-               c1 = 0.0, c2 = c_reparam, 
-               method = method, maxcor = maxcor, tol_thresholds = tol_thresholds, constrained = constrained,
-               init = init, 
-               variance = variance)
+               c1 = 0.0, c2 = c_reparam, method = method, maxcor = maxcor, 
+               tol_thresholds = tol_thresholds, constrained = constrained,
+               init = init, variance = variance)
 }
 
 
@@ -339,15 +385,8 @@ polycor <- function(x, y = NULL, c = 0.6,
 #' 
 #' Implements the maximum likelihood estimator of Olsson (1979, Psychometrika, \doi{10.1007/BF02296207}) for the polychoric correlation model.
 #' 
-#' @param x Vector of integer-valued responses to first item, or contingency table (a \code{"\link[base]{table}"} object).
-#' @param y Vector of integer-valued responses to second item; only required if \code{x} is not a contingency table.
-#' @param variance Shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}.
-#' @param method Numerical optimization method; default is Nelder-Mead.
-#' @param constrained shall strict monotonicity of thresholds be explicitly enforced by linear constraints? Only relevant if \code{twostep = FALSE}. Default is \code{TRUE}.
+#' @inheritParams polycor
 #' @param twostep Shall two-step estimation of Olsson (1979) <doi:10.1007/BF02296207> be performed? Default is \code{FALSE}.
-#' @param maxcor Maximum absolute correlation (to ensure numerical stability). Deafult is 0.999.
-#' @param tol_thresholds Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant if \code{constrained = TRUE}. Default is 0.01.
-#' @param init Initialization of numerical optimization. Default is neutral. If \code{twostep = TRUE}, only the first element (the correlation coefficient) will be used.
 #' 
 #' @return An object of class \code{"robpolycor"}. See \code{\link{polycor}()} for details.
 #' 
@@ -363,13 +402,21 @@ polycor <- function(x, y = NULL, c = 0.6,
 #' @export
 polycor_mle <- function(x, y = NULL, 
                         variance = TRUE,
-                        constrained = TRUE,
+                        constrained = "ifneeded",
                         twostep = FALSE,
-                        method = ifelse(constrained, "Nelder-Mead", "L-BFGS-B"),
+                        method = NULL,
                         maxcor = 0.999,
                         tol_thresholds = 0.01,
                         init = initialize_param(x, y))
 {
+  ## initializations
+  if (is.character(constrained)) 
+  {
+    constrained <- match.arg(constrained)
+  } else 
+  {
+    constrained <- isTRUE(constrained)
+  }
   if(is.table(x))
   {
     inputs <- input_table(x = x, y = y)
@@ -377,22 +424,24 @@ polycor_mle <- function(x, y = NULL,
   {
     inputs <- input_vector(x = x, y = y)
   }
+  if (sum(diag(inputs$contingency)) == inputs$N) {
+    warning("observed variables are identical; polychoric model is not identified")
+  }
   
-  if(!twostep)
-  {
-    # TODO: adjust to MLE loss function 
-    obj <- 
-      polycor_fast(f = inputs$f, Kx = inputs$Kx, Ky = inputs$Ky, N = inputs$N,
-                   c1 = 0.0, c2 = Inf, 
-                   method = method, maxcor = maxcor, tol_thresholds = tol_thresholds, constrained = constrained,
-                   init = init, 
-                   variance = FALSE)
-  } else
+  if(twostep)
   {
     obj <- 
       polycor_twostep(f = inputs$f, contingency = inputs$contingency, 
                       Kx = inputs$Kx, Ky = inputs$Ky, N = inputs$N, 
                       init = init[1L], maxcor = maxcor)
+  } else
+  {
+    # TODO: adjust to MLE loss function 
+    obj <- 
+      polycor_fast(f = inputs$f, Kx = inputs$Kx, Ky = inputs$Ky, N = inputs$N,
+                   c1 = 0.0, c2 = Inf, method = method, maxcor = maxcor, 
+                   tol_thresholds = tol_thresholds, constrained = constrained,
+                   init = init, variance = FALSE)
   }
   
   
