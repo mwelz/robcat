@@ -132,7 +132,7 @@ polycor_twostep <- function(f, contingency, Kx, Ky, N, init, maxcor)
                                Kx = Kx, Ky = Ky)
   
   ## calculate pearson residuals
-  pearson <- f / probs
+  pearson <- f / probs - 1.0
   
   return(structure(
     list(thetahat = thetahat, 
