@@ -156,10 +156,52 @@ polyserial_thetanames <- function(num_y)
 }
 
 
-## main function
-polyserial <- function(x, y, alpha, num_y = max(y),
+
+#' Robust estimation of polyserial correlation 
+#' 
+#' Implements the robust estimator of  Welz (2025)  for the polyserial correlation model.
+#' 
+#' @param x Vector of numeric values.
+#' @param y Vector of integer-valued ordinal values.
+#' @param alpha Tuning constant that governs robustness-efficiency tradeoff; must be in \code{[0, Inf]}. Defaults to 0.5.
+#' @param num_y Number of response categories in y; defaults to max(y)
+#' @param variance Shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}.
+#' @param method Numerical optimization method, see \code{\link[stats]{optim}()} and \code{\link[stats]{constrOptim}()}. Default is to use \code{"BFGS"} in case of unconstrained optimization and \code{"Nelder-Mead"} in case of constrained optimization.
+#' @param constrained Shall parameter restructions be enforced by linear constraints? This can be a logical (\code{TRUE} or \code{FALSE}), or \code{"ifneeded"} to first try unconstrained optimization and in case of an error perform constrained optimization. Default is \code{"ifneeded"}.
+#' @param maxcor Maximum absolute correlation (to ensure numerical stability). Default is 0.999.
+#' @param tol_thresholds Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant in case of constrained optimization. Default is 0.01.
+#' @param tol_sigma2 Minimum value of sigma2 parameter (population variance of X); only relevant in case of constrained optimization. Default is 0.01.
+#' @param init Initialization of numerical optimization. Default is neutral.
+#'
+#' @return 
+#' An object of class \code{"polyserial"}, which is a list with the following components. 
+#' \describe{
+#'   \item{\code{thetahat}}{A vector of estimates for the polyserial correlation coefficient (\code{rho}), population mean of X (\code{mu}), population variance of Y (\code{sigma2}), as well as thresholds for \code{y} (named \code{tau1,tau2,...,tau_{r-1}}).}
+#'   \item{\code{stderr}}{A vector of standard errors for each estimate in \code{thetahat}.}
+#'   \item{\code{vcov}}{Estimated asymptotic covariance matrix of \code{thetahat}. The matrix \eqn{\Sigma} in the paper (asymptotic covariance matrix of \eqn{\sqrt{N} \hat{\theta}}) can be obtained via \code{vcov * N}, where \code{N} is the sample size.}
+#'   \item{\code{pointpolyserial}}{Estimated polyserial correlation coefficient, calculated with provided scoring of Y}
+#'   \item{\code{weights}}{List of rescaled and raw outlyingness weights for each observation as well as maximum possible raw weight that was used for rescaling (\code{sup}).}
+#'   \item{\code{objective}}{Value of minimized loss function.}
+#'   \item{\code{optim}}{Object of class \code{optim}.}
+#'   \item{\code{inputs}}{List of provided inputs.}
+#' }
+#' 
+#' @examples
+#' ## example data
+#' set.seed(123)
+#' x <- rnorm(n = 100)
+#' y <- sample(c(1,2), size = 100, replace = TRUE)
+#' 
+#' polyserial(x,y)
+#' 
+#' @export
+polyserial <- function(x, y, 
+                       alpha = 0.5, 
+                       num_y = max(y),
                        constrained = "ifneeded",
                        method = NULL,
+                       variance = TRUE,
+                       init = polyserial_initialize_param(x = x, num_y = num_y, robust = TRUE),
                        maxcor = 0.999,
                        tol_thresholds = 0.01,
                        tol_sigma2 = 0.01)
@@ -171,6 +213,9 @@ polyserial <- function(x, y, alpha, num_y = max(y),
   const      <- (1.0 + alpha_inv) / N
   stopifnot(N == length(y))
   stopifnot(alpha > 0.0)
+  check_NA(x) ; check_NA(y)
+  is_numeric(x, checkinteger = FALSE)
+  is_numeric(y, checkinteger = TRUE)
   
   ## initialize params
   init <- polyserial_initialize_param(x = x, num_y = num_y, robust = TRUE)
@@ -257,7 +302,36 @@ polyserial <- function(x, y, alpha, num_y = max(y),
   }
   names(thetahat) <- polyserial_thetanames(num_y)
   
-  return(list(thetahat = thetahat, objective = opt$value, optim = opt))
+  
+  ## calculate weights
+  wgt_ls <- weights(x = x, y = y, theta = thetahat, alpha = alpha)
+  
+  ## point polyserial correlation
+  pp <- pointpolyserial(theta = thetahat, ycat = sort(unique(y), decreasing = FALSE))
+  
+  ## if requested, calculate asymptotic covariance matrix
+  if(variance)
+  {
+    asv <- variance_polyserial(theta = thetahat, x = x, y = y, alpha = alpha)
+  } else
+  {
+    asv <- NULL
+  } # IF
+  
+  return(structure(
+    list(thetahat = thetahat, 
+         stderr = asv$se,
+         vcov = asv$vcov,
+         pointpolyserial = pp,
+         weights = list(
+           rescaled = wgt_ls$weights_rescaled, 
+           raw = wgt_ls$weights_raw,
+           sup = wgt_ls$sup_weight),
+         objective = opt$value,
+         optim = opt, 
+         inputs = list(
+           x = x, y = y, num_y = num_y, N = N, alpha = alpha, method = method)), 
+    class = c("robpolyserial", "polyserial")))
 } # FUN
 
 
@@ -382,6 +456,21 @@ polyserial_mle <- function(x, y, num_y = max(y),
 }
 
 
+#' Neutral initialization of starting values for polyserial correlation
+#' 
+#' Initializes starting values for numerical optimization in a neutral way.
+#' 
+#' @param x Vector of numeric values
+#' @param num_y Number of response options of ordinal variable
+#' @param robust Should values of \code{mu} and \code{sigma2} be initialized in robust way (that is, median and squared MAD)? If \code{FALSE} (default), then nonrobust sample mean and variance are used.
+#' @return A vector of initial values for the polyserial correlation coefficient, mu, sigma2, and Y-threshold parameters
+#' @examples
+#' ## example data
+#' set.seed(123)
+#' x <- rnorm(100)
+#' polyserial_initialize_param(x = x, num_y = 3)
+#' 
+#' @export
 polyserial_initialize_param <- function(x, num_y, robust = FALSE)
 {
   # order: rho, mu, sigma2, thres
