@@ -1,5 +1,7 @@
 #' Obtain estimated asymptotic variance-covariance matrix 
 #' 
+#' Estimate asymptotic variance-covariance matrix of polychoric model.
+#' 
 #' Method for classes \code{"robpolycor"} and \code{"polycor"}. Returns the estimated asymptotic variance-covariance matrix of a point estimate \code{thetahat}. The matrix \eqn{\Sigma} in the paper (asymptotic variance-covariance matrix of \eqn{\sqrt{N} \hat{\theta}}) can be obtained via multiplying the returned matrix by the sample size.
 #' 
 #' @param object Object of class \code{"robpolycor"} or \code{"polycor"}.
@@ -35,4 +37,43 @@ vcov.robpolycor <- function(object, ...)
                             Kx = Kx, Ky = Ky, f = fhat, N = N)
   }
   return(out)
+} 
+
+
+#' Obtain estimated asymptotic variance-covariance matrix 
+#' 
+#' Estimate asymptotic variance-covariance matrix of polyserial model.
+#' 
+#' Method for classes \code{"robpolyserial"} and \code{"polyserial"}. Returns the estimated asymptotic variance-covariance matrix of a point estimate \code{thetahat}. The matrix \eqn{\Sigma} in the paper (asymptotic variance-covariance matrix of \eqn{\sqrt{N} \hat{\theta}}) can be obtained via multiplying the returned matrix by the sample size.
+#' 
+#' @param object Object of class \code{"robpolyserial"} or \code{"polyserial"}.
+#' @param ... Additional parameters to be passed down.
+#' @return A numeric matrix, being the estimated asymptotic covariance matrix for the model parameters
+#' @examples
+#' ## example data
+#' set.seed(123)
+#' x <- rnorm(n = 100)
+#' y <- sample(c(1,2), size = 100, replace = TRUE)
+#' 
+#' fit <- polyserial(x,y)
+#' vcov(fit)
+#' 
+#' @export
+vcov.robpolyserial <- function(object, ...)
+{
+  stopifnot(inherits(x = object, what = "polyserial"))
+  
+  thetahat <- object$thetahat
+  x        <- object$inputs$x
+  y        <- object$inputs$y
+
+  if(inherits(x = object, what = "robpolyserial_mle"))
+  {
+    ## for MLE, compute fisher-information-based covariance matrix
+    out <- variance_polyserial_mle(theta = thetahat, x = x, y = y)
+  } else
+  {
+    out <-  variance_polyserial(theta = thetahat, x = x, y = y, alpha = object$inputs$alpha)
+  }
+  return(out$vcov)
 } 

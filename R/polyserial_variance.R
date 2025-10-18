@@ -457,7 +457,7 @@ variance_polyserial <- function(theta, x, y, alpha)
 }
 
 
-variance_mle <- function(theta, x, y)
+variance_polyserial_mle <- function(theta, x, y)
 {
   d      <- length(theta)
   N      <- length(x)

@@ -15,6 +15,9 @@
 A numeric matrix, being the estimated asymptotic covariance matrix for the model parameters
 }
 \description{
+Estimate asymptotic variance-covariance matrix of polychoric model.
+}
+\details{
 Method for classes \code{"robpolycor"} and \code{"polycor"}. Returns the estimated asymptotic variance-covariance matrix of a point estimate \code{thetahat}. The matrix \eqn{\Sigma} in the paper (asymptotic variance-covariance matrix of \eqn{\sqrt{N} \hat{\theta}}) can be obtained via multiplying the returned matrix by the sample size.
 }
 \examples{

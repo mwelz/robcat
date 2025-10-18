@@ -11,7 +11,9 @@ export(polycormat)
 export(polycormat_mle)
 
 S3method(print,robpolyserial)
+S3method(vcov,robpolyserial)
 export(polyserial)
+export(polyserial_mle)
 export(polyserial_initialize_param)
 
 import(ggplot2)

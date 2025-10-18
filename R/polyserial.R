@@ -166,6 +166,7 @@ polyserial_thetanames <- function(num_y)
 #' @param alpha Tuning constant that governs robustness-efficiency tradeoff; must be in \code{[0, Inf]}. Defaults to 0.5.
 #' @param num_y Number of response categories in y; defaults to max(y)
 #' @param variance Shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}.
+#' @param weights Shall weights be returned? Default is \code{TRUE}.
 #' @param method Numerical optimization method, see \code{\link[stats]{optim}()} and \code{\link[stats]{constrOptim}()}. Default is to use \code{"BFGS"} in case of unconstrained optimization and \code{"Nelder-Mead"} in case of constrained optimization.
 #' @param constrained Shall parameter restructions be enforced by linear constraints? This can be a logical (\code{TRUE} or \code{FALSE}), or \code{"ifneeded"} to first try unconstrained optimization and in case of an error perform constrained optimization. Default is \code{"ifneeded"}.
 #' @param maxcor Maximum absolute correlation (to ensure numerical stability). Default is 0.999.
@@ -201,6 +202,7 @@ polyserial <- function(x, y,
                        constrained = "ifneeded",
                        method = NULL,
                        variance = TRUE,
+                       weights = TRUE,
                        init = polyserial_initialize_param(x = x, num_y = num_y, robust = TRUE),
                        maxcor = 0.999,
                        tol_thresholds = 0.01,
@@ -218,7 +220,6 @@ polyserial <- function(x, y,
   is_numeric(y, checkinteger = TRUE)
   
   ## initialize params
-  init <- polyserial_initialize_param(x = x, num_y = num_y, robust = TRUE)
   num_params <- num_y + 2L
   is_null_method <- is.null(method)
   
@@ -304,7 +305,13 @@ polyserial <- function(x, y,
   
   
   ## calculate weights
-  wgt_ls <- weights(x = x, y = y, theta = thetahat, alpha = alpha)
+  if(weights)
+  {
+    wgt_ls <- weights(x = x, y = y, theta = thetahat, alpha = alpha)
+  } else
+  {
+    wgt_ls <- NULL
+  }
   
   ## point polyserial correlation
   pp <- pointpolyserial(theta = thetahat, ycat = sort(unique(y), decreasing = FALSE))
@@ -347,9 +354,49 @@ logl <- function(x, y, rho, mu, sigma, thres, num_y)
 }
 
 
-polyserial_mle <- function(x, y, num_y = max(y),
+
+#' Maximum likelihood estimation of polyserial correlation 
+#' 
+#' Implements maximum likelihood estimation of the polyserial correlation model.
+#' 
+#' @param x Vector of numeric values.
+#' @param y Vector of integer-valued ordinal values.
+#' @param num_y Number of response categories in y; defaults to max(y)
+#' @param variance Shall an estimated asymptotic covariance matrix be returned? Default is \code{TRUE}.
+#' @param method Numerical optimization method, see \code{\link[stats]{optim}()} and \code{\link[stats]{constrOptim}()}. Default is to use \code{"BFGS"} in case of unconstrained optimization and \code{"Nelder-Mead"} in case of constrained optimization.
+#' @param constrained Shall parameter restructions be enforced by linear constraints? This can be a logical (\code{TRUE} or \code{FALSE}), or \code{"ifneeded"} to first try unconstrained optimization and in case of an error perform constrained optimization. Default is \code{"ifneeded"}.
+#' @param maxcor Maximum absolute correlation (to ensure numerical stability). Default is 0.999.
+#' @param tol_thresholds Minimum distance between consecutive thresholds (to enforce strict monotonicity); only relevant in case of constrained optimization. Default is 0.01.
+#' @param tol_sigma2 Minimum value of sigma2 parameter (population variance of X); only relevant in case of constrained optimization. Default is 0.01.
+#' @param init Initialization of numerical optimization. Default is neutral.
+#'
+#' @return 
+#' An object of class \code{"polyserial"}, which is a list with the following components. 
+#' \describe{
+#'   \item{\code{thetahat}}{A vector of estimates for the polyserial correlation coefficient (\code{rho}), population mean of X (\code{mu}), population variance of Y (\code{sigma2}), as well as thresholds for \code{y} (named \code{tau1,tau2,...,tau_{r-1}}).}
+#'   \item{\code{stderr}}{A vector of standard errors for each estimate in \code{thetahat}.}
+#'   \item{\code{vcov}}{Estimated asymptotic covariance matrix of \code{thetahat}. The matrix \eqn{\Sigma} in the paper (asymptotic covariance matrix of \eqn{\sqrt{N} \hat{\theta}}) can be obtained via \code{vcov * N}, where \code{N} is the sample size.}
+#'   \item{\code{pointpolyserial}}{Estimated polyserial correlation coefficient, calculated with provided scoring of Y}
+#'   \item{\code{objective}}{Value of minimized loss function.}
+#'   \item{\code{optim}}{Object of class \code{optim}.}
+#'   \item{\code{inputs}}{List of provided inputs.}
+#' }
+#' 
+#' @examples
+#' ## example data
+#' set.seed(123)
+#' x <- rnorm(n = 100)
+#' y <- sample(c(1,2), size = 100, replace = TRUE)
+#' 
+#' polyserial_mle(x,y)
+#' 
+#' @export
+polyserial_mle <- function(x, y, 
+                           num_y = max(y),
                            constrained = "ifneeded",
                            method = NULL,
+                           variance = TRUE,
+                           init = polyserial_initialize_param(x = x, num_y = num_y, robust = FALSE),
                            maxcor = 0.999,
                            tol_thresholds = 0.01,
                            tol_sigma2 = 0.01)
@@ -363,9 +410,12 @@ polyserial_mle <- function(x, y, num_y = max(y),
   # we can achieve by nonrobust initialization. Again, this is a computational problem
   # because in theory, initialization shouldn't matter due to convexity. 
   # Also, nonrobust initialization is equivalent to what the Fox package does (they even fix the moments like that)
-  init <- polyserial_initialize_param(x = x, num_y = num_y, robust = FALSE)
+  N          <- length(x)
+  stopifnot(N == length(y))
+  check_NA(x) ; check_NA(y)
+  is_numeric(x, checkinteger = FALSE)
+  is_numeric(y, checkinteger = TRUE)
   num_params <- num_y + 2L
-  N <- length(x)
   is_null_method <- is.null(method)
   
   ## prepare function to minimize over
@@ -452,7 +502,28 @@ polyserial_mle <- function(x, y, num_y = max(y),
   # to DPD loss, but useful to spot identification issues
   objective <- opt$value / N
   
-  return(list(thetahat = thetahat, objective = objective, optim = opt))
+  ## point polyserial correlation
+  pp <- pointpolyserial(theta = thetahat, ycat = sort(unique(y), decreasing = FALSE))
+  
+  ## if requested, calculate asymptotic covariance matrix
+  if(variance)
+  {
+    asv <- variance_polyserial_mle(theta = thetahat, x = x, y = y)
+  } else
+  {
+    asv <- NULL
+  } # IF
+  
+  return(structure(
+    list(thetahat = thetahat, 
+         stderr = asv$se,
+         vcov = asv$vcov,
+         pointpolyserial = pp,
+         objective = objective,
+         optim = opt, 
+         inputs = list(
+           x = x, y = y, num_y = num_y, N = N, method = method)), 
+    class = c("robpolyserial", "robpolyserial_mle", "polyserial")))
 }
 
 
