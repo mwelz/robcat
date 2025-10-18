@@ -15,6 +15,7 @@ S3method(vcov,robpolyserial)
 export(polyserial)
 export(polyserial_mle)
 export(polyserial_initialize_param)
+export(polyserial_efficiency)
 
 import(ggplot2)
 import(mvtnorm)
