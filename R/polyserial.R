@@ -159,7 +159,7 @@ polyserial_thetanames <- function(num_y)
 
 #' Robust estimation of polyserial correlation 
 #' 
-#' Implements the robust estimator of  Welz (2025)  for the polyserial correlation model.
+#' Implements the robust estimator of  Welz (2025, \doi{10.48550/arXiv.2510.15632})  for the polyserial correlation model.
 #' 
 #' @param x Vector of numeric values.
 #' @param y Vector of integer-valued ordinal values.

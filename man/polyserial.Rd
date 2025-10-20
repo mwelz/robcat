@@ -58,7 +58,7 @@ An object of class \code{"polyserial"}, which is a list with the following compo
 }
 }
 \description{
-Implements the robust estimator of  Welz (2025)  for the polyserial correlation model.
+Implements the robust estimator of  Welz (2025, \doi{10.48550/arXiv.2510.15632})  for the polyserial correlation model.
 }
 \examples{
 ## example data
