@@ -1,23 +1,5 @@
 ## hessian matrix of p_X
 
-### 1. first order derivative functions ----
-px_d1_mu <- function(x, mu, sigma2)
-{
-  pxtheta <- px(x = x, mu = mu, sigma = sqrt(sigma2))
-  xmmu    <- x - mu
-  pxtheta * xmmu / sigma2
-}
-
-px_d1_sigma2 <- function(x, mu, sigma2)
-{
-  pxtheta <- px(x = x, mu = mu, sigma = sqrt(sigma2))
-  xmmu    <- x - mu
-  pxtheta * (xmmu^2 / sigma2 - 1.0) / (2.0 * sigma2)
-}
-
-
-### 2. 2nd order derivatives ----
-
 px_d2_mu2 <- function(x, mu, sigma2)
 {
   pxtheta <- px(x = x, mu = mu, sigma = sqrt(sigma2))
