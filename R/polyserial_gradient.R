@@ -91,16 +91,30 @@ py_x_grad <- function(y, x, rho, mu, sigma, thres, num_y)
 ## first-order derivatives of p_{X}
 px_d1_mu <- function(x, mu, sigma2)
 {
-  pxtheta <- px(x = x, mu = mu, sigma = sqrt(sigma2))
-  xmmu    <- x - mu
-  pxtheta * xmmu / sigma2
+  if(is.infinite(x))
+  {
+    out <- 0.0
+  } else
+  {
+    pxtheta <- px(x = x, mu = mu, sigma = sqrt(sigma2))
+    xmmu    <- x - mu
+    out <- pxtheta * xmmu / sigma2
+  }
+  return(out)
 }
 
 px_d1_sigma2 <- function(x, mu, sigma2)
 {
-  pxtheta <- px(x = x, mu = mu, sigma = sqrt(sigma2))
-  xmmu    <- x - mu
-  pxtheta * (xmmu^2 / sigma2 - 1.0) / (2.0 * sigma2)
+  if(is.infinite(x))
+  {
+    out <- 0.0
+  } else
+  {
+    pxtheta <- px(x = x, mu = mu, sigma = sqrt(sigma2))
+    xmmu    <- x - mu
+    out <- pxtheta * (xmmu^2 / sigma2 - 1.0) / (2.0 * sigma2)
+  }
+  return(out)
 }
 
 
@@ -134,7 +148,9 @@ py_x_d1_rho <- function(y, x, rho, mu, sigma2, thres, num_y)
                               tau_y = thres[ym1]))
     p2_2 <- rho * thres[ym1] - z
   }
-  return(scaling * (p1_1 * p1_2 - p2_1 * p2_2))
+  out <- scaling * (p1_1 * p1_2 - p2_1 * p2_2)
+  if(is.nan(out)) out <- 0.0 ## account for 0 * Inf
+  return(out)
 }
 
 
@@ -184,7 +200,10 @@ py_x_d1_sigma2 <- function(y, x, rho, mu, sigma2, thres, num_y)
     p2 <- phi(get_taustar_y(x = x, rho = rho, mu = mu, sigma2 = sigma2, 
                             tau_y = thres[y-1L]))
   }
-  return(scaling * (p1 - p2))
+  
+  out <- scaling * (p1 - p2)
+  if(is.nan(out)) out <- 0.0 ## account for 0 * Inf
+  return(out)
 }
 
 # defined for k \in [num_y-1]

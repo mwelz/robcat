@@ -34,7 +34,9 @@ py_x_d2_mu2 <- function(y, x, rho, mu, sigma2, thres, num_y)
   }
   
   diff <- sum1 - sum2
-  return(scaling * diff)
+  out <- scaling * diff
+  if(is.nan(out)) out <- 0.0 ## account for 0 * Inf
+  return(out)
 }
 
 
@@ -93,7 +95,9 @@ py_x_d2_sigma22 <- function(y, x, rho, mu, sigma2, thres, num_y)
   scaling <- rho * (x - mu) / (2 * sigma2^1.5 * sqrt(1 - rho^2))
   diff1 <- (-1.5) * (diff1_part1 - diff1_part2) / sigma2
   diff2 <- diff2_part1 - diff2_part2
-  return(scaling * (diff1 + diff2))
+  out <- scaling * (diff1 + diff2)
+  if(is.nan(out)) out <- 0.0 ## account for 0 * Inf
+  return(out)
 }
 
 
@@ -123,6 +127,8 @@ py_x_d2_tauk2 <- function(y, x, k, rho, mu, sigma2, thres, num_y)
   {
     out <- 0.0
   }
+  
+  if(is.nan(out)) out <- 0.0 ## account for 0 * Inf
   return(out)
 }
 
@@ -222,5 +228,7 @@ py_x_d2_rho2 <- function(y, x, rho, mu, sigma2, thres, num_y)
   scaling2 <- 1 / ((1 - rho^2)^1.5)
   diff2 <- scaling2 * (paren2_part1 - paren2_part2)
   
-  return(diff1 + diff2)
+  out <- diff1 + diff2
+  if(is.nan(out)) out <- 0.0 ## account for 0 * Inf
+  return(out)
 }

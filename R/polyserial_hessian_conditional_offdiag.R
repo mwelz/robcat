@@ -64,7 +64,10 @@ py_x_d2_rhomu <- function(y, x, rho, mu, sigma2, thres, num_y)
   scale1 <- 1.0 + (rho^2) / (1.0 - rho^2)
   diff1  <- scale1 * (paren1_part1 - paren1_part2) 
   diff2  <- rho * (paren2_part1 - paren2_part2)
-  return(scale0 * (diff1 + diff2))
+  out <- scale0 * (diff1 + diff2)
+  
+  if(is.nan(out)) out <- 0.0 ## account for 0 * Inf
+  return(out)
 }
 
 
@@ -133,7 +136,10 @@ py_x_d2_rhosigma2 <- function(y, x, rho, mu, sigma2, thres, num_y)
   scale1 <- 1.0 + (rho^2) / (1.0 - rho^2)
   diff1  <- scale1 * (paren1_part1 - paren1_part2) 
   diff2  <- rho * (paren2_part1 - paren2_part2)
-  return(scale0 * (diff1 + diff2))
+  out <- scale0 * (diff1 + diff2)
+  
+  if(is.nan(out)) out <- 0.0 ## account for 0 * Inf
+  return(out)
 }
 
 
@@ -202,7 +208,10 @@ py_x_d2_musigma2 <- function(y, x, rho, mu, sigma2, thres, num_y)
   scale1 <- 1.0 / (2 * sigma2)
   diff1 <- paren1_part1 - paren1_part2
   diff2 <- scale1 * (paren2_part1 - paren2_part2)
-  return(scale0 * (diff1 - diff2))
+  out <- scale0 * (diff1 - diff2)
+  
+  if(is.nan(out)) out <- 0.0 ## account for 0 * Inf
+  return(out)
 }
 
 
@@ -228,6 +237,8 @@ py_x_d2_mutauk <- function(y, x, k, rho, mu, sigma2, thres, num_y)
   {
     out <- 0.0
   }
+  
+  if(is.nan(out)) out <- 0.0 ## account for 0 * Inf
   return(out)
 }
 
@@ -254,6 +265,8 @@ py_x_d2_sigma2tauk <- function(y, x, k, rho, mu, sigma2, thres, num_y)
   {
     out <- 0.0
   }
+  
+  if(is.nan(out)) out <- 0.0 ## account for 0 * Inf
   return(out)
 }
 
@@ -287,5 +300,7 @@ py_x_d2_rhotauk <- function(y, x, k, rho, mu, sigma2, thres, num_y)
   {
     out <- 0.0
   }
+  
+  if(is.nan(out)) out <- 0.0 ## account for 0 * Inf
   return(out)
 }

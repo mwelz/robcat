@@ -4,7 +4,9 @@ px_d2_mu2 <- function(x, mu, sigma2)
 {
   pxtheta <- px(x = x, mu = mu, sigma = sqrt(sigma2))
   pxprime_mu <- px_d1_mu(x = x, mu = mu, sigma2 = sigma2)
-  ((x - mu) * pxprime_mu - pxtheta) / sigma2
+  out <- ((x - mu) * pxprime_mu - pxtheta) / sigma2
+  if(is.nan(out)) out <- 0.0 ## account for 0 * Inf
+  return(out)
 }
 
 
@@ -13,7 +15,9 @@ px_d2_sigma22 <- function(x, mu, sigma2)
   pxtheta_scaled <- px(x = x, mu = mu, sigma = sqrt(sigma2)) / sigma2
   pxprime_sigma2 <- px_d1_sigma2(x = x, mu = mu, sigma2 = sigma2)
   z2 <- ((x - mu)^2) / sigma2
-  (pxprime_sigma2 * (z2 - 1) + pxtheta_scaled * (1 - 2*z2)) / (2*sigma2)
+  out <- (pxprime_sigma2 * (z2 - 1) + pxtheta_scaled * (1 - 2*z2)) / (2*sigma2)
+  if(is.nan(out)) out <- 0.0 ## account for 0 * Inf
+  return(out)
 }
 
 
@@ -23,7 +27,9 @@ px_d2_musigma2 <- function(x, mu, sigma2)
   pxtheta <- px(x = x, mu = mu, sigma = sqrt(sigma2))
   pxprime_sigma2 <- px_d1_sigma2(x = x, mu = mu, sigma2 = sigma2)
   scaling <- (x - mu) / sigma2
-  scaling * (pxprime_sigma2 - pxtheta / sigma2)
+  out <- scaling * (pxprime_sigma2 - pxtheta / sigma2)
+  if(is.nan(out)) out <- 0.0 ## account for 0 * Inf
+  return(out)
 }
 
 
