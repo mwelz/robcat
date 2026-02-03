@@ -14,7 +14,7 @@ init_thresholds <- function(K)
 } # FUN
 
 
-#' Neutral initialization of starting values
+#' Neutral initialization of starting values for polychoric correlation
 #' 
 #' Initializes starting values for numerical optimization in a neutral way. The optimization problem itself is convex, so the initialization should not matter much.
 #' 

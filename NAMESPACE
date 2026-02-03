@@ -1,5 +1,6 @@
 useDynLib(robcat, .registration=TRUE)
 importFrom(Rcpp, evalCpp)
+
 S3method(plot,robpolycor)
 S3method(print,robpolycor)
 S3method(vcov,robpolycor)
@@ -8,6 +9,14 @@ export(initialize_param)
 export(polycor_mle)
 export(polycormat)
 export(polycormat_mle)
+
+S3method(print,robpolyserial)
+S3method(vcov,robpolyserial)
+export(polyserial)
+export(polyserial_mle)
+export(polyserial_initialize_param)
+export(polyserial_efficiency)
+
 import(ggplot2)
 import(mvtnorm)
 import(stringr)

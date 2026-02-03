@@ -2,7 +2,7 @@
 % Please edit documentation in R/polycor_funs_helper.R
 \name{initialize_param}
 \alias{initialize_param}
-\title{Neutral initialization of starting values}
+\title{Neutral initialization of starting values for polychoric correlation}
 \usage{
 initialize_param(x, y)
 }
