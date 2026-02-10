@@ -2,7 +2,7 @@
 
 [![CRAN](https://www.R-pkg.org/badges/version/robcat)](https://CRAN.R-project.org/package=robcat) 
 
-This package implements the methodology proposed in the working paper _Robust Estimation and Inference in Categorical Data_ by [Welz (2024)](https://arxiv.org/abs/2403.11954). Here we will demonstrate how the methodology can be used to robustly estimate polychoric correlation, which is described in detail in our companion paper _Robust Estimation of Polychoric Correlation_ by [Welz, Mair, and Alfons (2024)](https://arxiv.org/abs/2407.18835).
+This package implements the methodology proposed in the working paper _Robust Estimation and Inference in Categorical Data_ by [Welz (2024)](https://arxiv.org/abs/2403.11954). Here we will demonstrate how the methodology can be used to robustly estimate polychoric correlation, which is described in detail in our companion paper _Robust Estimation of Polychoric Correlation_ by [Welz, Mair, and Alfons (2026)](https://doi.org/10.1017/psy.2025.10066). At the moment, also robust estimation of polyserial correlation is supported [(Welz, 2026)](https://doi.org/10.1017/psy.2026.10091).
 
 Package `robcat` is on CRAN (The Comprehensive R Archive Network), hence the latest release can be easily installed from the `R` command line via
 
